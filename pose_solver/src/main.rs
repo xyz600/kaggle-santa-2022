@@ -170,7 +170,7 @@ impl Pose {
                     [Direction::Up, Direction::None, Direction::Left]
                 } else if x == -max_value && y == max_value {
                     [Direction::Down, Direction::None, Direction::Right]
-                } else if x == max_value && y == -max_value {
+                } else if x == max_value && y == max_value {
                     [Direction::Down, Direction::None, Direction::Left]
                 } else if x.abs() == max_value {
                     [Direction::Up, Direction::Down, Direction::None]
@@ -242,22 +242,10 @@ fn calculate_cost(diff: &DiffPose, from: &Pose, image: &HashMap<(i16, i16), Cell
     color_cost + pos_cost
 }
 
-fn calculate_lb_cost(
-    orig_from: &(i16, i16),
-    from: &Pose,
-    to_coord: &(i16, i16),
-    image: &HashMap<(i16, i16), Cell>,
-) -> i64 {
-    let orig_from_cell = image[orig_from];
-
+fn calculate_lb_cost(from: &Pose, to_coord: &(i16, i16), image: &HashMap<(i16, i16), Cell>) -> i64 {
     let from_coord = from.coord();
     let from_cell = image[&from_coord];
     let to_cell = image[to_coord];
-
-    let o_dr = (orig_from_cell.r - to_cell.r).abs();
-    let o_dg = (orig_from_cell.g - to_cell.g).abs();
-    let o_db = (orig_from_cell.b - to_cell.b).abs();
-    let offset_color_cost = (o_dr + o_dg + o_db) * 3 * 10000;
 
     let dr = (from_cell.r - to_cell.r).abs();
     let dg = (from_cell.g - to_cell.g).abs();
@@ -270,7 +258,7 @@ fn calculate_lb_cost(
 
     let pos_cost = (((dx + dy) as f64).sqrt() * 10000.0 * 255.0).round() as i64;
 
-    color_cost + pos_cost - offset_color_cost
+    color_cost + pos_cost
 }
 
 // dynamic dijkstra で最小コストルートを求める
@@ -313,14 +301,6 @@ fn next_move(
             return (cost as f64 / (255.0 * 10000.0), diff_list);
         }
 
-        // debug
-        let mut set = HashSet::<(i16, i16)>::new();
-        for diff in pose.next_diff_list() {
-            let mut next_pose = pose.clone();
-            next_pose.apply(&diff);
-            set.insert(next_pose.coord());
-        }
-
         for diff in pose.next_diff_list() {
             let next_cost = cost + calculate_cost(&diff, &pose, image);
 
@@ -333,8 +313,7 @@ fn next_move(
             {
                 visited.insert(next_pose_encoded, (next_cost, cur_enc));
                 // コストの下限値を求めて A*
-                let lb_cost =
-                    next_cost + calculate_lb_cost(&init_pose.coord(), &next_pose, &to, image);
+                let lb_cost = next_cost + calculate_lb_cost(&next_pose, &to, image);
 
                 que.push((-lb_cost, -next_cost, next_pose_encoded));
             }
@@ -407,7 +386,8 @@ fn load_image(filepath: &PathBuf) -> HashMap<(i16, i16), Cell> {
 
 fn main() {
     // solution を読み込む
-    let solution = ArraySolution::load(&PathBuf::from_str("solution_split_lkh.tsp").unwrap());
+    let solution = ArraySolution::load(&PathBuf::from_str("solution_snake.tsp").unwrap());
+    // let solution = ArraySolution::load(&PathBuf::from_str("solution_split_lkh.tsp").unwrap());
 
     let mut index_table = HashMap::<(i16, i16), u32>::new();
     let mut rev_index_table = vec![(0, 0); solution.len()];

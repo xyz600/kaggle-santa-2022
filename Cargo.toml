@@ -4,4 +4,5 @@ members = [
     "lib",
     "route_solver",
     "pose_solver",
+    "integrated_solver",
 ]

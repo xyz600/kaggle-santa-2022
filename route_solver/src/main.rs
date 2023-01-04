@@ -158,6 +158,11 @@ fn main() {
     let route = reconstruct_route(route_str);
     let solution = ArraySolution::from_array(route);
     // let solution = ArraySolution::new(distance.dimension() as usize);
+    solution.save(&PathBuf::from_str("solution_snake.tsp").unwrap());
+    eprintln!(
+        "eval = {}",
+        evaluate(&distance, &solution) as f64 / (255.0 * 10000.0)
+    );
 
     let solution = opt3::solve(
         &distance,
