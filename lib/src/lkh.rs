@@ -1,4 +1,4 @@
-use std::{path::PathBuf, time::Instant};
+use std::{path::PathBuf, str::FromStr, time::Instant};
 
 use rand::{rngs::ThreadRng, Rng};
 
@@ -258,6 +258,8 @@ pub fn solve(
                 global_best_eval = eval;
                 global_best_solution.copy_from(&solution);
                 no_continuous_fail_count = 0;
+
+                global_best_solution.save(&PathBuf::from_str("solution_all_lkh.tsp").unwrap());
             } else {
                 solution.copy_from(&global_best_solution);
                 no_continuous_fail_count += 1;
