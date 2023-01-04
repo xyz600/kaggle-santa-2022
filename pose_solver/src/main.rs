@@ -1,7 +1,6 @@
 use lib::{array_solution::ArraySolution, solution::Solution};
 use proconio::input;
 use proconio::source::auto::AutoSource;
-use std::collections::HashSet;
 use std::io::{BufWriter, Read, Write};
 use std::{
     collections::{BinaryHeap, HashMap},
@@ -58,14 +57,14 @@ impl Pose {
     fn new() -> Pose {
         Pose {
             arm_list: [
-                Coord::new(0, -64),
-                Coord::new(0, 32),
-                Coord::new(0, 16),
-                Coord::new(0, 8),
-                Coord::new(0, 4),
-                Coord::new(0, 2),
-                Coord::new(0, 1),
-                Coord::new(0, 1),
+                Coord::new(0, 64),
+                Coord::new(0, -32),
+                Coord::new(0, -16),
+                Coord::new(0, -8),
+                Coord::new(0, -4),
+                Coord::new(0, -2),
+                Coord::new(0, -1),
+                Coord::new(0, -1),
             ],
         }
     }
@@ -183,8 +182,10 @@ impl Pose {
                 }
             } else {
                 let max_value = get_max_value(depth);
+                // stack に積まれた方向の分も加味
                 let y = pos_list[depth].y;
                 let x = pos_list[depth].x;
+
                 let candidate_dirs = if x == -max_value && y == -max_value {
                     [Direction::Up, Direction::None, Direction::Right]
                 } else if x == max_value && y == -max_value {
@@ -297,35 +298,18 @@ fn next_move(
     init_pose: Pose,
     to: (i16, i16),
     image: &HashMap<(i16, i16), Cell>,
-    debug: bool,
 ) -> (f64, Vec<DiffPose>) {
-    let mut visited = HashMap::<u128, (i64, u128)>::new();
+    let mut visited = HashMap::<u128, (i64, i64, u128)>::new();
 
-    let mut que = BinaryHeap::<(i64, i64, u128)>::new();
-    que.push((0, 0, init_pose.encode()));
+    let mut que = BinaryHeap::<(i64, i64, u128, u128)>::new();
+    que.push((0, 0, init_pose.encode(), init_pose.encode()));
 
-    let mut prev_cost = 0;
-
-    let mut coord_set = HashSet::new();
-
-    while let Some((_lb_cost_neg, cost, encoded)) = que.pop() {
+    while let Some((_lb_cost, cost, encoded, prev_encoded)) = que.pop() {
         // to min-heap
         let cost = -cost;
 
-        if debug && -_lb_cost_neg != prev_cost {
-            eprintln!("lb cost: {}", (-_lb_cost_neg as f64) / (255.0 * 10000.0));
-            prev_cost = -_lb_cost_neg;
-        }
         let pose = Pose::decode(encoded);
         let cur_enc = pose.encode();
-
-        if debug {
-            let coord = pose.coord();
-            if !coord_set.contains(&coord) {
-                eprintln!("  new coord: {:?}", coord);
-                coord_set.insert(coord);
-            }
-        }
 
         if pose.coord() == to {
             // 復元
@@ -335,7 +319,7 @@ fn next_move(
             let mut cur_pose = pose;
 
             while coord != from {
-                let prev_pose_encoded = visited[&cur_pose.encode()].1;
+                let prev_pose_encoded = visited[&cur_pose.encode()].2;
                 let prev_pose = Pose::decode(prev_pose_encoded);
                 let diff = prev_pose.diff(&cur_pose);
 
@@ -343,12 +327,12 @@ fn next_move(
                 cur_pose = prev_pose;
                 coord = cur_pose.coord();
             }
-
+            diff_list.reverse();
             return (cost as f64 / (255.0 * 10000.0), diff_list);
         }
 
-        // 最小コストでない探索を省略
-        if visited.contains_key(&cur_enc) && visited[&cur_enc].0 < cost {
+        // prev 登録が正しい物を信じる
+        if visited.contains_key(&cur_enc) && visited[&cur_enc].2 != prev_encoded {
             continue;
         }
 
@@ -358,17 +342,19 @@ fn next_move(
             let mut next_pose = pose.clone();
             next_pose.apply(&diff);
             let next_pose_encoded = next_pose.encode();
-
-            let next_coord = next_pose.coord();
+            // コストの下限値を求めて A*
+            let lb_cost = next_cost + calculate_lb_cost(&next_pose, &to, image);
 
             if !visited.contains_key(&next_pose_encoded)
-                || visited[&next_pose_encoded].0 > next_cost
+                || (
+                    -visited[&next_pose_encoded].0,
+                    -visited[&next_pose_encoded].1,
+                ) < (-lb_cost, -next_cost)
             {
-                visited.insert(next_pose_encoded, (next_cost, cur_enc));
-                // コストの下限値を求めて A*
-                let lb_cost = next_cost + calculate_lb_cost(&next_pose, &to, image);
+                visited.insert(next_pose_encoded, (lb_cost, next_cost, cur_enc));
 
-                que.push((-lb_cost, -next_cost, next_pose_encoded));
+                // 正確なコスト計算のために next_cost もいれる
+                que.push((-lb_cost, -next_cost, next_pose_encoded, cur_enc));
             }
         }
     }
@@ -449,7 +435,7 @@ fn save_pos_list(pose_list: &Vec<Pose>, filepath: &PathBuf) {
 
 fn main() {
     // solution を読み込む
-    let solution = ArraySolution::load(&PathBuf::from_str("solution_snake.tsp").unwrap());
+    let solution = ArraySolution::load(&PathBuf::from_str("solution_split_lkh.tsp").unwrap());
 
     let mut index_table = HashMap::<(i16, i16), u32>::new();
     let mut rev_index_table = vec![(0, 0); solution.len()];
@@ -485,10 +471,9 @@ fn main() {
             let next_id = solution.next(id);
             let next_pos = rev_index_table[next_id as usize];
 
-            eprintln!("from, to = {:?}, {:?}", pose.coord(), next_pos);
-
-            let (cost, diff_list) = next_move(pose, next_pos, &image, false);
+            let (cost, diff_list) = next_move(pose, next_pos, &image);
             for diff in diff_list {
+                eprintln!("  {:?}", diff);
                 pose.apply(&diff);
                 all_pose_list.push(pose.clone());
             }
@@ -520,11 +505,7 @@ fn main() {
             let prev_id = solution.prev(id);
             let prev_pos = rev_index_table[prev_id as usize];
 
-            let debug = id == index_table[&(0, -1)];
-
-            eprintln!("from, to = {:?}, {:?}", pose.coord(), prev_pos);
-
-            let (cost, diff_list) = next_move(pose, prev_pos, &image, debug);
+            let (cost, diff_list) = next_move(pose, prev_pos, &image);
             for diff in diff_list {
                 pose.apply(&diff);
                 rev_all_pose_list.push(pose.clone());
