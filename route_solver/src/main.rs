@@ -1,6 +1,8 @@
+mod snake;
+
+use crate::snake::create_snake_shape;
 use lib::array_solution::ArraySolution;
 use lib::distance::DistanceFunction;
-use lib::divide_and_conqure_solver::{self, DivideAndConqureConfig};
 use lib::evaluate::evaluate;
 use lib::lkh::{self, LKHConfig};
 use lib::opt3::{self, Opt3Config};
@@ -89,6 +91,7 @@ impl DistanceFunction for ManipulationDistanceFunction {
         let dr = (c1.r - c2.r).abs();
         let dg = (c1.g - c2.g).abs();
         let db = (c1.b - c2.b).abs();
+
         (((dx + dy) as f64).sqrt() * 10000.0 * 255.0) as i64 + (dr + dg + db)
     }
 
@@ -110,6 +113,8 @@ fn main() {
     let distance = ManipulationDistanceFunction::load(&input_filepath);
     let solution = ArraySolution::new(distance.dimension() as usize);
 
+    let route_str = create_snake_shape();
+
     let mut solution = opt3::solve(
         &distance,
         solution,
@@ -127,42 +132,6 @@ fn main() {
     );
     solution.save(&PathBuf::from_str("solution_opt3.tsp").unwrap());
 
-    // 分割して並列化
-    let mut best_eval = evaluate(&distance, &solution);
-    let mut start_kick_step = 30;
-    let mut time_ms = 30_000;
-
-    for iter in 1.. {
-        solution = divide_and_conqure_solver::solve(
-            &distance,
-            &solution,
-            DivideAndConqureConfig {
-                no_split: 12,
-                debug: false,
-                time_ms,
-                start_kick_step,
-                kick_step_diff: 10,
-                end_kick_step: distance.dimension() as usize / 10,
-                fail_count_threashold: 50,
-                max_depth: 7,
-            },
-        );
-        let eval = evaluate(&distance, &solution);
-        eprintln!("finish splited lkh {} times.", iter);
-        eprintln!("eval = {}", eval as f64 / (255.0 * 10000.0));
-        if best_eval == eval {
-            start_kick_step += 10;
-            time_ms += 30_000;
-        } else {
-            solution.save(&PathBuf::from_str("solution_init_lkh.tsp").unwrap());
-        }
-        best_eval = eval;
-
-        if start_kick_step == 100 {
-            break;
-        }
-    }
-
     let solution = lkh::solve(
         &distance,
         solution,
@@ -170,12 +139,12 @@ fn main() {
             use_neighbor_cache: true,
             cache_filepath: get_cache_filepath(&distance),
             debug: true,
-            time_ms: 1000 * 60 * 60 * 4,
+            time_ms: 1000 * 60 * 60 * 12,
             start_kick_step: 30,
             kick_step_diff: 10,
             end_kick_step: 1000,
             fail_count_threashold: 50,
-            max_depth: 6,
+            max_depth: 7,
             neighbor_create_parallel: true,
         },
     );
