@@ -2,7 +2,7 @@ use lib::{array_solution::ArraySolution, solution::Solution};
 use proconio::input;
 use proconio::source::auto::AutoSource;
 use std::collections::HashSet;
-use std::io::Read;
+use std::io::{BufWriter, Read, Write};
 use std::{
     collections::{BinaryHeap, HashMap},
     fs::File,
@@ -29,9 +29,9 @@ impl Coord {
 
     fn decode(value: u32, bit_width: i16) -> Coord {
         let offset = (1 << bit_width) as i16;
-        let x = (value % offset as u32) as i16 - (offset / 2 - 1);
         let y = (value / offset as u32) as i16 - (offset / 2 - 1);
-        Coord { x, y }
+        let x = (value % offset as u32) as i16 - (offset / 2 - 1);
+        Coord { y, x }
     }
 }
 
@@ -143,6 +143,16 @@ impl Pose {
         DiffPose { diff_list }
     }
 
+    fn pos_diff(&self, to: &Pose) -> i64 {
+        let mut ret = 0;
+        for i in 0..8 {
+            let dy = self.arm_list[i].y - to.arm_list[i].y;
+            let dx = self.arm_list[i].x - to.arm_list[i].x;
+            ret += dy.abs() + dx.abs();
+        }
+        ret as i64
+    }
+
     fn next_diff_list(&self) -> Vec<DiffPose> {
         fn get_max_value(depth: usize) -> i16 {
             let ret = [64, 32, 16, 8, 4, 2, 1, 1];
@@ -157,9 +167,20 @@ impl Pose {
         ) {
             if depth == 8 {
                 // 全ての diff を積み終わった
-                ret.push(DiffPose {
-                    diff_list: stack.clone(),
-                })
+
+                let mut changed = false;
+                for i in 0..8 {
+                    if stack[i] != Direction::None {
+                        changed = true;
+                        break;
+                    }
+                }
+                // 全て None を避ける
+                if changed {
+                    ret.push(DiffPose {
+                        diff_list: stack.clone(),
+                    })
+                }
             } else {
                 let max_value = get_max_value(depth);
                 let y = pos_list[depth].y;
@@ -174,8 +195,10 @@ impl Pose {
                     [Direction::Down, Direction::None, Direction::Left]
                 } else if x.abs() == max_value {
                     [Direction::Up, Direction::Down, Direction::None]
-                } else {
+                } else if y.abs() == max_value {
                     [Direction::Left, Direction::Right, Direction::None]
+                } else {
+                    unreachable!()
                 };
 
                 for dir in candidate_dirs {
@@ -189,6 +212,14 @@ impl Pose {
         let mut stack = [Direction::None; 8];
         inner(&self.arm_list, 0, &mut ret, &mut stack);
         ret
+    }
+
+    fn to_string(&self) -> String {
+        let mut vs = vec![];
+        for i in 0..8 {
+            vs.push(format!("{} {}", self.arm_list[i].x, self.arm_list[i].y));
+        }
+        vs.join(";") + "\n"
     }
 }
 
@@ -266,20 +297,35 @@ fn next_move(
     init_pose: Pose,
     to: (i16, i16),
     image: &HashMap<(i16, i16), Cell>,
+    debug: bool,
 ) -> (f64, Vec<DiffPose>) {
     let mut visited = HashMap::<u128, (i64, u128)>::new();
 
     let mut que = BinaryHeap::<(i64, i64, u128)>::new();
     que.push((0, 0, init_pose.encode()));
 
-    eprintln!("from = {:?}, to = {:?}", init_pose.coord(), to);
+    let mut prev_cost = 0;
+
+    let mut coord_set = HashSet::new();
 
     while let Some((_lb_cost_neg, cost, encoded)) = que.pop() {
         // to min-heap
         let cost = -cost;
 
+        if debug && -_lb_cost_neg != prev_cost {
+            eprintln!("lb cost: {}", (-_lb_cost_neg as f64) / (255.0 * 10000.0));
+            prev_cost = -_lb_cost_neg;
+        }
         let pose = Pose::decode(encoded);
         let cur_enc = pose.encode();
+
+        if debug {
+            let coord = pose.coord();
+            if !coord_set.contains(&coord) {
+                eprintln!("  new coord: {:?}", coord);
+                coord_set.insert(coord);
+            }
+        }
 
         if pose.coord() == to {
             // 復元
@@ -301,12 +347,19 @@ fn next_move(
             return (cost as f64 / (255.0 * 10000.0), diff_list);
         }
 
+        // 最小コストでない探索を省略
+        if visited.contains_key(&cur_enc) && visited[&cur_enc].0 < cost {
+            continue;
+        }
+
         for diff in pose.next_diff_list() {
             let next_cost = cost + calculate_cost(&diff, &pose, image);
 
             let mut next_pose = pose.clone();
             next_pose.apply(&diff);
             let next_pose_encoded = next_pose.encode();
+
+            let next_coord = next_pose.coord();
 
             if !visited.contains_key(&next_pose_encoded)
                 || visited[&next_pose_encoded].0 > next_cost
@@ -384,10 +437,19 @@ fn load_image(filepath: &PathBuf) -> HashMap<(i16, i16), Cell> {
     ret
 }
 
+fn save_pos_list(pose_list: &Vec<Pose>, filepath: &PathBuf) {
+    let f = File::create(filepath).unwrap();
+    let mut writer = BufWriter::new(f);
+
+    writer.write("configuration".as_bytes()).unwrap();
+    for pose in pose_list.iter() {
+        writer.write(pose.to_string().as_bytes()).unwrap();
+    }
+}
+
 fn main() {
     // solution を読み込む
     let solution = ArraySolution::load(&PathBuf::from_str("solution_snake.tsp").unwrap());
-    // let solution = ArraySolution::load(&PathBuf::from_str("solution_split_lkh.tsp").unwrap());
 
     let mut index_table = HashMap::<(i16, i16), u32>::new();
     let mut rev_index_table = vec![(0, 0); solution.len()];
@@ -405,36 +467,91 @@ fn main() {
     let rev_index_table = rev_index_table;
 
     let image = load_image(&PathBuf::from_str("data/image.csv").unwrap());
+    let init_pose = Pose::new();
 
-    // 初手から次の遷移までに要する最少コストを BFS で sequential に計算
-    // 原点が最初
-    let mut id = index_table[&(0, 0)];
-    // 初期は [(0, -64), (0, 32), (0, 16), (0, 8), (0, 4), (0, 2), (0, 1), (0, 1)]
-    let mut pose = Pose::new();
-
-    let mut all_pose_list = vec![pose.clone()];
-
+    let target_id = index_table[&(128, 128)];
     let mut cost_all = 0.0;
 
-    for iter in 0..solution.len() {
-        let next_id = solution.next(id);
-        let next_pos = rev_index_table[next_id as usize];
-        let (cost, diff_list) = next_move(pose, next_pos, &image);
-        for diff in diff_list {
-            pose.apply(&diff);
-            all_pose_list.push(pose.clone());
+    let mut all_pose_list = vec![init_pose.clone()];
+    let mut front_count = 0;
+    {
+        // 初手から次の遷移までに要する最少コストを BFS で sequential に計算
+        // 原点が最初
+        let mut id = index_table[&(0, 0)];
+        // 初期は [(0, -64), (0, 32), (0, 16), (0, 8), (0, 4), (0, 2), (0, 1), (0, 1)]
+        let mut pose = init_pose;
+
+        for iter in 0..solution.len() {
+            let next_id = solution.next(id);
+            let next_pos = rev_index_table[next_id as usize];
+
+            eprintln!("from, to = {:?}, {:?}", pose.coord(), next_pos);
+
+            let (cost, diff_list) = next_move(pose, next_pos, &image, false);
+            for diff in diff_list {
+                pose.apply(&diff);
+                all_pose_list.push(pose.clone());
+            }
+            id = next_id;
+            cost_all += cost;
+            front_count += 1;
+
+            if id == target_id {
+                break;
+            }
+
+            eprintln!(
+                "iter = {} / {}, cost = {} ({})",
+                iter,
+                257 * 257,
+                cost_all,
+                cost
+            );
+            eprintln!("pose = {:?}", pose.arm_list);
         }
-        id = next_id;
-        cost_all += cost;
-
-        eprintln!(
-            "iter = {} / {}, cost = {} ({})",
-            iter,
-            257 * 257,
-            cost_all,
-            cost
-        );
     }
+    let front_count = front_count;
 
-    // print final pose
+    {
+        let mut rev_all_pose_list = vec![init_pose.clone()];
+        let mut pose = init_pose;
+        let mut id = index_table[&(0, 0)];
+        for iter in 0..solution.len() {
+            let prev_id = solution.prev(id);
+            let prev_pos = rev_index_table[prev_id as usize];
+
+            let debug = id == index_table[&(0, -1)];
+
+            eprintln!("from, to = {:?}, {:?}", pose.coord(), prev_pos);
+
+            let (cost, diff_list) = next_move(pose, prev_pos, &image, debug);
+            for diff in diff_list {
+                pose.apply(&diff);
+                rev_all_pose_list.push(pose.clone());
+            }
+            id = prev_id;
+            cost_all += cost;
+
+            if id == target_id {
+                break;
+            }
+
+            eprintln!(
+                "iter = {} / {}, cost = {} ({})",
+                iter + front_count,
+                257 * 257,
+                cost_all,
+                cost
+            );
+            eprintln!("pose = {:?}", pose.arm_list);
+        }
+
+        rev_all_pose_list.pop();
+        rev_all_pose_list.reverse();
+        all_pose_list.append(&mut rev_all_pose_list);
+    }
+    save_pos_list(
+        &all_pose_list,
+        &PathBuf::from_str("submission.csv").unwrap(),
+    );
 }

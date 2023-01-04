@@ -164,31 +164,22 @@ pub fn create_snake_shape() -> Vec<char> {
     let size = 128;
 
     let mut seq = vec![
-        // U x 128 + L
         vec!['U'; size],
-        vec!['L'],
-        // (UR, DR)
-        inner_2nx2n(size as i64, PosType::UR, PosType::DR),
-        // D + L x 127 + D
-        vec!['D'],
-        vec!['L'; size - 1],
-        vec!['D'],
-        // (UL, UR)
-        inner_2nx2n(size as i64, PosType::UL, PosType::UR),
-        // R + D x 127 + R
         vec!['R'],
-        vec!['D'; size - 1],
-        vec!['R'],
-        // (DL, UL)
-        inner_2nx2n(size as i64, PosType::DL, PosType::UL),
-        // U + R x 127 + U
-        vec!['U'],
+        inner_2nx2n(size as i64, PosType::UL, PosType::DL),
+        vec!['D'],
         vec!['R'; size - 1],
+        vec!['D'],
+        inner_2nx2n(size as i64, PosType::UR, PosType::UL),
+        vec!['L'],
+        vec!['D'; size - 1],
+        vec!['L'],
+        inner_2nx2n(size as i64, PosType::DR, PosType::UR),
         vec!['U'],
-        // (DR, DL)
-        inner_2nx2n(size as i64, PosType::DR, PosType::DL),
-        // D + L (1周しようと思うと必要だけど、今は不要)
-        // vec!['D', 'L'],
+        vec!['L'; size - 1],
+        vec!['U'],
+        inner_2nx2n(size as i64, PosType::DL, PosType::DR),
+        // vec!['R', 'D'],
     ];
 
     let mut ret = vec![];
