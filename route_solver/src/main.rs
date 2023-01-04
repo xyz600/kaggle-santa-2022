@@ -8,6 +8,7 @@ use lib::lkh::{self, LKHConfig};
 use lib::opt3::{self, Opt3Config};
 use proconio::input;
 use proconio::source::auto::AutoSource;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
@@ -108,13 +109,52 @@ fn get_cache_filepath(distance: &impl DistanceFunction) -> PathBuf {
     PathBuf::from_str(format!("{}.cache", distance.name()).as_str()).unwrap()
 }
 
+fn reconstruct_route(route_str: Vec<char>) -> Vec<u32> {
+    let mut index_table = HashMap::<(i32, i32), u32>::new();
+    {
+        let mut index = 0u32;
+        for y in (-128..=128).rev() {
+            for x in -128..=128 {
+                index_table.insert((y, x), index);
+                index += 1;
+            }
+        }
+    }
+
+    let mut y = 0;
+    let mut x = 0;
+    let mut solution_array = vec![index_table[&(y, x)]];
+
+    for ch in route_str {
+        if ch == 'U' {
+            y += 1;
+        } else if ch == 'R' {
+            x += 1;
+        } else if ch == 'D' {
+            y -= 1;
+        } else if ch == 'L' {
+            x -= 1;
+        } else {
+            unreachable!()
+        }
+        let index = index_table[&(y, x)];
+        solution_array.push(index);
+    }
+    solution_array
+}
+
 fn main() {
     let input_filepath = PathBuf::from_str("data/image.csv").unwrap();
     let distance = ManipulationDistanceFunction::load(&input_filepath);
-    let solution = ArraySolution::new(distance.dimension() as usize);
 
     let route_str = create_snake_shape();
+    let route = reconstruct_route(route_str);
+    let solution = ArraySolution::from_array(route);
+    solution.save(&PathBuf::from_str("solution_snake.tsp").unwrap());
 
+    if true {
+        return;
+    }
     let mut solution = opt3::solve(
         &distance,
         solution,

@@ -5,9 +5,22 @@ pub enum PosType {
     DL,
 }
 
-fn rev(mut v: Vec<char>) -> Vec<char> {
-    v.reverse();
-    v
+fn rev_char(ch: char) -> char {
+    if ch == 'U' {
+        'D'
+    } else if ch == 'D' {
+        'U'
+    } else if ch == 'L' {
+        'R'
+    } else if ch == 'R' {
+        'L'
+    } else {
+        unreachable!()
+    }
+}
+
+fn rev(v: Vec<char>) -> Vec<char> {
+    v.into_iter().rev().map(rev_char).collect()
 }
 
 macro_rules! to_vec {
@@ -91,27 +104,27 @@ pub fn inner_2nx2n(size: i64, begin: PosType, end: PosType) -> Vec<char> {
     } else {
         match begin {
             PosType::UL => match end {
-                PosType::UL => seq_cmd!(size/2; (UR, UL)),
-                PosType::UR => unreachable!(),
+                PosType::UL => unreachable!(),
+                PosType::UR => seq_cmd![size/2; (UL, DL) "D" (UL, UR) "R" (UL, UR) "U" (DR, UR)],
                 PosType::DR => unreachable!(),
-                PosType::DL => unreachable!(),
+                PosType::DL => rev(inner_2nx2n(size, end, begin)),
             },
             PosType::UR => match end {
-                PosType::UL => unreachable!(),
+                PosType::UL => rev(inner_2nx2n(size, end, begin)),
                 PosType::UR => unreachable!(),
-                PosType::DR => unreachable!(),
+                PosType::DR => seq_cmd![size/2; (UR, UL) "L" (UR, DR) "D" (UR, DR) "R" (DL, DR)],
                 PosType::DL => unreachable!(),
             },
             PosType::DR => match end {
                 PosType::UL => unreachable!(),
-                PosType::UR => unreachable!(),
+                PosType::UR => rev(inner_2nx2n(size, end, begin)),
                 PosType::DR => unreachable!(),
-                PosType::DL => unreachable!(),
+                PosType::DL => seq_cmd![size/2; (DR, UR) "U" (DR, DL) "L" (DR, DL) "D" (UL, DL)],
             },
             PosType::DL => match end {
-                PosType::UL => unreachable!(),
+                PosType::UL => seq_cmd![size/2; (DL, DR) "R" (DL, UL) "U" (DL, UL) "L" (UR, UL)],
                 PosType::UR => unreachable!(),
-                PosType::DR => unreachable!(),
+                PosType::DR => rev(inner_2nx2n(size, end, begin)),
                 PosType::DL => unreachable!(),
             },
         }
@@ -147,6 +160,41 @@ mod tests {
     }
 }
 
-pub fn create_snake_shape() -> String {
-    "".to_string()
+pub fn create_snake_shape() -> Vec<char> {
+    let size = 128;
+
+    let mut seq = vec![
+        // U x 128 + L
+        vec!['U'; size],
+        vec!['L'],
+        // (UR, DR)
+        inner_2nx2n(size as i64, PosType::UR, PosType::DR),
+        // D + L x 127 + D
+        vec!['D'],
+        vec!['L'; size - 1],
+        vec!['D'],
+        // (UL, UR)
+        inner_2nx2n(size as i64, PosType::UL, PosType::UR),
+        // R + D x 127 + R
+        vec!['R'],
+        vec!['D'; size - 1],
+        vec!['R'],
+        // (DL, UL)
+        inner_2nx2n(size as i64, PosType::DL, PosType::UL),
+        // U + R x 127 + U
+        vec!['U'],
+        vec!['R'; size - 1],
+        vec!['U'],
+        // (DR, DL)
+        inner_2nx2n(size as i64, PosType::DR, PosType::DL),
+        // D + L (1周しようと思うと必要だけど、今は不要)
+        // vec!['D', 'L'],
+    ];
+
+    let mut ret = vec![];
+    for subsec in seq.iter_mut() {
+        ret.append(subsec)
+    }
+
+    ret
 }
