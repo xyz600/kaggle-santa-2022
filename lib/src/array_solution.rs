@@ -1,6 +1,6 @@
 use std::{
     fs::File,
-    io::{BufWriter, Write},
+    io::{BufRead, BufReader, BufWriter, Write},
     path::PathBuf,
 };
 
@@ -54,6 +54,21 @@ impl ArraySolution {
             .join(" ")
             + "\n";
         writer.write(line.as_bytes()).unwrap();
+    }
+
+    pub fn load(filepath: &PathBuf) -> ArraySolution {
+        let f = File::open(filepath).unwrap();
+        let mut reader = BufReader::new(f);
+
+        let mut buffer = String::new();
+        reader.read_line(&mut buffer).unwrap();
+        let tokens = buffer
+            .trim()
+            .split(" ")
+            .map(|t| t.parse::<u32>().unwrap())
+            .collect();
+
+        ArraySolution::from_array(tokens)
     }
 }
 

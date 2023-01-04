@@ -157,8 +157,9 @@ fn main() {
     let route_str = create_snake_shape();
     let route = reconstruct_route(route_str);
     let solution = ArraySolution::from_array(route);
+    // let solution = ArraySolution::new(distance.dimension() as usize);
 
-    let mut solution = opt3::solve(
+    let solution = opt3::solve(
         &distance,
         solution,
         Opt3Config {
@@ -174,6 +175,28 @@ fn main() {
         evaluate(&distance, &solution) as f64 / (255.0 * 10000.0)
     );
     solution.save(&PathBuf::from_str("solution_opt3.tsp").unwrap());
+
+    let mut solution = lkh::solve(
+        &distance,
+        solution,
+        LKHConfig {
+            use_neighbor_cache: true,
+            cache_filepath: get_cache_filepath(&distance),
+            debug: false,
+            time_ms: 60_000,
+            start_kick_step: 30,
+            kick_step_diff: 10,
+            end_kick_step: distance.dimension() as usize / 10,
+            fail_count_threashold: 50,
+            max_depth: 6,
+            neighbor_create_parallel: true,
+        },
+    );
+    eprintln!("finish initial lkh.");
+    eprintln!(
+        "eval = {}",
+        evaluate(&distance, &solution) as f64 / (255.0 * 10000.0)
+    );
 
     // 分割して並列化
 

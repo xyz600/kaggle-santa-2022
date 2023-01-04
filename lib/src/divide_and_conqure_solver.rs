@@ -101,7 +101,7 @@ pub fn solve(
             LKHConfig {
                 use_neighbor_cache: false,
                 cache_filepath: PathBuf::new(),
-                debug: config.debug,
+                debug: false,
                 time_ms: config.time_ms,
                 start_kick_step: config.start_kick_step,
                 kick_step_diff: config.kick_step_diff,
