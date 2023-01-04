@@ -242,6 +242,37 @@ fn calculate_cost(diff: &DiffPose, from: &Pose, image: &HashMap<(i16, i16), Cell
     color_cost + pos_cost
 }
 
+fn calculate_lb_cost(
+    orig_from: &(i16, i16),
+    from: &Pose,
+    to_coord: &(i16, i16),
+    image: &HashMap<(i16, i16), Cell>,
+) -> i64 {
+    let orig_from_cell = image[orig_from];
+
+    let from_coord = from.coord();
+    let from_cell = image[&from_coord];
+    let to_cell = image[to_coord];
+
+    let o_dr = (orig_from_cell.r - to_cell.r).abs();
+    let o_dg = (orig_from_cell.g - to_cell.g).abs();
+    let o_db = (orig_from_cell.b - to_cell.b).abs();
+    let offset_color_cost = (o_dr + o_dg + o_db) * 3 * 10000;
+
+    let dr = (from_cell.r - to_cell.r).abs();
+    let dg = (from_cell.g - to_cell.g).abs();
+    let db = (from_cell.b - to_cell.b).abs();
+
+    let color_cost = (dr + dg + db) * 3 * 10000;
+
+    let dy = from_coord.0.abs_diff(to_coord.0) as i64;
+    let dx = from_coord.1.abs_diff(to_coord.1) as i64;
+
+    let pos_cost = (((dx + dy) as f64).sqrt() * 10000.0 * 255.0).round() as i64;
+
+    color_cost + pos_cost - offset_color_cost
+}
+
 // dynamic dijkstra で最小コストルートを求める
 fn next_move(
     init_pose: Pose,
@@ -250,19 +281,14 @@ fn next_move(
 ) -> (f64, Vec<DiffPose>) {
     let mut visited = HashMap::<u128, (i64, u128)>::new();
 
-    let mut que = BinaryHeap::<(i64, u128)>::new();
-    que.push((0, init_pose.encode()));
+    let mut que = BinaryHeap::<(i64, i64, u128)>::new();
+    que.push((0, 0, init_pose.encode()));
 
-    let mut counter = 0;
+    eprintln!("from = {:?}, to = {:?}", init_pose.coord(), to);
 
-    while let Some((cost, encoded)) = que.pop() {
+    while let Some((_lb_cost_neg, cost, encoded)) = que.pop() {
         // to min-heap
         let cost = -cost;
-
-        counter += 1;
-        if counter == 50 {
-            break;
-        }
 
         let pose = Pose::decode(encoded);
         let cur_enc = pose.encode();
@@ -306,7 +332,11 @@ fn next_move(
                 || visited[&next_pose_encoded].0 > next_cost
             {
                 visited.insert(next_pose_encoded, (next_cost, cur_enc));
-                que.push((-next_cost, next_pose_encoded));
+                // コストの下限値を求めて A*
+                let lb_cost =
+                    next_cost + calculate_lb_cost(&init_pose.coord(), &next_pose, &to, image);
+
+                que.push((-lb_cost, -next_cost, next_pose_encoded));
             }
         }
     }
@@ -417,7 +447,13 @@ fn main() {
         id = next_id;
         cost_all += cost;
 
-        eprintln!("iter = {} / 100000, cost = {} ({})", iter, cost_all, cost);
+        eprintln!(
+            "iter = {} / {}, cost = {} ({})",
+            iter,
+            257 * 257,
+            cost_all,
+            cost
+        );
     }
 
     // print final pose
