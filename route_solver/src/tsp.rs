@@ -79,7 +79,7 @@ pub fn solve_tsp(
     eprintln!("finish initial lkh.");
     eprintln!(
         "eval = {}",
-        evaluate(distance, &solution) // as f64 / (255.0 * 10000.0)
+        evaluate(distance, &solution) as f64 / (255.0 * 10000.0)
     );
     solution.save(&PathBuf::from_str("solution_initial_lkh.tsp").unwrap());
 
@@ -105,7 +105,7 @@ pub fn solve_tsp(
         );
         let eval = evaluate(distance, &solution);
         eprintln!("finish splited lkh {} times.", iter);
-        eprintln!("eval = {}", eval); // as f64 / (255.0 * 10000.0));
+        eprintln!("eval = {}", eval as f64 / (255.0 * 10000.0));
         if best_eval == eval {
             start_kick_step += 10;
             time_ms += 30_000;
@@ -138,7 +138,7 @@ pub fn solve_tsp(
     eprintln!("finish lkh");
     eprintln!(
         "eval = {}",
-        evaluate(distance, &solution) // as f64 / (255.0 * 10000.0)
+        evaluate(distance, &solution) as f64 / (255.0 * 10000.0)
     );
     solution.save(&PathBuf::from_str("solution_all_lkh.tsp").unwrap());
 

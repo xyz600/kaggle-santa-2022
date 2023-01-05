@@ -6,9 +6,11 @@ use lib::{distance, lkh};
 use proconio::input;
 use proconio::source::auto::AutoSource;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
-use std::collections::HashSet;
+use rayon::slice::ParallelSliceMut;
+use std::collections::{BinaryHeap, HashSet};
 use std::fs::File;
 use std::io::Read;
+use std::thread;
 use std::{
     collections::{HashMap, VecDeque},
     path::PathBuf,
@@ -408,7 +410,7 @@ impl DistanceFunction for PoseDistanceFunction {
                 .sqrt();
             (dist * 10000.0 * 255.0) as i64 + (dr + dg + db) * 10000 * 3
         } else {
-            std::i64::MAX / (self.pose_list.len() as i64 * 4)
+            (257 * 2 + 3 * 3) * 255 * 10000
         }
     }
 
@@ -456,11 +458,11 @@ fn reconstruct_route(route_str: Vec<char>) -> Vec<u32> {
 }
 
 struct StepDistanceFunction {
-    distance_table: Vec<Vec<u32>>,
+    distance_table: Vec<Vec<i64>>,
 }
 
 impl StepDistanceFunction {
-    fn new(pose_list: &Vec<Pose>) -> StepDistanceFunction {
+    fn new(pose_list: &Vec<Pose>, color_list: &Vec<Cell>) -> StepDistanceFunction {
         // 8x8 の領域を見て、遷移できる場所を確認
 
         let dim = pose_list.len();
@@ -540,31 +542,59 @@ impl StepDistanceFunction {
 
         eprintln!("finish checking neighbor symmetric.");
 
-        // 全点間の最短手数を求める
-        // 距離1なので bfs で ok
+        fn calculate_cost(from: u32, to: u32, diff: &DiffPose, color_list: &Vec<Cell>) -> i64 {
+            // color cost
+            let dr = color_list[from as usize].r - color_list[to as usize].r;
+            let dg = color_list[from as usize].g - color_list[to as usize].g;
+            let db = color_list[from as usize].b - color_list[to as usize].b;
+            let color_cost = (dr.abs() + dg.abs() + db.abs()) * 10000;
 
+            // position cost
+            let pos_count = diff
+                .diff_list
+                .iter()
+                .filter(|&v| *v != Direction::None)
+                .count();
+            let pos_cost = ((pos_count as f64).sqrt() * 255.0 * 10000.0) as i64;
+
+            color_cost + pos_cost
+        }
+
+        // 全点間の最短手数を求める
+        // 厳密コストを計算するので、dijkstra で計算
         let distance_table = (0..dim)
             .into_par_iter()
             .map(|from| {
-                let mut que = VecDeque::new();
-                let mut distance_row = vec![std::u32::MAX; dim];
-                que.push_back((0u32, from as u32));
+                let mut que = BinaryHeap::new();
+                let mut distance_row = vec![std::i64::MAX; dim];
+                que.push((0i64, from as u32));
                 distance_row[from] = 0;
 
-                while let Some((depth, id)) = que.pop_front() {
+                let mut counter = 0;
+
+                while let Some((cost, id)) = que.pop() {
+                    let cost = -cost;
+
+                    // skip
+                    if distance_row[id as usize] < cost {
+                        continue;
+                    }
+                    counter += 1;
+
                     for n_id in neighbor_list[id as usize].iter() {
-                        if distance_row[*n_id as usize] > depth + 1 {
-                            distance_row[*n_id as usize] = depth + 1;
-                            que.push_back((depth + 1, *n_id));
+                        let pose1 = &pose_list[id as usize];
+                        let pose2 = &pose_list[*n_id as usize];
+
+                        let diff = pose1.diff(&pose2).unwrap();
+                        let next_cost = cost + calculate_cost(id, *n_id, &diff, &color_list);
+
+                        if distance_row[*n_id as usize] > next_cost {
+                            distance_row[*n_id as usize] = next_cost;
+                            que.push((-next_cost, *n_id));
                         }
                     }
                 }
-
-                assert_eq!(distance_row[from], 0);
-                for n_id in neighbor_list[from].iter() {
-                    assert_eq!(distance_row[*n_id as usize], 1);
-                }
-
+                assert_eq!(counter, dim);
                 distance_row
             })
             .collect::<Vec<_>>();
@@ -586,7 +616,7 @@ impl StepDistanceFunction {
 
 impl DistanceFunction for StepDistanceFunction {
     fn distance(&self, id1: u32, id2: u32) -> i64 {
-        self.distance_table[id1 as usize][id2 as usize] as i64
+        self.distance_table[id1 as usize][id2 as usize]
     }
 
     fn dimension(&self) -> u32 {
@@ -647,30 +677,32 @@ impl UnionFind {
 
 fn create_mst_solution(distance: &impl DistanceFunction) -> ArraySolution {
     let dim = distance.dimension() as usize;
-    let mut distance_list = vec![vec![]; dim];
     let mut uf = UnionFind::new(dim);
 
+    let mut distance_list = vec![];
     for from in 0..dim {
         for to in from + 1..dim {
             let dist = distance.distance(from as u32, to as u32);
-            distance_list[dist as usize].push((from, to));
+            distance_list.push((dist, from as u32, to as u32));
         }
     }
+    distance_list.par_sort();
 
     eprintln!("finish edge list.");
 
     let mut counter = 0;
     let mut edges = vec![];
     'outer: while counter < dim {
-        for dist in 0..dim {
-            for (from, to) in distance_list[dist].iter() {
-                if !uf.same(*from, *to) {
-                    uf.unite(*from, *to);
-                    edges.push((*from, *to));
-                    counter += 1;
-                    if counter == dim - 1 {
-                        break 'outer;
-                    }
+        for (_dist, from, to) in distance_list.iter() {
+            let from = *from as usize;
+            let to = *to as usize;
+
+            if !uf.same(from, to) {
+                uf.unite(from, to);
+                edges.push((from, to));
+                counter += 1;
+                if counter == dim - 1 {
+                    break 'outer;
                 }
             }
         }
@@ -715,14 +747,14 @@ fn create_mst_solution(distance: &impl DistanceFunction) -> ArraySolution {
 pub fn solve() {
     const SIZE: usize = 257 * 257;
     let pose_list = calculate_pose_map(SIZE);
+    let color_list = load_image(&PathBuf::from_str("./data/image.csv").unwrap());
     eprintln!("finish pose assignment");
 
     // 初期解を作るために、遷移手数を最適化
-    let distance = StepDistanceFunction::new(&pose_list);
+    let distance = StepDistanceFunction::new(&pose_list, &color_list);
     eprintln!("finish calculate distance function");
 
     let init_solution = create_mst_solution(&distance);
-    // let init_solution = ArraySolution::load(&PathBuf::from_str("./solution_all_lkh.tsp").unwrap());
 
     let solution = tsp::solve_tsp(&distance, init_solution);
 
