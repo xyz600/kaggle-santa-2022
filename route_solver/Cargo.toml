@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 lib = { path = "../lib" }
 proconio = "0.4.2"
+rayon = "1.6.1"

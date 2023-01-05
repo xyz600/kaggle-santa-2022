@@ -242,6 +242,19 @@ pub fn solve(
             dlb.remove(a);
         }
 
+        if iter % 1000 == 0 {
+            if config.debug {
+                eprintln!("-----");
+                eprintln!(
+                    "step: {} (failcount: {})",
+                    no_random_step, no_continuous_fail_count
+                );
+                eprintln!("iter: {}", iter);
+                eprintln!("best eval: {}", eval); //  as f64 / (255.0 * 10000.0));
+                eprintln!("dlb size: {}", dlb.len());
+            }
+        }
+
         if dlb.is_empty() {
             if config.debug {
                 eprintln!("-----");
@@ -250,7 +263,7 @@ pub fn solve(
                     no_random_step, no_continuous_fail_count
                 );
                 eprintln!("iter: {}", iter);
-                eprintln!("best eval: {}", eval as f64 / (255.0 * 10000.0));
+                eprintln!("best eval: {}", eval); // as f64 / (255.0 * 10000.0));
                 eprintln!("dlb size: {}", dlb.len());
             }
 
@@ -276,7 +289,7 @@ pub fn solve(
             // 近い部分のエッジを強制的に結ぶ kick
             // どうせ kick するなら、ある点の近傍をたくさん kick した方が変化させる意味があるから、
             // chain させる感じで変化をさせる。
-            let mut a = rng.gen_range(0..n as u32);
+            let mut a = rng.gen_range(0..solution.len() as u32);
             let mut b = solution.next(a);
 
             let mut selected = BitSet::new(n);

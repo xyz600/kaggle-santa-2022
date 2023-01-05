@@ -433,7 +433,7 @@ fn save_pos_list(pose_list: &Vec<Pose>, filepath: &PathBuf) {
     }
 }
 
-fn main() {
+pub fn solve() {
     // solution を読み込む
     let solution = ArraySolution::load(&PathBuf::from_str("solution_split_lkh.tsp").unwrap());
 
