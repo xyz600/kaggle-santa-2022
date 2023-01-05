@@ -22,6 +22,18 @@ pub fn solve_tsp(
     let mut solution = ArraySolution::new(init_solution.len());
 
     {
+        // cache 作成用
+        opt3::solve(
+            distance,
+            init_solution.clone(),
+            Opt3Config {
+                use_neighbor_cache: true,
+                cache_filepath: get_cache_filepath(distance),
+                debug: true,
+                neighbor_create_parallel: true,
+            },
+        );
+
         let solutions = (0..100)
             .into_par_iter()
             .map(|_iter| {
@@ -31,8 +43,8 @@ pub fn solve_tsp(
                     Opt3Config {
                         use_neighbor_cache: true,
                         cache_filepath: get_cache_filepath(distance),
-                        debug: false,
-                        neighbor_create_parallel: true,
+                        debug: true,
+                        neighbor_create_parallel: false,
                     },
                 );
 
@@ -44,7 +56,7 @@ pub fn solve_tsp(
                     longest_edge = longest_edge.max(edge);
                     id = next_id;
                 }
-                eprintln!("longest edge: {}", longest_edge);
+                eprintln!("longest edge: {}", longest_edge as f64 / (255.0 * 10000.0));
                 (longest_edge, local_solution)
             })
             .collect::<Vec<_>>();

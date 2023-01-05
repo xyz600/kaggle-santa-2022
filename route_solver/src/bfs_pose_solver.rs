@@ -462,7 +462,10 @@ struct StepDistanceFunction {
 }
 
 impl StepDistanceFunction {
-    fn new(pose_list: &Vec<Pose>, color_list: &Vec<Cell>) -> StepDistanceFunction {
+    fn new(
+        pose_list: &Vec<Pose>,
+        color_list: &Vec<Cell>,
+    ) -> (StepDistanceFunction, Vec<HashSet<u32>>) {
         // 8x8 の領域を見て、遷移できる場所を確認
 
         let dim = pose_list.len();
@@ -610,7 +613,7 @@ impl StepDistanceFunction {
         });
         eprintln!("check distance_table symmetry validation");
 
-        StepDistanceFunction { distance_table }
+        (StepDistanceFunction { distance_table }, neighbor_list)
     }
 }
 
@@ -626,10 +629,6 @@ impl DistanceFunction for StepDistanceFunction {
     fn name(&self) -> String {
         "pose_nostep_function".to_string()
     }
-}
-
-fn get_cache_filepath(distance: &impl DistanceFunction) -> PathBuf {
-    PathBuf::from_str(format!("{}.cache", distance.name()).as_str()).unwrap()
 }
 
 struct UnionFind {
@@ -675,15 +674,18 @@ impl UnionFind {
     }
 }
 
-fn create_mst_solution(distance: &impl DistanceFunction) -> ArraySolution {
+fn create_mst_solution(
+    distance: &impl DistanceFunction,
+    neighbor_list: &Vec<HashSet<u32>>,
+) -> ArraySolution {
     let dim = distance.dimension() as usize;
     let mut uf = UnionFind::new(dim);
 
     let mut distance_list = vec![];
     for from in 0..dim {
-        for to in from + 1..dim {
-            let dist = distance.distance(from as u32, to as u32);
-            distance_list.push((dist, from as u32, to as u32));
+        for to in neighbor_list[from].iter() {
+            let dist = distance.distance(from as u32, *to);
+            distance_list.push((dist, from as u32, *to));
         }
     }
     distance_list.par_sort();
@@ -751,10 +753,10 @@ pub fn solve() {
     eprintln!("finish pose assignment");
 
     // 初期解を作るために、遷移手数を最適化
-    let distance = StepDistanceFunction::new(&pose_list, &color_list);
+    let (distance, neighbor_list) = StepDistanceFunction::new(&pose_list, &color_list);
     eprintln!("finish calculate distance function");
 
-    let init_solution = create_mst_solution(&distance);
+    let init_solution = create_mst_solution(&distance, &neighbor_list);
 
     let solution = tsp::solve_tsp(&distance, init_solution);
 
