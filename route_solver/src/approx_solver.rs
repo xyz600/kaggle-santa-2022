@@ -205,7 +205,7 @@ fn solve_tsp(
 
     {
         // cache 作成用
-        opt3::solve(
+        solution = opt3::solve(
             distance,
             init_solution.clone(),
             Opt3Config {
@@ -240,7 +240,6 @@ fn solve_tsp(
                     longest_edge = longest_edge.max(edge);
                     id = next_id;
                 }
-                eprintln!("longest edge: {}", longest_edge as f64 * scale);
                 (longest_edge, local_solution)
             })
             .collect::<Vec<_>>();
@@ -259,7 +258,12 @@ fn solve_tsp(
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
 
     if solution.next(begin) != end && solution.prev(begin) != end {
-        lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
+        let success = lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
+        if success {
+            eprintln!("kick need and success.");
+            solution.validate();
+            assert!(solution.next(begin) == end || solution.prev(begin) == end);
+        }
     }
 
     let mut solution = lkh::solve(
@@ -268,7 +272,7 @@ fn solve_tsp(
         LKHConfig {
             use_neighbor_cache: true,
             cache_filepath: get_cache_filepath(distance),
-            debug: true,
+            debug: false,
             time_ms: 60_000,
             start_kick_step: 30,
             kick_step_diff: 10,
@@ -284,7 +288,12 @@ fn solve_tsp(
     solution.save(&PathBuf::from_str("solution_initial_lkh.tsp").unwrap());
 
     if solution.next(begin) != end && solution.prev(begin) != end {
-        lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
+        let success = lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
+        if success {
+            eprintln!("kick need and success.");
+            solution.validate();
+            assert!(solution.next(begin) == end || solution.prev(begin) == end);
+        }
     }
 
     // 分割して並列化
@@ -321,7 +330,12 @@ fn solve_tsp(
     }
 
     if solution.next(begin) != end && solution.prev(begin) != end {
-        lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
+        let success = lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
+        if success {
+            eprintln!("kick need and success.");
+            solution.validate();
+            assert!(solution.next(begin) == end || solution.prev(begin) == end);
+        }
     }
 
     solution

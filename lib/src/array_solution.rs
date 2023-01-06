@@ -70,6 +70,23 @@ impl ArraySolution {
 
         ArraySolution::from_array(tokens)
     }
+
+    pub fn validate(&self) {
+        // content と index の一対一対応が存在するか
+        for i in 0..self.len() {
+            let id = self.content[i];
+            assert_eq!(self.index_of[id as usize], i as u32);
+        }
+
+        // ぐるっと1周した時、必ず一筆書きになっているか
+        let mut id = 0;
+        for _iter in 0..self.len() - 1 {
+            let next = self.next(id);
+            assert_ne!(next, id);
+            id = next;
+        }
+        assert_eq!(self.next(id), 0);
+    }
 }
 
 impl Solution for ArraySolution {

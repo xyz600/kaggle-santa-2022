@@ -174,9 +174,11 @@ pub fn connect(
         }
         selected.set(c);
         selected.set(d);
+        current_tree.swap(b, c);
 
         for edge in [(a, c), (b, d)] {
             edge_stack.push(edge);
+
             solve_inner(
                 2,
                 max_depth,
@@ -192,6 +194,7 @@ pub fn connect(
             );
         }
 
+        current_tree.undo();
         selected.clear(c);
         selected.clear(d);
 
