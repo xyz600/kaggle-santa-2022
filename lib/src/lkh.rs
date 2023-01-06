@@ -142,6 +142,7 @@ pub struct LKHConfig {
     pub fail_count_threashold: u32,
     pub max_depth: usize,
     pub neighbor_create_parallel: bool,
+    pub scale: f64,
 }
 
 pub fn solve(
@@ -250,7 +251,7 @@ pub fn solve(
                     no_random_step, no_continuous_fail_count
                 );
                 eprintln!("iter: {}", iter);
-                eprintln!("best eval: {}", eval); //  as f64 / (255.0 * 10000.0));
+                eprintln!("best eval: {}", eval as f64 * config.scale);
                 eprintln!("dlb size: {}", dlb.len());
             }
         }
@@ -263,7 +264,7 @@ pub fn solve(
                     no_random_step, no_continuous_fail_count
                 );
                 eprintln!("iter: {}", iter);
-                eprintln!("best eval: {}", eval); // as f64 / (255.0 * 10000.0));
+                eprintln!("best eval: {}", eval as f64 * config.scale);
                 eprintln!("dlb size: {}", dlb.len());
             }
 

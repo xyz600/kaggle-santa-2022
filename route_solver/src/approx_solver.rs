@@ -1,159 +1,239 @@
-use crate::snake::create_snake_shape;
-use crate::tsp;
-use lib::array_solution::ArraySolution;
-use lib::distance::DistanceFunction;
-use lib::evaluate::evaluate;
-use proconio::input;
-use proconio::source::auto::AutoSource;
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
-use std::path::PathBuf;
-use std::str::FromStr;
+use std::{
+    collections::{HashMap, HashSet},
+    path::PathBuf,
+    str::FromStr,
+};
 
-macro_rules! input_fromfile {
-    (path: $path:expr, $($t:tt)+) => {
-        fn read_all(filepath: &PathBuf) -> String {
-            let mut f = File::open(filepath).expect("file not found");
-            let mut contents = String::new();
+use lib::{distance::DistanceFunction, solution::Solution};
 
-            f.read_to_string(&mut contents)
-                .expect("something went wrong reading the file");
+use crate::{mst_solution::create_mst_solution, onestep_distance::OneStepDistanceFunction, tsp};
 
-            contents
-        }
-        let contents = read_all($path);
-        let source = AutoSource::from(contents.as_str());
-
-        input! {
-            from source,
-            $($t)*
-        }
-    };
+struct SubPathDistance {
+    coord_set: Vec<(i16, i16)>,
+    begin_id: u32,
+    end_id: u32,
+    orig_distance: OneStepDistanceFunction,
+    orig_index_map: HashMap<(i16, i16), u32>,
+    name: String,
 }
 
-#[derive(Clone, Copy, Debug)]
-struct Cell {
-    x: i64,
-    y: i64,
-    r: i64,
-    g: i64,
-    b: i64,
-}
+impl SubPathDistance {}
 
-struct ManipulationDistanceFunction {
-    cell_list: Vec<Cell>,
-}
-
-impl ManipulationDistanceFunction {
-    fn load(filepath: &PathBuf) -> ManipulationDistanceFunction {
-        const SIZE: usize = 257;
-        const LEN: usize = SIZE * SIZE;
-
-        input_fromfile! {
-            path: filepath,
-            _1: String,
-            _2: String,
-            _3: String,
-            _4: String,
-            _5: String,
-            data: [(i64, i64, f64, f64, f64); LEN],
-        };
-
-        let cell_list = data
-            .iter()
-            .map(|(x, y, r, g, b)| {
-                Cell {
-                    x: *x,
-                    y: *y,
-                    r: (*r * 255.0).round() as i64 * 3 * 10000, // * 3 means cost scaling, 10000 means fixed point
-                    g: (*g * 255.0).round() as i64 * 3 * 10000,
-                    b: (*b * 255.0).round() as i64 * 3 * 10000,
-                }
-            })
-            .collect::<Vec<_>>();
-
-        ManipulationDistanceFunction { cell_list }
-    }
-}
-
-impl DistanceFunction for ManipulationDistanceFunction {
+impl DistanceFunction for SubPathDistance {
     fn distance(&self, id1: u32, id2: u32) -> i64 {
-        // 1歩で移動できる範囲で歩いて行って全ての行動が完了できると仮定する。
-        // 1歩で移動できる場合の距離は、\sqrt{|x| + |y|} で下から抑えられるので、まずはこの距離関数でいい感じのルートが作れる
-        // 実際には \sqrt{|x| + |y|} だと遠い距離に対して見積もりが甘いので、後日何とかする
-        let c1 = &self.cell_list[id1 as usize];
-        let c2 = &self.cell_list[id2 as usize];
-        let dx = (c1.x - c2.x).abs();
-        let dy = (c1.y - c2.y).abs();
-        let dr = (c1.r - c2.r).abs();
-        let dg = (c1.g - c2.g).abs();
-        let db = (c1.b - c2.b).abs();
-
-        let dist = if dx + dy < 10 {
-            ((dx + dy) as f64).sqrt()
+        if (self.begin_id == id1 && self.end_id == id2)
+            || (self.begin_id == id2 && self.end_id == id1)
+        {
+            // s-t 間の距離は0に設定
+            0
         } else {
-            (dx + dy) as f64
-        };
-
-        (dist * 10000.0 * 255.0) as i64 + (dr + dg + db)
+            let orig_id1 = self.orig_index_map[&self.coord_set[id1 as usize]];
+            let orig_id2 = self.orig_index_map[&self.coord_set[id2 as usize]];
+            self.orig_distance.distance(orig_id1, orig_id2)
+        }
     }
 
     fn dimension(&self) -> u32 {
-        self.cell_list.len() as u32
+        self.coord_set.len() as u32
     }
 
     fn name(&self) -> String {
-        "santa_2022_approx_1".to_string()
+        self.name.clone()
     }
 }
 
-fn reconstruct_route(route_str: Vec<char>) -> Vec<u32> {
-    let mut index_table = HashMap::<(i32, i32), u32>::new();
-    {
-        let mut index = 0u32;
-        for y in (-128..=128).rev() {
-            for x in -128..=128 {
-                index_table.insert((y, x), index);
-                index += 1;
+fn calculate_subpath(
+    coord_list: Vec<(i16, i16)>,
+    begin: (i16, i16),
+    end: (i16, i16),
+    orig_index_map: &HashMap<(i16, i16), u32>,
+    name: String,
+) -> Vec<(i16, i16)> {
+    let orig_distance =
+        OneStepDistanceFunction::load(&PathBuf::from_str("data/image.csv").unwrap());
+
+    let mut index_map = HashMap::new();
+    for (i, coord) in coord_list.iter().enumerate() {
+        index_map.insert(coord, i as u32);
+    }
+    let index_map = index_map;
+
+    let mut begin_id = std::u32::MAX;
+    let mut end_id = std::u32::MAX;
+    for i in 0..coord_list.len() {
+        if coord_list[i] == begin {
+            begin_id = i as u32;
+        }
+        if coord_list[i] == end {
+            end_id = i as u32;
+        }
+    }
+    assert_ne!(begin_id, std::u32::MAX);
+    assert_ne!(end_id, std::u32::MAX);
+    let begin_id = begin_id;
+    let end_id = end_id;
+
+    let distance = SubPathDistance {
+        coord_set: coord_list.clone(),
+        begin_id,
+        end_id,
+        orig_distance,
+        orig_index_map: orig_index_map.clone(),
+        name,
+    };
+
+    // ±1のグリッド内部に含まれる近傍で mst
+    let mut neighbor_list = vec![HashSet::new(); distance.dimension() as usize];
+    for (i, &(y, x)) in coord_list.iter().enumerate() {
+        for dy in -1..=1 {
+            for dx in -1..=1 {
+                let ny = y + dy;
+                let nx = x + dx;
+                if index_map.contains_key(&(ny, nx)) {
+                    let n_index = index_map[&(ny, nx)];
+                    neighbor_list[i].insert(n_index);
+                }
             }
         }
     }
 
-    let mut y = 0;
-    let mut x = 0;
-    let mut solution_array = vec![index_table[&(y, x)]];
+    let init_solution = create_mst_solution(&distance, &neighbor_list);
+    let subpath_solution = tsp::solve_tsp(&distance, init_solution, 1.0 / (255.0 * 10000.0));
 
-    for ch in route_str {
-        if ch == 'U' {
-            y += 1;
-        } else if ch == 'R' {
-            x += 1;
-        } else if ch == 'D' {
-            y -= 1;
-        } else if ch == 'L' {
-            x -= 1;
-        } else {
-            unreachable!()
+    let mut ret = vec![];
+    let mut id = begin_id;
+    if subpath_solution.prev(begin_id) == end_id {
+        for _iter in 0..subpath_solution.len() {
+            ret.push(coord_list[id as usize]);
+            id = subpath_solution.next(id);
         }
-        let index = index_table[&(y, x)];
-        solution_array.push(index);
+    } else if subpath_solution.next(begin_id) == end_id {
+        for _iter in 0..subpath_solution.len() {
+            ret.push(coord_list[id as usize]);
+            id = subpath_solution.prev(id);
+        }
+    } else {
+        unreachable!();
     }
-    solution_array
+    ret
 }
 
-pub fn solve() {
-    let input_filepath = PathBuf::from_str("data/image.csv").unwrap();
-    let distance = ManipulationDistanceFunction::load(&input_filepath);
+fn extract_upper_left() -> Vec<(i16, i16)> {
+    let mut ret = vec![];
+    for y in 64..=128 {
+        for x in -128..=0 {
+            ret.push((y, x));
+        }
+    }
+    for y in 0..=63 {
+        for x in -128..=-1 {
+            ret.push((y, x));
+        }
+    }
+    ret
+}
 
-    let route_str = create_snake_shape();
-    let route = reconstruct_route(route_str);
-    let init_solution = ArraySolution::from_array(route);
-    init_solution.save(&PathBuf::from_str("solution_snake.tsp").unwrap());
-    eprintln!(
-        "eval = {}",
-        evaluate(&distance, &init_solution) as f64 / (255.0 * 10000.0)
+fn extract_lower_left() -> Vec<(i16, i16)> {
+    let mut ret = vec![];
+    ret.push((0, -128));
+    for y in -128..=-1 {
+        for x in -128..=0 {
+            ret.push((y, x));
+        }
+    }
+    ret
+}
+
+fn extract_lower_right() -> Vec<(i16, i16)> {
+    let mut ret = vec![];
+    ret.push((-128, 0));
+    for y in -128..=0 {
+        for x in 1..=128 {
+            ret.push((y, x));
+        }
+    }
+    ret
+}
+
+fn extract_upper_right() -> Vec<(i16, i16)> {
+    let mut ret = vec![];
+    for y in 64..=128 {
+        for x in 1..=128 {
+            ret.push((y, x));
+        }
+    }
+    for y in 1..=63 {
+        for x in 2..=128 {
+            ret.push((y, x));
+        }
+    }
+    ret
+}
+
+// subset に分けて、s-t パスを繋いで最適化する
+// 適切な配置から開始すれば、128x128 矩形は割と自由に動けるという理由による
+pub fn solve() {
+    let mut orig_index_table = HashMap::<(i16, i16), u32>::new();
+    {
+        let mut index = 0u32;
+        for y in (-128..=128).rev() {
+            for x in -128..=128 {
+                orig_index_table.insert((y, x), index);
+                index += 1;
+            }
+        }
+    }
+    let orig_index_table = orig_index_table;
+
+    // initialize
+    // (0, 0) -> (64, 0)
+
+    // Upper Left
+    // (64, 0) -> (0, -128)
+    let ul_coord_list = extract_upper_left();
+    let ul_subpath = calculate_subpath(
+        ul_coord_list,
+        (64, 0),
+        (0, -128),
+        &orig_index_table,
+        "subpath_ul".to_string(),
     );
 
-    tsp::solve_tsp(&distance, init_solution);
+    // Lower Left
+    // (0, -128) -> (-128, 0)
+    let ll_coord_list = extract_lower_left();
+    let ll_subpath = calculate_subpath(
+        ll_coord_list,
+        (0, -128),
+        (-128, 0),
+        &orig_index_table,
+        "subpath_ll".to_string(),
+    );
+
+    // Lower Right
+    // (-128, 0) -> (0, 128)
+    let lr_coord_list = extract_lower_right();
+    let lr_subpath = calculate_subpath(
+        lr_coord_list,
+        (-128, 0),
+        (0, 128),
+        &orig_index_table,
+        "subpath_lr".to_string(),
+    );
+
+    // Upper Right
+    // (0, 128) -> (64, 1)
+    let ur_coord_list = extract_upper_right();
+    let ur_subpath = calculate_subpath(
+        ur_coord_list,
+        (0, 128),
+        (64, 1),
+        &orig_index_table,
+        "subpath_ur".to_string(),
+    );
+
+    // finalize
+    // (64, 1) -> (1, 1) -> (0, 0)
+
+    // merge solution
 }

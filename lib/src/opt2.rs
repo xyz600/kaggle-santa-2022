@@ -11,6 +11,7 @@ pub struct Opt2Config {
     pub cache_filepath: PathBuf,
     pub debug: bool,
     pub neighbor_create_parallel: bool,
+    pub scale: f64,
 }
 
 pub fn solve(
@@ -75,7 +76,7 @@ pub fn solve(
         }
 
         if config.debug && (iter % n == 0 || dlb.is_empty()) {
-            eprintln!("iter = {}, eval = {}", iter, eval);
+            eprintln!("iter = {}, eval = {}", iter, eval as f64 * config.scale);
             eprintln!("dlb size = {}", dlb.len());
         }
         if dlb.is_empty() {

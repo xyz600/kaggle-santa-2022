@@ -3,13 +3,9 @@ use lib::lkh::LKHConfig;
 use lib::solution::{self, Solution};
 use lib::{array_solution::ArraySolution, distance::DistanceFunction};
 use lib::{distance, lkh};
-use proconio::input;
-use proconio::source::auto::AutoSource;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use rayon::slice::ParallelSliceMut;
 use std::collections::{BinaryHeap, HashSet};
-use std::fs::File;
-use std::io::Read;
 use std::thread;
 use std::{
     collections::{HashMap, VecDeque},
@@ -17,7 +13,9 @@ use std::{
     str::FromStr,
 };
 
+use crate::mst_solution::create_mst_solution;
 use crate::tsp;
+use crate::util::{load_image, Cell};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct Coord {
@@ -318,60 +316,6 @@ fn calculate_pose_map(dimension: usize) -> Vec<Pose> {
     ret
 }
 
-macro_rules! input_fromfile {
-    (path: $path:expr, $($t:tt)+) => {
-        fn read_all(filepath: &PathBuf) -> String {
-            let mut f = File::open(filepath).expect("file not found");
-            let mut contents = String::new();
-
-            f.read_to_string(&mut contents)
-                .expect("something went wrong reading the file");
-
-            contents
-        }
-        let contents = read_all($path);
-        let source = AutoSource::from(contents.as_str());
-
-        input! {
-            from source,
-            $($t)*
-        }
-    };
-}
-
-#[derive(Clone, Copy, Debug)]
-struct Cell {
-    x: i64,
-    y: i64,
-    r: i64,
-    g: i64,
-    b: i64,
-}
-
-fn load_image(filepath: &PathBuf) -> Vec<Cell> {
-    const SIZE: usize = 257;
-    const LEN: usize = SIZE * SIZE;
-
-    input_fromfile! {
-        path: filepath,
-        _1: String,
-        _2: String,
-        _3: String,
-        _4: String,
-        _5: String,
-        data: [(i64, i64, f64, f64, f64); LEN],
-    };
-    data.iter()
-        .map(|(x, y, r, g, b)| Cell {
-            x: *x,
-            y: *y,
-            r: (*r * 255.0).round() as i64,
-            g: (*g * 255.0).round() as i64,
-            b: (*b * 255.0).round() as i64,
-        })
-        .collect::<Vec<_>>()
-}
-
 struct PoseDistanceFunction {
     pose_list: Vec<Pose>,
     color_table: Vec<Cell>,
@@ -631,121 +575,6 @@ impl DistanceFunction for StepDistanceFunction {
     }
 }
 
-struct UnionFind {
-    parent: Vec<usize>,
-    size: Vec<usize>,
-}
-
-impl UnionFind {
-    fn new(size: usize) -> UnionFind {
-        UnionFind {
-            parent: (0..size).collect(),
-            size: vec![1; size],
-        }
-    }
-
-    fn find(&mut self, child: usize) -> usize {
-        if self.parent[child] != child {
-            let parent = self.find(self.parent[child]);
-            self.parent[child] = parent;
-        }
-        self.parent[child]
-    }
-
-    fn unite(&mut self, v1: usize, v2: usize) {
-        let p1 = self.find(v1);
-        let p2 = self.find(v2);
-        if self.size[p1] < self.size[p2] {
-            self.parent[p1] = self.parent[p2];
-            self.size[p2] += self.size[p1];
-        } else {
-            self.parent[p2] = self.parent[p1];
-            self.size[p1] += self.size[p2];
-        }
-    }
-
-    fn same(&mut self, v1: usize, v2: usize) -> bool {
-        self.find(v1) == self.find(v2)
-    }
-
-    fn size(&mut self, v: usize) -> usize {
-        let parent = self.find(v);
-        self.size[parent]
-    }
-}
-
-fn create_mst_solution(
-    distance: &impl DistanceFunction,
-    neighbor_list: &Vec<HashSet<u32>>,
-) -> ArraySolution {
-    let dim = distance.dimension() as usize;
-    let mut uf = UnionFind::new(dim);
-
-    let mut distance_list = vec![];
-    for from in 0..dim {
-        for to in neighbor_list[from].iter() {
-            let dist = distance.distance(from as u32, *to);
-            distance_list.push((dist, from as u32, *to));
-        }
-    }
-    distance_list.par_sort();
-
-    eprintln!("finish edge list.");
-
-    let mut counter = 0;
-    let mut edges = vec![];
-    'outer: while counter < dim {
-        for (_dist, from, to) in distance_list.iter() {
-            let from = *from as usize;
-            let to = *to as usize;
-
-            if !uf.same(from, to) {
-                uf.unite(from, to);
-                edges.push((from, to));
-                counter += 1;
-                if counter == dim - 1 {
-                    break 'outer;
-                }
-            }
-        }
-    }
-
-    eprintln!("finish creating mst.");
-
-    // mst から dfs で経路を復元
-    // 適当に root を決めて、dfs で潜ってルートを決定
-    let mut neighbor_table = vec![vec![]; dim];
-    for (from, to) in edges.into_iter() {
-        neighbor_table[from].push(to as u32);
-        neighbor_table[to].push(from as u32);
-    }
-
-    fn inner(
-        current: u32,
-        visited: &mut Vec<bool>,
-        seq: &mut Vec<u32>,
-        neighbor_table: &Vec<Vec<u32>>,
-    ) {
-        seq.push(current);
-
-        for next in neighbor_table[current as usize].iter() {
-            if !visited[*next as usize] {
-                visited[*next as usize] = true;
-                inner(*next, visited, seq, neighbor_table);
-            }
-        }
-    }
-
-    let mut visited = vec![false; dim];
-    visited[0] = true;
-    let mut seq = vec![];
-    inner(0, &mut visited, &mut seq, &neighbor_table);
-
-    eprintln!("finish reconstruct solution");
-
-    ArraySolution::from_array(seq)
-}
-
 pub fn solve() {
     const SIZE: usize = 257 * 257;
     let pose_list = calculate_pose_map(SIZE);
@@ -758,7 +587,7 @@ pub fn solve() {
 
     let init_solution = create_mst_solution(&distance, &neighbor_list);
 
-    let solution = tsp::solve_tsp(&distance, init_solution);
+    let solution = tsp::solve_tsp(&distance, init_solution, 1.0 / (255.0 * 10000.0));
 
     solution.save(&PathBuf::from_str("final_result_bfs.tsp").unwrap())
 }

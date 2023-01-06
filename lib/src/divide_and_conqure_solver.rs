@@ -65,6 +65,7 @@ pub struct DivideAndConqureConfig {
     pub end_kick_step: usize,
     pub fail_count_threashold: u32,
     pub max_depth: usize,
+    pub scale: f64,
 }
 
 // スレッド数で問題を分割して、最終的に統合
@@ -109,6 +110,7 @@ pub fn solve(
                 fail_count_threashold: config.fail_count_threashold,
                 max_depth: config.max_depth,
                 neighbor_create_parallel: false,
+                scale: config.scale,
             },
         );
 
