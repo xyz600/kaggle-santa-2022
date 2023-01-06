@@ -177,6 +177,7 @@ fn extract_lower_right() -> Vec<(i16, i16)> {
 
 fn extract_upper_right() -> Vec<(i16, i16)> {
     let mut ret = vec![];
+    ret.push((0, 128));
     for y in 64..=128 {
         for x in 1..=128 {
             ret.push((y, x));
@@ -213,7 +214,7 @@ fn solve_tsp(
                 cache_filepath: get_cache_filepath(distance),
                 debug: false,
                 neighbor_create_parallel: true,
-                scale: scale,
+                scale,
             },
         );
 
@@ -228,7 +229,7 @@ fn solve_tsp(
                         cache_filepath: get_cache_filepath(distance),
                         debug: false,
                         neighbor_create_parallel: false,
-                        scale: scale,
+                        scale,
                     },
                 );
 
@@ -253,7 +254,11 @@ fn solve_tsp(
             }
         }
     }
-    solution.save(&PathBuf::from_str("solution_opt3.tsp").unwrap());
+    eprintln!("finish opt3.");
+    eprintln!("eval = {}", evaluate(distance, &solution) as f64 * scale);
+    solution.save(
+        &PathBuf::from_str(format!("solution_opt3_{}.tsp", distance.name()).as_str()).unwrap(),
+    );
 
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
 
@@ -280,12 +285,15 @@ fn solve_tsp(
             fail_count_threashold: 50,
             max_depth: 6,
             neighbor_create_parallel: true,
-            scale: scale,
+            scale,
         },
     );
     eprintln!("finish initial lkh.");
     eprintln!("eval = {}", evaluate(distance, &solution) as f64 * scale);
-    solution.save(&PathBuf::from_str("solution_initial_lkh.tsp").unwrap());
+    solution.save(
+        &PathBuf::from_str(format!("solution_initial_lkh_{}.tsp", distance.name()).as_str())
+            .unwrap(),
+    );
 
     if solution.next(begin) != end && solution.prev(begin) != end {
         let success = lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
@@ -314,7 +322,7 @@ fn solve_tsp(
                 end_kick_step: distance.dimension() as usize / 10,
                 fail_count_threashold: 50,
                 max_depth: 7,
-                scale: scale,
+                scale,
             },
         );
         let eval = evaluate(distance, &solution);
@@ -324,7 +332,10 @@ fn solve_tsp(
             start_kick_step += 10;
             time_ms += 30_000;
         } else {
-            solution.save(&PathBuf::from_str("solution_split_lkh.tsp").unwrap());
+            solution.save(
+                &PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str())
+                    .unwrap(),
+            );
         }
         best_eval = eval;
     }
@@ -356,42 +367,43 @@ pub fn solve() {
     }
     let orig_index_table = orig_index_table;
 
-    // initialize
-    // (0, 0) -> (64, 0)
+    if false {
+        // initialize
+        // (0, 0) -> (64, 0)
 
-    // Upper Left
-    // (64, 0) -> (0, -128)
-    let ul_coord_list = extract_upper_left();
-    let ul_subpath = calculate_subpath(
-        ul_coord_list,
-        (64, 0),
-        (0, -128),
-        &orig_index_table,
-        "subpath_ul".to_string(),
-    );
+        // Upper Left
+        // (64, 0) -> (0, -128)
+        let ul_coord_list = extract_upper_left();
+        let ul_subpath = calculate_subpath(
+            ul_coord_list,
+            (64, 0),
+            (0, -128),
+            &orig_index_table,
+            "subpath_ul".to_string(),
+        );
 
-    // Lower Left
-    // (0, -128) -> (-128, 0)
-    let ll_coord_list = extract_lower_left();
-    let ll_subpath = calculate_subpath(
-        ll_coord_list,
-        (0, -128),
-        (-128, 0),
-        &orig_index_table,
-        "subpath_ll".to_string(),
-    );
+        // Lower Left
+        // (0, -128) -> (-128, 0)
+        let ll_coord_list = extract_lower_left();
+        let ll_subpath = calculate_subpath(
+            ll_coord_list,
+            (0, -128),
+            (-128, 0),
+            &orig_index_table,
+            "subpath_ll".to_string(),
+        );
 
-    // Lower Right
-    // (-128, 0) -> (0, 128)
-    let lr_coord_list = extract_lower_right();
-    let lr_subpath = calculate_subpath(
-        lr_coord_list,
-        (-128, 0),
-        (0, 128),
-        &orig_index_table,
-        "subpath_lr".to_string(),
-    );
-
+        // Lower Right
+        // (-128, 0) -> (0, 128)
+        let lr_coord_list = extract_lower_right();
+        let lr_subpath = calculate_subpath(
+            lr_coord_list,
+            (-128, 0),
+            (0, 128),
+            &orig_index_table,
+            "subpath_lr".to_string(),
+        );
+    }
     // Upper Right
     // (0, 128) -> (64, 1)
     let ur_coord_list = extract_upper_right();
