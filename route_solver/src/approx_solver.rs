@@ -16,7 +16,9 @@ use lib::{
 };
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 
-use crate::{mst_solution::create_mst_solution, onestep_distance::OneStepDistanceFunction};
+use crate::{
+    mst_solution::create_mst_solution, onestep_distance::OneStepDistanceFunction, util::Pose,
+};
 
 // s-t を同一視するため、以下のルールを採用
 // - s-t をまとめて 1頂点として採用(p とする)
@@ -352,6 +354,21 @@ fn solve_tsp(
     solution
 }
 
+struct PoseSimulator {
+    pose_list: Vec<Pose>,
+    // size64 を上下方向に動作させるか
+    is_size64_ud: bool,
+}
+
+impl PoseSimulator {
+    fn new() -> PoseSimulator {
+        PoseSimulator {
+            pose_list: vec![Pose::new()],
+            is_size64_ud: false,
+        }
+    }
+}
+
 // subset に分けて、s-t パスを繋いで最適化する
 // 適切な配置から開始すれば、128x128 矩形は割と自由に動けるという理由による
 pub fn solve() {
@@ -367,43 +384,46 @@ pub fn solve() {
     }
     let orig_index_table = orig_index_table;
 
-    if false {
-        // initialize
-        // (0, 0) -> (64, 0)
-
-        // Upper Left
-        // (64, 0) -> (0, -128)
-        let ul_coord_list = extract_upper_left();
-        let ul_subpath = calculate_subpath(
-            ul_coord_list,
-            (64, 0),
-            (0, -128),
-            &orig_index_table,
-            "subpath_ul".to_string(),
-        );
-
-        // Lower Left
-        // (0, -128) -> (-128, 0)
-        let ll_coord_list = extract_lower_left();
-        let ll_subpath = calculate_subpath(
-            ll_coord_list,
-            (0, -128),
-            (-128, 0),
-            &orig_index_table,
-            "subpath_ll".to_string(),
-        );
-
-        // Lower Right
-        // (-128, 0) -> (0, 128)
-        let lr_coord_list = extract_lower_right();
-        let lr_subpath = calculate_subpath(
-            lr_coord_list,
-            (-128, 0),
-            (0, 128),
-            &orig_index_table,
-            "subpath_lr".to_string(),
-        );
+    // initialize
+    // (0, 0) -> (64, 0)
+    let mut initial_subpath = vec![];
+    for y in 0..=64 {
+        initial_subpath.push((y, 0));
     }
+
+    // Upper Left
+    // (64, 0) -> (0, -128)
+    let ul_coord_list = extract_upper_left();
+    let ul_subpath = calculate_subpath(
+        ul_coord_list,
+        (64, 0),
+        (0, -128),
+        &orig_index_table,
+        "subpath_ul".to_string(),
+    );
+
+    // Lower Left
+    // (0, -128) -> (-128, 0)
+    let ll_coord_list = extract_lower_left();
+    let ll_subpath = calculate_subpath(
+        ll_coord_list,
+        (0, -128),
+        (-128, 0),
+        &orig_index_table,
+        "subpath_ll".to_string(),
+    );
+
+    // Lower Right
+    // (-128, 0) -> (0, 128)
+    let lr_coord_list = extract_lower_right();
+    let lr_subpath = calculate_subpath(
+        lr_coord_list,
+        (-128, 0),
+        (0, 128),
+        &orig_index_table,
+        "subpath_lr".to_string(),
+    );
+
     // Upper Right
     // (0, 128) -> (64, 1)
     let ur_coord_list = extract_upper_right();
@@ -417,6 +437,30 @@ pub fn solve() {
 
     // finalize
     // (64, 1) -> (1, 1) -> (0, 0)
+    let mut final_subpath = vec![];
+    for y in (1..=64).rev() {
+        final_subpath.push((y, 1));
+    }
+    final_subpath.push((0, 1));
+    final_subpath.push((0, 0));
 
     // merge solution
+
+    let mut merged_solution = vec![];
+    for subpath in [
+        initial_subpath,
+        ul_subpath,
+        ll_subpath,
+        lr_subpath,
+        ur_subpath,
+        final_subpath,
+    ] {
+        for coord in subpath.iter() {
+            merged_solution.push(orig_index_table[coord]);
+        }
+        merged_solution.pop();
+    }
+
+    let final_solution = ArraySolution::from_array(merged_solution);
+    final_solution.save(&PathBuf::from_str("final_solution.tsp").unwrap());
 }
