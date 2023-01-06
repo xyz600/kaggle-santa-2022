@@ -101,7 +101,7 @@ pub fn solve_tsp(
     let mut time_ms = 30_000;
     let mut best_eval = evaluate(distance, &solution);
 
-    for iter in 1..5 {
+    for iter in 1.. {
         solution = divide_and_conqure_solver::solve(
             distance,
             &solution,
@@ -133,25 +133,26 @@ pub fn solve_tsp(
         }
     }
 
-    // let solution = lkh::solve(
-    //     distance,
-    //     solution,
-    //     LKHConfig {
-    //         use_neighbor_cache: true,
-    //         cache_filepath: get_cache_filepath(distance),
-    //         debug: true,
-    //         time_ms: 1000 * 60 * 60 * 12,
-    //         start_kick_step: 30,
-    //         kick_step_diff: 10,
-    //         end_kick_step: 1000,
-    //         fail_count_threashold: 50,
-    //         max_depth: 7,
-    //         neighbor_create_parallel: true,
-    //     },
-    // );
-    // eprintln!("finish lkh");
-    // eprintln!("eval = {}", evaluate(distance, &solution) as f64 * scale);
-    // solution.save(&PathBuf::from_str("solution_all_lkh.tsp").unwrap());
+    let solution = lkh::solve(
+        distance,
+        solution,
+        LKHConfig {
+            use_neighbor_cache: true,
+            cache_filepath: get_cache_filepath(distance),
+            debug: true,
+            time_ms: 1000 * 60 * 60 * 12,
+            start_kick_step: 30,
+            kick_step_diff: 10,
+            end_kick_step: 1000,
+            fail_count_threashold: 50,
+            max_depth: 7,
+            neighbor_create_parallel: true,
+            scale: scale,
+        },
+    );
+    eprintln!("finish lkh");
+    eprintln!("eval = {}", evaluate(distance, &solution) as f64 * scale);
+    solution.save(&PathBuf::from_str("solution_all_lkh.tsp").unwrap());
 
     solution
 }

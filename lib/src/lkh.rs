@@ -131,6 +131,86 @@ fn solve_inner<'a, T: Solution>(
     }
 }
 
+pub fn connect(
+    distance: &(impl DistanceFunction + std::marker::Sync),
+    solution: &mut ArraySolution,
+    neighbor_table: &NeighborTable,
+    from: u32,
+    to: u32,
+    max_depth: usize,
+) -> bool {
+    // from - to を無理やり接続するための遷移を求める
+
+    let n = distance.dimension() as usize;
+    // 解く
+
+    let mut rng = rand::thread_rng();
+    let mut selected = BitSet::new(n);
+    selected.clear_all();
+
+    let a = from;
+
+    let mut current_tree = SegmentTree::new(solution);
+    let mut best_tree = SegmentTree::new(solution);
+
+    let mut best_gain = std::i64::MIN;
+
+    let a_next = solution.next(a);
+    let a_prev = solution.prev(a);
+
+    let mut edge_stack = vec![];
+
+    for (a, b) in [(a_prev, a), (a, a_next)] {
+        selected.set(a);
+        selected.set(b);
+        edge_stack.push((a, b));
+
+        // depth 2 は無理やり a-c をくっつける遷移で確定
+        let c = to;
+        let d = solution.next(to);
+
+        if selected.test(c) || selected.test(d) {
+            continue;
+        }
+        selected.set(c);
+        selected.set(d);
+
+        for edge in [(a, c), (b, d)] {
+            edge_stack.push(edge);
+            solve_inner(
+                2,
+                max_depth,
+                distance,
+                &neighbor_table,
+                &mut current_tree,
+                &mut best_tree,
+                &mut edge_stack,
+                0,
+                &mut best_gain,
+                &mut selected,
+                &mut rng,
+            );
+        }
+
+        selected.clear(c);
+        selected.clear(d);
+
+        selected.clear(a);
+        selected.clear(b);
+        edge_stack.pop();
+    }
+
+    // 更新があったら採用
+    if best_gain == std::i64::MIN {
+        false
+    } else {
+        for (from, to) in best_tree.to_swap_list().into_iter() {
+            solution.swap(from, to);
+        }
+        true
+    }
+}
+
 pub struct LKHConfig {
     pub use_neighbor_cache: bool,
     pub cache_filepath: PathBuf,
