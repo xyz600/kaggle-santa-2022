@@ -176,23 +176,23 @@ pub fn connect(
         selected.set(d);
         current_tree.swap(b, c);
 
-        for edge in [(a, c), (b, d)] {
-            edge_stack.push(edge);
+        // (a, c) を選択すると再度結合を削除する可能性があるので、 (b, d) のみ
+        let edge = (b, d);
+        edge_stack.push(edge);
 
-            solve_inner(
-                2,
-                max_depth,
-                distance,
-                &neighbor_table,
-                &mut current_tree,
-                &mut best_tree,
-                &mut edge_stack,
-                0,
-                &mut best_gain,
-                &mut selected,
-                &mut rng,
-            );
-        }
+        solve_inner(
+            2,
+            max_depth,
+            distance,
+            &neighbor_table,
+            &mut current_tree,
+            &mut best_tree,
+            &mut edge_stack,
+            0,
+            &mut best_gain,
+            &mut selected,
+            &mut rng,
+        );
 
         current_tree.undo();
         selected.clear(c);

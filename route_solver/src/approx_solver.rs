@@ -311,7 +311,7 @@ fn solve_tsp(
     let mut time_ms = 30_000;
     let mut best_eval = evaluate(distance, &solution);
 
-    for iter in 1..10 {
+    for iter in 1..5 {
         solution = divide_and_conqure_solver::solve(
             distance,
             &solution,
