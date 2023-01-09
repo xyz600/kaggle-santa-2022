@@ -64,9 +64,12 @@ fn calculate_subpath(
     end: (i16, i16),
     orig_index_map: &HashMap<(i16, i16), u32>,
     name: String,
+    is_64x64_vertical: bool,
 ) -> Vec<(i16, i16)> {
-    let orig_distance =
-        OneStepDistanceFunction::load(&PathBuf::from_str("data/image.csv").unwrap());
+    let orig_distance = OneStepDistanceFunction::load(
+        &PathBuf::from_str("data/image.csv").unwrap(),
+        is_64x64_vertical,
+    );
 
     let mut index_map = HashMap::new();
     for (i, coord) in coord_list.iter().enumerate() {
@@ -307,11 +310,11 @@ fn solve_tsp(
     }
 
     // 分割して並列化
-    let mut start_kick_step = 30;
-    let mut time_ms = 30_000;
+    let start_kick_step = 30;
+    let time_ms = 30_000;
     let mut best_eval = evaluate(distance, &solution);
 
-    for iter in 1..5 {
+    for iter in 1..2 {
         solution = divide_and_conqure_solver::solve(
             distance,
             &solution,
@@ -331,8 +334,7 @@ fn solve_tsp(
         eprintln!("finish splited lkh {} times.", iter);
         eprintln!("eval = {}", eval as f64 * scale);
         if best_eval == eval {
-            start_kick_step += 10;
-            time_ms += 30_000;
+            break;
         } else {
             solution.save(
                 &PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str())
@@ -350,6 +352,29 @@ fn solve_tsp(
             assert!(solution.next(begin) == end || solution.prev(begin) == end);
         }
     }
+
+    return solution;
+
+    let solution = lkh::solve(
+        distance,
+        solution,
+        LKHConfig {
+            use_neighbor_cache: true,
+            cache_filepath: get_cache_filepath(distance),
+            debug: true,
+            time_ms: 1000 * 60 * 60 * 1,
+            start_kick_step: 30,
+            kick_step_diff: 10,
+            end_kick_step: 1000,
+            fail_count_threashold: 50,
+            max_depth: 7,
+            neighbor_create_parallel: true,
+            scale,
+        },
+    );
+    eprintln!("finish lkh");
+    eprintln!("eval = {}", evaluate(distance, &solution) as f64 * scale);
+    solution.save(&PathBuf::from_str("solution_all_lkh.tsp").unwrap());
 
     solution
 }
@@ -400,6 +425,7 @@ pub fn solve() {
         (0, -128),
         &orig_index_table,
         "subpath_ul".to_string(),
+        false,
     );
 
     // Lower Left
@@ -411,6 +437,7 @@ pub fn solve() {
         (-128, 0),
         &orig_index_table,
         "subpath_ll".to_string(),
+        true,
     );
 
     // Lower Right
@@ -422,6 +449,7 @@ pub fn solve() {
         (0, 128),
         &orig_index_table,
         "subpath_lr".to_string(),
+        false,
     );
 
     // Upper Right
@@ -433,6 +461,7 @@ pub fn solve() {
         (64, 1),
         &orig_index_table,
         "subpath_ur".to_string(),
+        true,
     );
 
     // finalize
@@ -441,8 +470,9 @@ pub fn solve() {
     for y in (1..=64).rev() {
         final_subpath.push((y, 1));
     }
-    final_subpath.push((0, 1));
-    final_subpath.push((0, 0));
+    // 不要
+    // final_subpath.push((0, 1));
+    // final_subpath.push((0, 0));
 
     // merge solution
 
@@ -460,6 +490,8 @@ pub fn solve() {
         }
         merged_solution.pop();
     }
+    // 最後の final で push した分
+    merged_solution.push(orig_index_table[&(1, 1)]);
 
     let final_solution = ArraySolution::from_array(merged_solution);
     final_solution.save(&PathBuf::from_str("final_solution.tsp").unwrap());

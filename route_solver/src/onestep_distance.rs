@@ -37,10 +37,11 @@ pub struct Cell {
 
 pub struct OneStepDistanceFunction {
     cell_list: Vec<Cell>,
+    is_64x64_vertical: bool,
 }
 
 impl OneStepDistanceFunction {
-    pub fn load(filepath: &PathBuf) -> OneStepDistanceFunction {
+    pub fn load(filepath: &PathBuf, is_64x64_vertical: bool) -> OneStepDistanceFunction {
         const SIZE: usize = 257;
         const LEN: usize = SIZE * SIZE;
 
@@ -67,7 +68,10 @@ impl OneStepDistanceFunction {
             })
             .collect::<Vec<_>>();
 
-        OneStepDistanceFunction { cell_list }
+        OneStepDistanceFunction {
+            cell_list,
+            is_64x64_vertical,
+        }
     }
 }
 
@@ -84,10 +88,15 @@ impl DistanceFunction for OneStepDistanceFunction {
         let dg = (c1.g - c2.g).abs();
         let db = (c1.b - c2.b).abs();
 
-        let dist = if dx + dy < 10 {
-            ((dx + dy) as f64).sqrt()
+        // 64x64 が担当する方向は 1つしか動かせない
+        let dist = if self.is_64x64_vertical {
+            let iter = (dx / 7) as f64;
+            let rest = (dx % 7) as f64;
+            7.0f64.sqrt() * iter + rest.sqrt() + dy as f64
         } else {
-            (dx + dy) as f64
+            let iter = (dy / 7) as f64;
+            let rest = (dy % 7) as f64;
+            7.0f64.sqrt() * iter + (rest as f64).sqrt() + dx as f64
         };
 
         (dist * 10000.0 * 255.0) as i64 + (dr + dg + db)

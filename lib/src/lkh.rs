@@ -148,36 +148,34 @@ pub fn connect(
     let mut selected = BitSet::new(n);
     selected.clear_all();
 
-    let a = from;
-
     let mut current_tree = SegmentTree::new(solution);
     let mut best_tree = SegmentTree::new(solution);
 
     let mut best_gain = std::i64::MIN;
 
-    let a_next = solution.next(a);
-    let a_prev = solution.prev(a);
+    let a = from;
+    let b = solution.next(from);
 
     let mut edge_stack = vec![];
 
-    for (a, b) in [(a_prev, a), (a, a_next)] {
-        selected.set(a);
-        selected.set(b);
-        edge_stack.push((a, b));
+    selected.set(a);
+    selected.set(b);
+    edge_stack.push((a, b));
 
-        // depth 2 は無理やり a-c をくっつける遷移で確定
-        let c = to;
-        let d = solution.next(to);
+    // depth 2 は無理やり a-c をくっつける遷移で確定
+    let c = to;
+    let d = solution.next(to);
 
-        if selected.test(c) || selected.test(d) {
-            continue;
-        }
-        selected.set(c);
-        selected.set(d);
-        current_tree.swap(b, c);
+    if selected.test(c) || selected.test(d) {
+        return false;
+    }
+    selected.set(c);
+    selected.set(d);
 
-        // (a, c) を選択すると再度結合を削除する可能性があるので、 (b, d) のみ
-        let edge = (b, d);
+    eprintln!("(a, b, c, d) = ({}, {}, {}, {})", a, b, c, d);
+    current_tree.swap(b, c);
+
+    for edge in [(b, d), (a, c)] {
         edge_stack.push(edge);
 
         solve_inner(
@@ -194,19 +192,20 @@ pub fn connect(
             &mut rng,
         );
 
-        current_tree.undo();
-        selected.clear(c);
-        selected.clear(d);
-
-        selected.clear(a);
-        selected.clear(b);
         edge_stack.pop();
     }
+    current_tree.undo();
+    selected.clear(c);
+    selected.clear(d);
+
+    selected.clear(a);
+    selected.clear(b);
 
     // 更新があったら採用
     if best_gain == std::i64::MIN {
         false
     } else {
+        eprintln!("swap {:?}", best_tree.clone().to_swap_list());
         for (from, to) in best_tree.to_swap_list().into_iter() {
             solution.swap(from, to);
         }

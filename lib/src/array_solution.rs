@@ -31,6 +31,9 @@ impl ArraySolution {
         }
         // 全ての id が登録されている
         for idx in 0..index_of.len() {
+            if index_of[idx] == std::u32::MAX {
+                eprintln!("fail: {}", idx);
+            }
             assert_ne!(index_of[idx], std::u32::MAX);
         }
 
