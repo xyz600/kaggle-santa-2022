@@ -172,7 +172,6 @@ pub fn connect(
     selected.set(c);
     selected.set(d);
 
-    eprintln!("(a, b, c, d) = ({}, {}, {}, {})", a, b, c, d);
     current_tree.swap(b, c);
 
     for edge in [(b, d), (a, c)] {
@@ -205,7 +204,6 @@ pub fn connect(
     if best_gain == std::i64::MIN {
         false
     } else {
-        eprintln!("swap {:?}", best_tree.clone().to_swap_list());
         for (from, to) in best_tree.to_swap_list().into_iter() {
             solution.swap(from, to);
         }

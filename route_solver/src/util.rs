@@ -60,8 +60,8 @@ pub fn load_image(filepath: &PathBuf) -> Vec<Cell> {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Coord {
-    y: i16,
-    x: i16,
+    pub y: i16,
+    pub x: i16,
 }
 
 impl Coord {
@@ -206,7 +206,6 @@ impl Pose {
             let ret = [64, 32, 16, 8, 4, 2, 1, 1];
             ret[depth]
         }
-
         fn inner(
             pos_list: &[Coord; 8],
             depth: usize,

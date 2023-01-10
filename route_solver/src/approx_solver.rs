@@ -1,5 +1,7 @@
 use std::{
     collections::{HashMap, HashSet},
+    fs::File,
+    io::{BufWriter, Write},
     path::PathBuf,
     str::FromStr,
 };
@@ -209,6 +211,13 @@ fn solve_tsp(
     begin: u32,
     end: u32,
 ) -> ArraySolution {
+    let filepath =
+        PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str()).unwrap();
+    if filepath.exists() {
+        let solution = ArraySolution::load(&filepath);
+        return solution;
+    }
+
     // 最初に制約を満たすように変異を加える
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
     let init_solution = if init_solution.next(begin) != end && init_solution.prev(begin) != end {
@@ -244,7 +253,7 @@ fn solve_tsp(
         },
     );
 
-    let solutions = (0..100)
+    let solutions = (0..12)
         .into_par_iter()
         .map(|_iter| {
             let local_solution = opt3::solve(
@@ -292,48 +301,51 @@ fn solve_tsp(
                 }
             }
 
-            for _iter in 1..3 {
-                local_solution = divide_and_conqure_solver::solve(
-                    distance,
-                    &local_solution,
-                    DivideAndConqureConfig {
-                        no_split: 12,
-                        debug: false,
-                        time_ms: 30_000,
-                        start_kick_step: 30,
-                        kick_step_diff: 10,
-                        end_kick_step: distance.dimension() as usize / 10,
-                        fail_count_threashold: 50,
-                        max_depth: 7,
-                        scale,
-                    },
-                );
-            }
-
-            if local_solution.next(begin) != end && local_solution.prev(begin) != end {
-                let success = lkh::connect(
-                    distance,
-                    &mut local_solution,
-                    &neighbor_table,
-                    begin,
-                    end,
-                    8,
-                );
-                if success {
-                    local_solution.validate();
-                    assert!(local_solution.next(begin) == end || local_solution.prev(begin) == end);
-                }
-            }
-
-            let eval = evaluate(distance, &local_solution);
-            eprintln!("eval = {}", eval as f64 / (255.0 * 10000.0));
-            (eval, local_solution)
+            (0, local_solution)
         })
         .collect::<Vec<_>>();
 
-    for (eval, local_solution) in solutions.into_iter() {
+    for (_, mut local_solution) in solutions.into_iter() {
+        // 並列化して最適化
+        for _iter in 0..2 {
+            local_solution = divide_and_conqure_solver::solve(
+                distance,
+                &local_solution,
+                DivideAndConqureConfig {
+                    no_split: 12,
+                    debug: false,
+                    time_ms: 30_000,
+                    start_kick_step: 30,
+                    kick_step_diff: 10,
+                    end_kick_step: distance.dimension() as usize / 10,
+                    fail_count_threashold: 50,
+                    max_depth: 7,
+                    scale,
+                },
+            );
+        }
+
+        if local_solution.next(begin) != end && local_solution.prev(begin) != end {
+            let success = lkh::connect(
+                distance,
+                &mut local_solution,
+                &neighbor_table,
+                begin,
+                end,
+                8,
+            );
+            if success {
+                local_solution.validate();
+                assert!(local_solution.next(begin) == end || local_solution.prev(begin) == end);
+            }
+        }
+
+        let eval = evaluate(distance, &local_solution);
+        eprintln!("eval = {}", eval as f64 / (255.0 * 10000.0));
+
         if best_eval > eval {
             best_solution = local_solution;
+            best_eval = eval;
         }
     }
 
@@ -399,7 +411,7 @@ fn solve_tsp(
             use_neighbor_cache: true,
             cache_filepath: get_cache_filepath(distance),
             debug: true,
-            time_ms: 1000 * 60 * 60 * 1,
+            time_ms: 1000 * 60 * 5,
             start_kick_step: 30,
             kick_step_diff: 10,
             end_kick_step: 1000,
@@ -433,9 +445,103 @@ impl PoseSimulator {
         }
     }
 
-    fn raw_simulate_auto(&mut self, diff: DiffPose) {}
+    fn current(&self) -> (i16, i16) {
+        self.pose_list.last().unwrap().coord()
+    }
 
-    fn raw_simulate(&mut self, to: (i16, i16)) {}
+    fn get_max_value(depth: usize) -> i16 {
+        let ret = [64, 32, 16, 8, 4, 2, 1, 1];
+        ret[depth]
+    }
+
+    fn simulate_auto_once(&mut self, y: i16, x: i16) {
+        let (cy, cx) = self.pose_list.last().unwrap().coord();
+        let mut dy = y - cy;
+        let mut dx = x - cx;
+
+        while dx != 0 || dy != 0 {
+            let mut new_pose = self.pose_list.last().unwrap().clone();
+
+            // 1手で可能な最大遷移を計算
+            let mut diff_pose = [Direction::None; 8];
+            if self.is_size64_vertical {
+                if dy > 0 {
+                    diff_pose[0] = Direction::Up;
+                    dy -= 1;
+                } else if dy < 0 {
+                    diff_pose[0] = Direction::Down;
+                    dy += 1;
+                }
+                for idx in 1..8 {
+                    let max_size = Self::get_max_value(idx);
+                    if dx < 0 && new_pose.arm_list[idx].x > -max_size {
+                        diff_pose[idx] = Direction::Left;
+                        dx += 1;
+                    }
+                    if dx > 0 && new_pose.arm_list[idx].x < max_size {
+                        diff_pose[idx] = Direction::Right;
+                        dx -= 1;
+                    }
+                }
+            } else {
+                if dx > 0 {
+                    diff_pose[0] = Direction::Right;
+                    dx -= 1;
+                } else if dx < 0 {
+                    diff_pose[0] = Direction::Left;
+                    dx += 1;
+                }
+                for idx in 1..8 {
+                    let max_size = Self::get_max_value(idx);
+                    if dy < 0 && new_pose.arm_list[idx].y > -max_size {
+                        diff_pose[idx] = Direction::Down;
+                        dy += 1;
+                    }
+                    if dy > 0 && new_pose.arm_list[idx].y < max_size {
+                        diff_pose[idx] = Direction::Up;
+                        dy -= 1;
+                    }
+                }
+            }
+
+            // 差分を適用
+            let diff_pose = DiffPose {
+                diff_list: diff_pose,
+            };
+            new_pose.apply(&diff_pose);
+            self.pose_list.push(new_pose);
+        }
+    }
+
+    // 点列の sequence を再現するように pose を蓄えていく
+    //
+    // 優先度
+    // 1. 中央に近づく動作を優先させる(左右どちらに対しても、長く動ける自由度が増す)
+    // 2. 長い腕の動きを優先させる
+    fn simulate_auto(&mut self, pos_list: &Vec<(i16, i16)>) {
+        for &(y, x) in pos_list.iter() {
+            self.simulate_auto_once(y, x);
+        }
+    }
+
+    fn simulate_manual(&mut self, index: usize, dir: Direction) {
+        let mut new_pose = self.pose_list.last().unwrap().clone();
+        let mut diff_list = [Direction::None; 8];
+        diff_list[index] = dir;
+        let diff = DiffPose { diff_list };
+        new_pose.apply(&diff);
+
+        self.pose_list.push(new_pose);
+    }
+
+    fn save(&self, filepath: &PathBuf) {
+        let f = File::create(filepath).unwrap();
+        let mut writer = BufWriter::new(f);
+        writer.write("configuration\n".as_bytes()).unwrap();
+        for pose in self.pose_list.iter() {
+            writer.write(pose.to_string().as_bytes()).unwrap();
+        }
+    }
 }
 
 // subset に分けて、s-t パスを繋いで最適化する
@@ -518,8 +624,64 @@ pub fn solve() {
     // final_subpath.push((0, 1));
     // final_subpath.push((0, 0));
 
-    // merge solution
+    {
+        // initialize
+        let mut pose_simulator = PoseSimulator::new();
+        for _i in 0..64 {
+            pose_simulator.simulate_manual(0, Direction::Up);
+        }
+        eprintln!("finish init");
+        eprintln!("cur: {:?}", pose_simulator.current());
+        eprintln!("cur pose: {:?}", pose_simulator.pose_list.last().unwrap());
 
+        {
+            pose_simulator.is_size64_vertical = false;
+            let mut subpath = ul_subpath.clone();
+            subpath.remove(0);
+            pose_simulator.simulate_auto(&subpath);
+            eprintln!("finish path ul",);
+        }
+        {
+            pose_simulator.is_size64_vertical = true;
+            let mut subpath = ll_subpath.clone();
+            subpath.remove(0);
+            pose_simulator.simulate_auto(&subpath);
+            eprintln!("finish path ll");
+        }
+        {
+            pose_simulator.is_size64_vertical = false;
+            let mut subpath = lr_subpath.clone();
+            subpath.remove(0);
+            pose_simulator.simulate_auto(&subpath);
+            eprintln!("finish path lr");
+        }
+        {
+            pose_simulator.is_size64_vertical = true;
+            let mut subpath = ur_subpath.clone();
+            subpath.remove(0);
+            pose_simulator.simulate_auto(&subpath);
+            eprintln!("finish path ur");
+        }
+
+        // finalize
+        pose_simulator.is_size64_vertical = false;
+        for idx in 1..7 {
+            while pose_simulator.pose_list.last().unwrap().arm_list[idx].y > 0 {
+                pose_simulator.simulate_manual(idx, Direction::Down);
+            }
+            while pose_simulator.pose_list.last().unwrap().arm_list[idx].y < 0 {
+                pose_simulator.simulate_manual(idx, Direction::Up);
+            }
+        }
+        eprintln!("finish finalize");
+        pose_simulator.simulate_manual(7, Direction::Left);
+        eprintln!("finish finalize 1");
+        pose_simulator.simulate_manual(7, Direction::Down);
+        eprintln!("finish finalize 2");
+        pose_simulator.save(&PathBuf::from_str("final_result.csv").unwrap());
+    }
+
+    // merge solutionp
     let mut merged_solution = vec![];
     for subpath in [
         initial_subpath,
