@@ -211,12 +211,18 @@ fn solve_tsp(
     begin: u32,
     end: u32,
 ) -> ArraySolution {
-    let filepath =
-        PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str()).unwrap();
-    if filepath.exists() {
-        let solution = ArraySolution::load(&filepath);
-        return solution;
-    }
+    // cache 作成用
+    opt3::solve(
+        distance,
+        init_solution.clone(),
+        Opt3Config {
+            use_neighbor_cache: true,
+            cache_filepath: get_cache_filepath(distance),
+            debug: false,
+            neighbor_create_parallel: true,
+            scale,
+        },
+    );
 
     // 最初に制約を満たすように変異を加える
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
@@ -240,20 +246,7 @@ fn solve_tsp(
     let mut best_solution = init_solution.clone();
     let mut best_eval = evaluate(distance, &best_solution);
 
-    // cache 作成用
-    opt3::solve(
-        distance,
-        init_solution.clone(),
-        Opt3Config {
-            use_neighbor_cache: true,
-            cache_filepath: get_cache_filepath(distance),
-            debug: false,
-            neighbor_create_parallel: true,
-            scale,
-        },
-    );
-
-    let solutions = (0..12)
+    let solutions = (0..96)
         .into_par_iter()
         .map(|_iter| {
             let local_solution = opt3::solve(
