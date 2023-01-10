@@ -17,7 +17,9 @@ use lib::{
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 
 use crate::{
-    mst_solution::create_mst_solution, onestep_distance::OneStepDistanceFunction, util::Pose,
+    mst_solution::create_mst_solution,
+    onestep_distance::OneStepDistanceFunction,
+    util::{DiffPose, Direction, Pose},
 };
 
 // s-t を同一視するため、以下のルールを採用
@@ -202,127 +204,126 @@ fn get_cache_filepath(distance: &impl DistanceFunction) -> PathBuf {
 
 fn solve_tsp(
     distance: &(impl DistanceFunction + std::marker::Sync),
-    init_solution: ArraySolution,
+    mut init_solution: ArraySolution,
     scale: f64,
     begin: u32,
     end: u32,
 ) -> ArraySolution {
-    let mut solution = ArraySolution::new(init_solution.len());
-
-    {
-        // cache 作成用
-        solution = opt3::solve(
-            distance,
-            init_solution.clone(),
-            Opt3Config {
-                use_neighbor_cache: true,
-                cache_filepath: get_cache_filepath(distance),
-                debug: false,
-                neighbor_create_parallel: true,
-                scale,
-            },
-        );
-
-        let solutions = (0..100)
-            .into_par_iter()
-            .map(|_iter| {
-                let local_solution = opt3::solve(
-                    distance,
-                    init_solution.clone(),
-                    Opt3Config {
-                        use_neighbor_cache: true,
-                        cache_filepath: get_cache_filepath(distance),
-                        debug: false,
-                        neighbor_create_parallel: false,
-                        scale,
-                    },
-                );
-
-                let mut id = 0;
-                let mut longest_edge = 0;
-                for _iter in 0..local_solution.len() {
-                    let next_id = local_solution.next(id);
-                    let edge = distance.distance(id, next_id);
-                    longest_edge = longest_edge.max(edge);
-                    id = next_id;
-                }
-                (longest_edge, local_solution)
-            })
-            .collect::<Vec<_>>();
-
-        // 最長辺が小さい初期解を頑張って引く
-        let mut best_longest_edge = std::i64::MAX;
-        for (longest_edge, local_solution) in solutions.into_iter() {
-            if best_longest_edge > longest_edge {
-                best_longest_edge = longest_edge;
-                solution = local_solution;
-            }
-        }
-    }
-    eprintln!("finish opt3.");
-    eprintln!("eval = {}", evaluate(distance, &solution) as f64 * scale);
-    solution.save(
-        &PathBuf::from_str(format!("solution_opt3_{}.tsp", distance.name()).as_str()).unwrap(),
-    );
-
+    // 最初に制約を満たすように変異を加える
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
-
-    if solution.next(begin) != end && solution.prev(begin) != end {
-        let success = lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
+    let init_solution = if init_solution.next(begin) != end && init_solution.prev(begin) != end {
+        let success = lkh::connect(distance, &mut init_solution, &neighbor_table, begin, end, 8);
         if success {
             eprintln!("kick need and success.");
-            solution.validate();
-            assert!(solution.next(begin) == end || solution.prev(begin) == end);
-        }
-    }
+            init_solution.validate();
+            assert!(init_solution.next(begin) == end || init_solution.prev(begin) == end);
 
-    let mut solution = lkh::solve(
+            eprintln!(
+                "kick eval = {}",
+                evaluate(distance, &init_solution) as f64 * scale
+            );
+        }
+        init_solution
+    } else {
+        init_solution
+    };
+
+    let mut best_solution = init_solution.clone();
+    let mut best_eval = evaluate(distance, &best_solution);
+
+    // cache 作成用
+    opt3::solve(
         distance,
-        solution,
-        LKHConfig {
+        init_solution.clone(),
+        Opt3Config {
             use_neighbor_cache: true,
             cache_filepath: get_cache_filepath(distance),
             debug: false,
-            time_ms: 60_000,
-            start_kick_step: 30,
-            kick_step_diff: 10,
-            end_kick_step: distance.dimension() as usize / 10,
-            fail_count_threashold: 50,
-            max_depth: 6,
             neighbor_create_parallel: true,
             scale,
         },
     );
-    eprintln!("finish initial lkh.");
-    eprintln!("eval = {}", evaluate(distance, &solution) as f64 * scale);
-    solution.save(
-        &PathBuf::from_str(format!("solution_initial_lkh_{}.tsp", distance.name()).as_str())
-            .unwrap(),
-    );
 
-    if solution.next(begin) != end && solution.prev(begin) != end {
-        let success = lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
-        if success {
-            eprintln!("kick need and success.");
-            solution.validate();
-            assert!(solution.next(begin) == end || solution.prev(begin) == end);
+    let solutions = (0..100)
+        .into_par_iter()
+        .map(|_iter| {
+            let local_solution = opt3::solve(
+                distance,
+                init_solution.clone(),
+                Opt3Config {
+                    use_neighbor_cache: true,
+                    cache_filepath: get_cache_filepath(distance),
+                    debug: false,
+                    neighbor_create_parallel: false,
+                    scale,
+                },
+            );
+
+            let mut local_solution = lkh::solve(
+                distance,
+                local_solution,
+                LKHConfig {
+                    use_neighbor_cache: true,
+                    cache_filepath: get_cache_filepath(distance),
+                    debug: false,
+                    time_ms: 60_000,
+                    start_kick_step: 30,
+                    kick_step_diff: 10,
+                    end_kick_step: distance.dimension() as usize / 10,
+                    fail_count_threashold: 50,
+                    max_depth: 6,
+                    neighbor_create_parallel: true,
+                    scale,
+                },
+            );
+
+            if local_solution.next(begin) != end && local_solution.prev(begin) != end {
+                let success = lkh::connect(
+                    distance,
+                    &mut local_solution,
+                    &neighbor_table,
+                    begin,
+                    end,
+                    8,
+                );
+                if success {
+                    local_solution.validate();
+                    assert!(local_solution.next(begin) == end || local_solution.prev(begin) == end);
+                }
+            }
+
+            let eval = evaluate(distance, &local_solution);
+            eprintln!("eval = {}", eval as f64 / (255.0 * 10000.0));
+            (eval, local_solution)
+        })
+        .collect::<Vec<_>>();
+
+    for (eval, local_solution) in solutions.into_iter() {
+        if best_eval > eval {
+            best_solution = local_solution;
         }
     }
 
-    // 分割して並列化
-    let start_kick_step = 30;
-    let time_ms = 30_000;
-    let mut best_eval = evaluate(distance, &solution);
+    eprintln!("finish opt3.");
+    eprintln!(
+        "eval = {}",
+        evaluate(distance, &best_solution) as f64 * scale
+    );
+    best_solution.save(
+        &PathBuf::from_str(format!("solution_opt3_{}.tsp", distance.name()).as_str()).unwrap(),
+    );
 
-    for iter in 1..2 {
-        solution = divide_and_conqure_solver::solve(
+    // 分割して並列化
+
+    for iter in 1.. {
+        best_solution = divide_and_conqure_solver::solve(
             distance,
-            &solution,
+            &best_solution,
             DivideAndConqureConfig {
                 no_split: 12,
                 debug: false,
-                time_ms,
-                start_kick_step,
+                time_ms: 30_000,
+                start_kick_step: 30,
                 kick_step_diff: 10,
                 end_kick_step: distance.dimension() as usize / 10,
                 fail_count_threashold: 50,
@@ -330,13 +331,13 @@ fn solve_tsp(
                 scale,
             },
         );
-        let eval = evaluate(distance, &solution);
+        let eval = evaluate(distance, &best_solution);
         eprintln!("finish splited lkh {} times.", iter);
         eprintln!("eval = {}", eval as f64 * scale);
         if best_eval == eval {
             break;
         } else {
-            solution.save(
+            best_solution.save(
                 &PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str())
                     .unwrap(),
             );
@@ -344,20 +345,23 @@ fn solve_tsp(
         best_eval = eval;
     }
 
-    if solution.next(begin) != end && solution.prev(begin) != end {
-        let success = lkh::connect(distance, &mut solution, &neighbor_table, begin, end, 8);
+    if best_solution.next(begin) != end && best_solution.prev(begin) != end {
+        let success = lkh::connect(distance, &mut best_solution, &neighbor_table, begin, end, 8);
         if success {
             eprintln!("kick need and success.");
-            solution.validate();
-            assert!(solution.next(begin) == end || solution.prev(begin) == end);
+            best_solution.validate();
+            assert!(best_solution.next(begin) == end || best_solution.prev(begin) == end);
+
+            eprintln!(
+                "kick eval = {}",
+                evaluate(distance, &best_solution) as f64 * scale
+            );
         }
     }
 
-    return solution;
-
-    let solution = lkh::solve(
+    best_solution = lkh::solve(
         distance,
-        solution,
+        best_solution,
         LKHConfig {
             use_neighbor_cache: true,
             cache_filepath: get_cache_filepath(distance),
@@ -373,25 +377,32 @@ fn solve_tsp(
         },
     );
     eprintln!("finish lkh");
-    eprintln!("eval = {}", evaluate(distance, &solution) as f64 * scale);
-    solution.save(&PathBuf::from_str("solution_all_lkh.tsp").unwrap());
+    eprintln!(
+        "eval = {}",
+        evaluate(distance, &best_solution) as f64 * scale
+    );
+    best_solution.save(&PathBuf::from_str("solution_all_lkh.tsp").unwrap());
 
-    solution
+    best_solution
 }
 
 struct PoseSimulator {
     pose_list: Vec<Pose>,
     // size64 を上下方向に動作させるか
-    is_size64_ud: bool,
+    is_size64_vertical: bool,
 }
 
 impl PoseSimulator {
     fn new() -> PoseSimulator {
         PoseSimulator {
             pose_list: vec![Pose::new()],
-            is_size64_ud: false,
+            is_size64_vertical: false,
         }
     }
+
+    fn raw_simulate_auto(&mut self, diff: DiffPose) {}
+
+    fn raw_simulate(&mut self, to: (i16, i16)) {}
 }
 
 // subset に分けて、s-t パスを繋いで最適化する
