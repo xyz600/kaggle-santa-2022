@@ -292,6 +292,39 @@ fn solve_tsp(
                 }
             }
 
+            for _iter in 1..3 {
+                local_solution = divide_and_conqure_solver::solve(
+                    distance,
+                    &local_solution,
+                    DivideAndConqureConfig {
+                        no_split: 12,
+                        debug: false,
+                        time_ms: 30_000,
+                        start_kick_step: 30,
+                        kick_step_diff: 10,
+                        end_kick_step: distance.dimension() as usize / 10,
+                        fail_count_threashold: 50,
+                        max_depth: 7,
+                        scale,
+                    },
+                );
+            }
+
+            if local_solution.next(begin) != end && local_solution.prev(begin) != end {
+                let success = lkh::connect(
+                    distance,
+                    &mut local_solution,
+                    &neighbor_table,
+                    begin,
+                    end,
+                    8,
+                );
+                if success {
+                    local_solution.validate();
+                    assert!(local_solution.next(begin) == end || local_solution.prev(begin) == end);
+                }
+            }
+
             let eval = evaluate(distance, &local_solution);
             eprintln!("eval = {}", eval as f64 / (255.0 * 10000.0));
             (eval, local_solution)
