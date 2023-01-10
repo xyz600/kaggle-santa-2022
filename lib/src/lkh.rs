@@ -259,6 +259,8 @@ pub fn solve(
     let mut no_random_step = config.start_kick_step;
     let mut no_continuous_fail_count = 0;
 
+    let mut kick_mode = false;
+
     for iter in 0.. {
         let a = dlb.random_select(&mut rng);
 
@@ -275,8 +277,14 @@ pub fn solve(
 
             let mut edge_stack = vec![];
 
+            let max_max_depth = if kick_mode {
+                config.max_depth + 1
+            } else {
+                config.max_depth
+            };
+
             // iterative deeping
-            for max_depth in 2..=config.max_depth {
+            for max_depth in 2..=max_max_depth {
                 for (a, b) in [(a_prev, a), (a, a_next)] {
                     selected.set(a);
                     selected.set(b);
@@ -337,6 +345,8 @@ pub fn solve(
         }
 
         if dlb.is_empty() {
+            kick_mode = true;
+
             if config.debug {
                 eprintln!("-----");
                 eprintln!(
