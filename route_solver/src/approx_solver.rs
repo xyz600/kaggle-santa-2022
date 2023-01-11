@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{BinaryHeap, HashMap, HashSet},
     fs::File,
     io::{BufWriter, Write},
     path::PathBuf,
@@ -8,7 +8,7 @@ use std::{
 
 use lib::{
     array_solution::ArraySolution,
-    distance::{self, DistanceFunction},
+    distance::DistanceFunction,
     divide_and_conqure_solver::{self, DivideAndConqureConfig},
     evaluate::evaluate,
     lkh::{self, LKHConfig},
@@ -21,7 +21,7 @@ use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use crate::{
     mst_solution::create_mst_solution,
     onestep_distance::OneStepDistanceFunction,
-    util::{load_image, DiffPose, Direction, Pose},
+    util::{load_image, Cell, Coord, DiffPose, Direction, Pose},
 };
 
 // s-t を同一視するため、以下のルールを採用
@@ -433,14 +433,27 @@ fn solve_tsp(
 struct PoseSimulator {
     pose_list: Vec<Pose>,
     // size64 を上下方向に動作させるか
-    is_size64_vertical: bool,
+    color_list: Vec<Cell>,
+    is_64x64_vertical: bool,
+    index_table: HashMap<(i16, i16), u32>,
 }
 
 impl PoseSimulator {
-    fn new() -> PoseSimulator {
+    fn new(color_list: Vec<Cell>, is_64x64_vertical: bool) -> PoseSimulator {
+        let mut index_table = HashMap::new();
+        let mut index = 0;
+        for y in (-128..=128 as i16).rev() {
+            for x in -128..=128 as i16 {
+                index_table.insert((y, x), index);
+                index += 1;
+            }
+        }
+
         PoseSimulator {
             pose_list: vec![Pose::new()],
-            is_size64_vertical: false,
+            is_64x64_vertical,
+            color_list,
+            index_table,
         }
     }
 
@@ -453,102 +466,261 @@ impl PoseSimulator {
         ret[depth]
     }
 
-    fn simulate_auto_once(&mut self, y: i16, x: i16) {
-        let (cy, cx) = self.pose_list.last().unwrap().coord();
-        let mut dy = y - cy;
-        let mut dx = x - cx;
+    fn create_coord_pose_map(
+        &self,
+        initial_pose: &Pose,
+        is_64x64_vertical: bool,
+    ) -> Vec<Vec<u128>> {
+        // [(i16, i16)] -> Vec<u128>
+        let mut coord_pose_map = vec![vec![]; 257 * 257];
 
-        while dx != 0 || dy != 0 {
-            let mut new_pose = self.pose_list.last().unwrap().clone();
+        let encode_coord = |(y, x)| -> usize { ((y as i64 + 128) * 257 + x as i64 + 128) as usize };
+        let key = encode_coord(initial_pose.coord());
+        coord_pose_map[key].push(initial_pose.encode());
 
-            // 1手で可能な最大遷移を計算
-            let mut diff_pose = [Direction::None; 8];
-            if self.is_size64_vertical {
-                if dy > 0 {
-                    diff_pose[0] = Direction::Up;
-                    dy -= 1;
-                } else if dy < 0 {
-                    diff_pose[0] = Direction::Down;
-                    dy += 1;
-                }
-                let range = if dx > 0 {
-                    (1..8).rev().collect::<Vec<_>>()
-                } else {
-                    (1..8).collect()
-                };
-                for idx in range.into_iter() {
-                    let max_size = Self::get_max_value(idx);
-                    if dx < 0 && new_pose.arm_list[idx].x > -max_size {
-                        diff_pose[idx] = Direction::Left;
-                        dx += 1;
-                    }
-                    if dx > 0 && new_pose.arm_list[idx].x < max_size {
-                        diff_pose[idx] = Direction::Right;
-                        dx -= 1;
-                    }
-                }
-            } else {
-                if dx > 0 {
-                    diff_pose[0] = Direction::Right;
-                    dx -= 1;
-                } else if dx < 0 {
-                    diff_pose[0] = Direction::Left;
-                    dx += 1;
-                }
-                let range = if dy > 0 {
-                    (1..8).rev().collect::<Vec<_>>()
-                } else {
-                    (1..8).collect()
-                };
-                for idx in range.into_iter() {
-                    let max_size = Self::get_max_value(idx);
-                    if dy < 0 && new_pose.arm_list[idx].y > -max_size {
-                        diff_pose[idx] = Direction::Down;
-                        dy += 1;
-                    }
-                    if dy > 0 && new_pose.arm_list[idx].y < max_size {
-                        diff_pose[idx] = Direction::Up;
-                        dy -= 1;
+        let arm = initial_pose.arm_list;
+        if is_64x64_vertical {
+            for y_64 in -64..=64 {
+                for x_32 in -32..=32 {
+                    for x_16 in -16..=16 {
+                        for x_8 in -8..=8 {
+                            for x_4 in -4..=4 {
+                                for x_2 in -2..=2 {
+                                    for x_1_1 in -1..=1 {
+                                        for x_1_2 in -1..=1 {
+                                            let arm_list = [
+                                                Coord::new(y_64, arm[0].x),
+                                                Coord::new(arm[1].y, x_32),
+                                                Coord::new(arm[2].y, x_16),
+                                                Coord::new(arm[3].y, x_8),
+                                                Coord::new(arm[4].y, x_4),
+                                                Coord::new(arm[5].y, x_2),
+                                                Coord::new(arm[6].y, x_1_1),
+                                                Coord::new(arm[7].y, x_1_2),
+                                            ];
+                                            let pose = Pose { arm_list };
+                                            let coord = pose.coord();
+                                            coord_pose_map[encode_coord(coord)].push(pose.encode());
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+        } else {
+            for x_64 in -64..=64 {
+                for y_32 in -32..=32 {
+                    for y_16 in -16..=16 {
+                        for y_8 in -8..=8 {
+                            for y_4 in -4..=4 {
+                                for y_2 in -2..=2 {
+                                    for y_1_1 in -1..=1 {
+                                        for y_1_2 in -1..=1 {
+                                            let arm_list = [
+                                                Coord::new(arm[0].y, x_64),
+                                                Coord::new(y_32, arm[1].x),
+                                                Coord::new(y_16, arm[2].x),
+                                                Coord::new(y_8, arm[3].x),
+                                                Coord::new(y_4, arm[4].x),
+                                                Coord::new(y_2, arm[5].x),
+                                                Coord::new(y_1_1, arm[6].x),
+                                                Coord::new(y_1_2, arm[7].x),
+                                            ];
+                                            let pose = Pose { arm_list };
+                                            let coord = pose.coord();
+                                            coord_pose_map[encode_coord(coord)].push(pose.encode());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        coord_pose_map
+    }
 
-            // 差分を適用
-            let diff_pose = DiffPose {
-                diff_list: diff_pose,
-            };
-            new_pose.apply(&diff_pose);
-            self.pose_list.push(new_pose);
+    fn simulate_best_cost(
+        &mut self,
+        initial_pose: &Pose,
+        point_seq: &Vec<(i16, i16)>,
+        final_pose: &Pose,
+        is_64x64_vertical: bool,
+    ) {
+        let encode_coord = |(y, x)| -> usize { ((y as i64 + 128) * 257 + x as i64 + 128) as usize };
+
+        eprintln!("enter simulate_best_cost");
+        let coord_pose_map = self.create_coord_pose_map(initial_pose, is_64x64_vertical);
+        eprintln!("calculate coord_pose_map");
+
+        let mut cost_table = HashMap::<u128, i64>::new();
+        let initial_pose_enc = initial_pose.encode();
+        cost_table.insert(initial_pose_enc, 0);
+
+        // 復元用の table
+        let mut rev = HashMap::<u128, u128>::new();
+
+        // 頂点間の遷移を全部計算して距離を求める
+        for index in 0..point_seq.len() - 1 {
+            let from = point_seq[index];
+            let to = point_seq[index + 1];
+
+            eprintln!(
+                "from / to size: {} {}",
+                coord_pose_map[encode_coord(from)].len(),
+                coord_pose_map[encode_coord(to)].len()
+            );
+
+            for from_pose_enc in coord_pose_map[encode_coord(from)].iter() {
+                let from_pose = Pose::decode(*from_pose_enc);
+                for to_pose_enc in coord_pose_map[encode_coord(to)].iter() {
+                    let to_pose = Pose::decode(*to_pose_enc);
+
+                    let cost_diff = self.cost(&from_pose, &to_pose, is_64x64_vertical);
+                    let next_cost = cost_table[from_pose_enc] + cost_diff;
+
+                    if !cost_table.contains_key(to_pose_enc) || cost_table[to_pose_enc] > next_cost
+                    {
+                        cost_table.insert(*to_pose_enc, next_cost);
+                        rev.insert(*to_pose_enc, *from_pose_enc);
+                    }
+                }
+            }
+            eprintln!("iter = {}", index);
+        }
+
+        // 復元
+    }
+
+    fn one_step_reachable(&self, from: &Pose, to: &Pose) -> bool {
+        for i in 0..8 {
+            let from_y = from.arm_list[i].y;
+            let to_y = to.arm_list[i].y;
+
+            let from_x = from.arm_list[i].x;
+            let to_x = to.arm_list[i].x;
+
+            if from_y.abs_diff(to_y) > 1 || from_x.abs_diff(to_x) > 1 {
+                return false;
+            }
+        }
+        true
+    }
+
+    // 整数で 255 倍されたリアルのコスト
+    fn cost_one_step(&mut self, from: &Pose, to: &Pose) -> i64 {
+        // 1手でたどり着く場合は迂回しないのが明らかに最善なので簡単
+        let pose_cost = (from.cost(&to) * 255.0 * 10000.0) as i64;
+        let from_color = self.color_list[self.index_table[&from.coord()] as usize];
+        let to_color = self.color_list[self.index_table[&to.coord()] as usize];
+
+        let dr = from_color.r.abs_diff(to_color.r) as i64;
+        let dg = from_color.g.abs_diff(to_color.g) as i64;
+        let db = from_color.b.abs_diff(to_color.b) as i64;
+
+        let color_cost = (dr + dg + db) * 3 * 10000;
+
+        pose_cost + color_cost
+    }
+
+    fn next_direction(&self, max_size: i16, coord: Coord, is_vertical: bool) -> Vec<Direction> {
+        if is_vertical {
+            let mut ret = vec![Direction::None];
+            if max_size > coord.y {
+                ret.push(Direction::Up);
+            }
+            if -max_size < coord.y {
+                ret.push(Direction::Down);
+            }
+            ret
+        } else {
+            let mut ret = vec![Direction::None];
+            if max_size > coord.x {
+                ret.push(Direction::Right);
+            }
+            if -max_size < coord.x {
+                ret.push(Direction::Left);
+            }
+            ret
         }
     }
 
-    // 点列の sequence を再現するように pose を蓄えていく
-    //
-    // 優先度
-    // 1. 中央に近づく動作を優先させる(左右どちらに対しても、長く動ける自由度が増す)
-    // 2. 長い腕の動きを優先させる
-    fn simulate_auto(&mut self, pos_list: &Vec<(i16, i16)>) {
-        for &(y, x) in pos_list.iter() {
-            self.simulate_auto_once(y, x);
+    fn next_pose_list(&self, cur: &Pose, is_64x64_vertical: bool) -> Vec<Pose> {
+        // 無理やり
+        let mut ret = vec![];
+        for dir_64 in self.next_direction(64, cur.arm_list[0], is_64x64_vertical) {
+            for dir_32 in self.next_direction(32, cur.arm_list[1], !is_64x64_vertical) {
+                for dir_16 in self.next_direction(16, cur.arm_list[2], !is_64x64_vertical) {
+                    for dir_8 in self.next_direction(8, cur.arm_list[3], !is_64x64_vertical) {
+                        for dir_4 in self.next_direction(4, cur.arm_list[4], !is_64x64_vertical) {
+                            for dir_2 in self.next_direction(2, cur.arm_list[5], !is_64x64_vertical)
+                            {
+                                for dir_1_1 in
+                                    self.next_direction(1, cur.arm_list[6], !is_64x64_vertical)
+                                {
+                                    for dir_1_2 in
+                                        self.next_direction(1, cur.arm_list[7], !is_64x64_vertical)
+                                    {
+                                        let diff_list = [
+                                            dir_64, dir_32, dir_16, dir_8, dir_4, dir_2, dir_1_1,
+                                            dir_1_2,
+                                        ];
+                                        let diff = DiffPose { diff_list };
+                                        let mut next_pose = cur.clone();
+                                        next_pose.apply(&diff);
+                                        ret.push(next_pose);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+        ret
     }
 
-    fn simulate_manual(&mut self, index: usize, dir: Direction) {
-        let mut new_pose = self.pose_list.last().unwrap().clone();
-        let mut diff_list = [Direction::None; 8];
-        diff_list[index] = dir;
-        let diff = DiffPose { diff_list };
-        new_pose.apply(&diff);
+    // 正確なコスト計算
+    fn cost(&mut self, from: &Pose, to: &Pose, is_64x64_vertical: bool) -> i64 {
+        if self.one_step_reachable(from, to) {
+            self.cost_one_step(from, to)
+        } else {
+            // FIXME: 必要に応じて A* する
 
-        self.pose_list.push(new_pose);
-    }
+            let mut que = BinaryHeap::new();
+            let mut cost_table = HashMap::<u128, i64>::new();
 
-    fn save(&self, filepath: &PathBuf) {
-        let f = File::create(filepath).unwrap();
-        let mut writer = BufWriter::new(f);
-        writer.write("configuration\n".as_bytes()).unwrap();
-        for pose in self.pose_list.iter() {
-            writer.write(pose.to_string().as_bytes()).unwrap();
+            let from_enc = from.encode();
+            que.push((0, from_enc));
+            cost_table.insert(from_enc, 0);
+            let to_enc = to.encode();
+
+            while let Some((cost, enc)) = que.pop() {
+                let cost = -cost;
+                if cost_table[&enc] < cost {
+                    continue;
+                }
+
+                if enc == to_enc {
+                    return cost;
+                }
+
+                // 1歩で行ける全てのコストを計上
+                let pose = Pose::decode(enc);
+                for next_pose in self.next_pose_list(&pose, is_64x64_vertical) {
+                    let next_enc = next_pose.encode();
+                    let diff_cost = self.cost_one_step(&pose, &next_pose);
+                    let next_cost = cost + diff_cost;
+                    if !cost_table.contains_key(&next_enc) || cost_table[&next_enc] > next_cost {
+                        cost_table.insert(next_enc, next_cost);
+                        que.push((-next_cost, next_enc));
+                    }
+                }
+            }
+            unreachable!();
         }
     }
 }
@@ -632,57 +804,41 @@ pub fn solve() {
     // 不要
     // final_subpath.push((0, 1));
     // final_subpath.push((0, 0));
+    let color_table = load_image(&PathBuf::from_str("data/image.csv").unwrap());
 
     // initialize
-    let mut pose_simulator = PoseSimulator::new();
-    for _i in 0..64 {
-        pose_simulator.simulate_manual(0, Direction::Up);
-    }
-    {
-        pose_simulator.is_size64_vertical = false;
-        let mut subpath = ul_subpath.clone();
-        subpath.remove(0);
-        pose_simulator.simulate_auto(&subpath);
-        eprintln!("finish path ul",);
-    }
-    {
-        pose_simulator.is_size64_vertical = true;
-        let mut subpath = ll_subpath.clone();
-        subpath.remove(0);
-        pose_simulator.simulate_auto(&subpath);
-        eprintln!("finish path ll");
-    }
-    {
-        pose_simulator.is_size64_vertical = false;
-        let mut subpath = lr_subpath.clone();
-        subpath.remove(0);
-        pose_simulator.simulate_auto(&subpath);
-        eprintln!("finish path lr");
-    }
-    {
-        pose_simulator.is_size64_vertical = true;
-        let mut subpath = ur_subpath.clone();
-        subpath.remove(0);
-        pose_simulator.simulate_auto(&subpath);
-        eprintln!("finish path ur");
-    }
+    // ul
+    let mut pose_simulator = PoseSimulator::new(color_table.clone(), true);
+    let initial_pose = Pose {
+        arm_list: [
+            Coord::new(64, 64),
+            Coord::new(0, -32),
+            Coord::new(0, -16),
+            Coord::new(0, -8),
+            Coord::new(0, -4),
+            Coord::new(0, -2),
+            Coord::new(0, -1),
+            Coord::new(0, -1),
+        ],
+    };
+    let final_pose = Pose {
+        arm_list: [
+            Coord::new(64, -64),
+            Coord::new(-32, -32),
+            Coord::new(-16, -16),
+            Coord::new(-8, -8),
+            Coord::new(-4, -4),
+            Coord::new(-2, -2),
+            Coord::new(-1, -1),
+            Coord::new(-1, -1),
+        ],
+    };
+    pose_simulator.simulate_best_cost(&initial_pose, &ul_subpath, &final_pose, false);
 
+    // dl
+    // dr
+    // ur
     // finalize
-    pose_simulator.is_size64_vertical = false;
-    for idx in 1..7 {
-        while pose_simulator.pose_list.last().unwrap().arm_list[idx].y > 0 {
-            pose_simulator.simulate_manual(idx, Direction::Down);
-        }
-        while pose_simulator.pose_list.last().unwrap().arm_list[idx].y < 0 {
-            pose_simulator.simulate_manual(idx, Direction::Up);
-        }
-    }
-    eprintln!("finish finalize");
-    pose_simulator.simulate_manual(7, Direction::Left);
-    eprintln!("finish finalize 1");
-    pose_simulator.simulate_manual(7, Direction::Down);
-    eprintln!("finish finalize 2");
-    pose_simulator.save(&PathBuf::from_str("final_result.csv").unwrap());
 
     // merge solutionp
     let mut merged_solution = vec![];
@@ -706,7 +862,6 @@ pub fn solve() {
     final_solution.save(&PathBuf::from_str("final_solution.tsp").unwrap());
 
     // eval
-    let color_table = load_image(&PathBuf::from_str("data/image.csv").unwrap());
     let mut eval = 0.0;
     for i in 0..pose_simulator.pose_list.len() - 1 {
         let pose = pose_simulator.pose_list[i];
