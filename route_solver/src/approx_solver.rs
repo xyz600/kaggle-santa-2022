@@ -8,7 +8,7 @@ use std::{
 
 use lib::{
     array_solution::ArraySolution,
-    distance::DistanceFunction,
+    distance::{self, DistanceFunction},
     divide_and_conqure_solver::{self, DivideAndConqureConfig},
     evaluate::evaluate,
     lkh::{self, LKHConfig},
@@ -223,6 +223,12 @@ fn solve_tsp(
             scale,
         },
     );
+
+    let filepath =
+        PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str()).unwrap();
+    if filepath.exists() {
+        return ArraySolution::load(&filepath);
+    }
 
     // 最初に制約を満たすように変異を加える
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
@@ -465,7 +471,12 @@ impl PoseSimulator {
                     diff_pose[0] = Direction::Down;
                     dy += 1;
                 }
-                for idx in 1..8 {
+                let range = if dx > 0 {
+                    (1..8).rev().collect::<Vec<_>>()
+                } else {
+                    (1..8).collect()
+                };
+                for idx in range.into_iter() {
                     let max_size = Self::get_max_value(idx);
                     if dx < 0 && new_pose.arm_list[idx].x > -max_size {
                         diff_pose[idx] = Direction::Left;
@@ -484,7 +495,12 @@ impl PoseSimulator {
                     diff_pose[0] = Direction::Left;
                     dx += 1;
                 }
-                for idx in 1..8 {
+                let range = if dy > 0 {
+                    (1..8).rev().collect::<Vec<_>>()
+                } else {
+                    (1..8).collect()
+                };
+                for idx in range.into_iter() {
                     let max_size = Self::get_max_value(idx);
                     if dy < 0 && new_pose.arm_list[idx].y > -max_size {
                         diff_pose[idx] = Direction::Down;

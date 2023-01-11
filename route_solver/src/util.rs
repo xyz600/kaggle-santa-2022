@@ -128,6 +128,15 @@ impl Pose {
                 Direction::None => {}
             }
         }
+        self.validate();
+    }
+
+    fn validate(&self) {
+        let size_array = [64, 32, 16, 8, 4, 2, 1, 1];
+        for i in 0..8 {
+            let max_size = size_array[i];
+            assert!(self.arm_list[i].x.abs() == max_size || self.arm_list[i].y.abs() == max_size);
+        }
     }
 
     pub fn encode(&self) -> u128 {
