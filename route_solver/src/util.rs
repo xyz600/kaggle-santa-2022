@@ -200,6 +200,16 @@ impl Pose {
         DiffPose { diff_list }
     }
 
+    pub fn cost(&self, to: &Pose) -> f64 {
+        let mut counter = 0;
+        for i in 0..8 {
+            if self.arm_list[i] != to.arm_list[i] {
+                counter += 1;
+            }
+        }
+        (counter as f64).sqrt()
+    }
+
     pub fn pos_diff(&self, to: &Pose) -> i64 {
         let mut ret = 0;
         for i in 0..8 {

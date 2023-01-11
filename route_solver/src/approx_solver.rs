@@ -21,7 +21,7 @@ use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use crate::{
     mst_solution::create_mst_solution,
     onestep_distance::OneStepDistanceFunction,
-    util::{DiffPose, Direction, Pose},
+    util::{load_image, DiffPose, Direction, Pose},
 };
 
 // s-t を同一視するため、以下のルールを採用
@@ -633,62 +633,56 @@ pub fn solve() {
     // final_subpath.push((0, 1));
     // final_subpath.push((0, 0));
 
-    {
-        // initialize
-        let mut pose_simulator = PoseSimulator::new();
-        for _i in 0..64 {
-            pose_simulator.simulate_manual(0, Direction::Up);
-        }
-        eprintln!("finish init");
-        eprintln!("cur: {:?}", pose_simulator.current());
-        eprintln!("cur pose: {:?}", pose_simulator.pose_list.last().unwrap());
-
-        {
-            pose_simulator.is_size64_vertical = false;
-            let mut subpath = ul_subpath.clone();
-            subpath.remove(0);
-            pose_simulator.simulate_auto(&subpath);
-            eprintln!("finish path ul",);
-        }
-        {
-            pose_simulator.is_size64_vertical = true;
-            let mut subpath = ll_subpath.clone();
-            subpath.remove(0);
-            pose_simulator.simulate_auto(&subpath);
-            eprintln!("finish path ll");
-        }
-        {
-            pose_simulator.is_size64_vertical = false;
-            let mut subpath = lr_subpath.clone();
-            subpath.remove(0);
-            pose_simulator.simulate_auto(&subpath);
-            eprintln!("finish path lr");
-        }
-        {
-            pose_simulator.is_size64_vertical = true;
-            let mut subpath = ur_subpath.clone();
-            subpath.remove(0);
-            pose_simulator.simulate_auto(&subpath);
-            eprintln!("finish path ur");
-        }
-
-        // finalize
-        pose_simulator.is_size64_vertical = false;
-        for idx in 1..7 {
-            while pose_simulator.pose_list.last().unwrap().arm_list[idx].y > 0 {
-                pose_simulator.simulate_manual(idx, Direction::Down);
-            }
-            while pose_simulator.pose_list.last().unwrap().arm_list[idx].y < 0 {
-                pose_simulator.simulate_manual(idx, Direction::Up);
-            }
-        }
-        eprintln!("finish finalize");
-        pose_simulator.simulate_manual(7, Direction::Left);
-        eprintln!("finish finalize 1");
-        pose_simulator.simulate_manual(7, Direction::Down);
-        eprintln!("finish finalize 2");
-        pose_simulator.save(&PathBuf::from_str("final_result.csv").unwrap());
+    // initialize
+    let mut pose_simulator = PoseSimulator::new();
+    for _i in 0..64 {
+        pose_simulator.simulate_manual(0, Direction::Up);
     }
+    {
+        pose_simulator.is_size64_vertical = false;
+        let mut subpath = ul_subpath.clone();
+        subpath.remove(0);
+        pose_simulator.simulate_auto(&subpath);
+        eprintln!("finish path ul",);
+    }
+    {
+        pose_simulator.is_size64_vertical = true;
+        let mut subpath = ll_subpath.clone();
+        subpath.remove(0);
+        pose_simulator.simulate_auto(&subpath);
+        eprintln!("finish path ll");
+    }
+    {
+        pose_simulator.is_size64_vertical = false;
+        let mut subpath = lr_subpath.clone();
+        subpath.remove(0);
+        pose_simulator.simulate_auto(&subpath);
+        eprintln!("finish path lr");
+    }
+    {
+        pose_simulator.is_size64_vertical = true;
+        let mut subpath = ur_subpath.clone();
+        subpath.remove(0);
+        pose_simulator.simulate_auto(&subpath);
+        eprintln!("finish path ur");
+    }
+
+    // finalize
+    pose_simulator.is_size64_vertical = false;
+    for idx in 1..7 {
+        while pose_simulator.pose_list.last().unwrap().arm_list[idx].y > 0 {
+            pose_simulator.simulate_manual(idx, Direction::Down);
+        }
+        while pose_simulator.pose_list.last().unwrap().arm_list[idx].y < 0 {
+            pose_simulator.simulate_manual(idx, Direction::Up);
+        }
+    }
+    eprintln!("finish finalize");
+    pose_simulator.simulate_manual(7, Direction::Left);
+    eprintln!("finish finalize 1");
+    pose_simulator.simulate_manual(7, Direction::Down);
+    eprintln!("finish finalize 2");
+    pose_simulator.save(&PathBuf::from_str("final_result.csv").unwrap());
 
     // merge solutionp
     let mut merged_solution = vec![];
@@ -710,4 +704,23 @@ pub fn solve() {
 
     let final_solution = ArraySolution::from_array(merged_solution);
     final_solution.save(&PathBuf::from_str("final_solution.tsp").unwrap());
+
+    // eval
+    let color_table = load_image(&PathBuf::from_str("data/image.csv").unwrap());
+    let mut eval = 0.0;
+    for i in 0..pose_simulator.pose_list.len() - 1 {
+        let pose = pose_simulator.pose_list[i];
+        let index = orig_index_table[&pose.coord()] as usize;
+        let next_pose = pose_simulator.pose_list[i + 1];
+        let next_index = orig_index_table[&next_pose.coord()] as usize;
+
+        let pos_cost = pose.cost(&next_pose);
+
+        let dr = color_table[index].r.abs_diff(color_table[next_index].r);
+        let dg = color_table[index].g.abs_diff(color_table[next_index].g);
+        let db = color_table[index].b.abs_diff(color_table[next_index].b);
+        let color_cost = (dr + dg + db) as f64 * 3.0 / 255.0;
+        eval += pos_cost + color_cost;
+    }
+    eprintln!("final eval: {}", eval);
 }
