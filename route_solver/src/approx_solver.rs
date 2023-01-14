@@ -435,12 +435,11 @@ struct PoseSimulator {
     pose_list: Vec<Pose>,
     // size64 を上下方向に動作させるか
     color_list: Vec<Cell>,
-    is_64x64_vertical: bool,
     index_table: HashMap<(i16, i16), u32>,
 }
 
 impl PoseSimulator {
-    fn new(color_list: Vec<Cell>, is_64x64_vertical: bool) -> PoseSimulator {
+    fn new(color_list: Vec<Cell>) -> PoseSimulator {
         let mut index_table = HashMap::new();
         let mut index = 0;
         for y in (-128..=128 as i16).rev() {
@@ -452,7 +451,6 @@ impl PoseSimulator {
 
         PoseSimulator {
             pose_list: vec![Pose::new()],
-            is_64x64_vertical,
             color_list,
             index_table,
         }
@@ -544,6 +542,12 @@ impl PoseSimulator {
         coord_pose_map
     }
 
+    fn simulate_manual(&mut self, diff: &DiffPose) {
+        let mut last = self.pose_list.last().unwrap().clone();
+        last.apply(diff);
+        self.pose_list.push(last);
+    }
+
     fn simulate_best_cost(
         &mut self,
         initial_pose: &Pose,
@@ -598,16 +602,31 @@ impl PoseSimulator {
             }
 
             let elapsed = (Instant::now() - start).as_millis();
-            if elapsed > 300_000 {
+            if elapsed > 30_000 {
                 break;
             }
         }
 
         // 復元
+        let mut pose_sequence = vec![];
+        let mut cur = final_pose.encode();
+        let init_enc = initial_pose.encode();
+        while cur != init_enc {
+            let prev_pose_enc = rev[&cur];
+            let cur_pose = Pose::decode(cur);
+            let prev_pose = Pose::decode(prev_pose_enc);
+            let mut subseq = self.cost_pose_seq(&cur_pose, &prev_pose, is_64x64_vertical);
+            // prev_pose を除外
+            subseq.pop();
+            pose_sequence.append(&mut subseq);
+            cur = prev_pose_enc;
+        }
+        pose_sequence.reverse();
+        self.pose_list.append(&mut pose_sequence);
     }
 
     // 整数で 255 倍されたリアルのコスト
-    fn cost_one_step(&mut self, from: &Pose, to: &Pose) -> i64 {
+    fn cost_one_step(&self, from: &Pose, to: &Pose) -> i64 {
         // 1手でたどり着く場合は迂回しないのが明らかに最善なので簡単
         let pose_cost = (from.cost(&to) * 255.0 * 10000.0) as i64;
         let from_color = self.color_list[self.index_table[&from.coord()] as usize];
@@ -666,7 +685,6 @@ impl PoseSimulator {
         let min_x = cur_coord.1.min(to_coord.1);
         let max_x = cur_coord.1.max(to_coord.1);
 
-        // 無理やり
         let mut ret = vec![];
         for dir_64 in self.next_direction(64, cur.arm_list[0], dy, dx, is_64x64_vertical) {
             for dir_32 in self.next_direction(32, cur.arm_list[1], dy, dx, !is_64x64_vertical) {
@@ -723,8 +741,59 @@ impl PoseSimulator {
 
     // 正確なコスト計算
     // from -> to へ行く過程で、ロスなく迎えるコストを全計算する
+    fn cost_pose_seq(&self, from: &Pose, to: &Pose, is_64x64_vertical: bool) -> Vec<Pose> {
+        let mut que = BinaryHeap::new();
+        let mut cost_table = HashMap::<u128, i64>::new();
+
+        let from_enc = from.encode();
+        let to_enc = to.encode();
+        let to_coord = to.coord();
+        let mut rev = HashMap::<u128, u128>::new();
+
+        que.push((0, from_enc));
+        cost_table.insert(from_enc, 0);
+
+        while let Some((cost, enc)) = que.pop() {
+            let cost = -cost;
+            if cost_table[&enc] < cost {
+                continue;
+            }
+
+            if enc == to_enc {
+                // 復元
+                let mut ret = vec![];
+                let mut cur = to_enc;
+                while cur != from_enc {
+                    ret.push(Pose::decode(cur));
+                    cur = rev[&cur];
+                }
+                ret.push(Pose::decode(cur));
+                ret.reverse();
+                return ret;
+            }
+
+            // 1歩で行ける全てのコストを計上
+            let pose = Pose::decode(enc);
+
+            for next_pose in self.next_pose_list(&pose, to_coord, is_64x64_vertical) {
+                let next_enc = next_pose.encode();
+                let diff_cost = self.cost_one_step(&pose, &next_pose);
+                let next_cost = cost + diff_cost;
+
+                if !cost_table.contains_key(&next_enc) || cost_table[&next_enc] > next_cost {
+                    rev.insert(next_enc, enc);
+                    cost_table.insert(next_enc, next_cost);
+                    que.push((-next_cost, next_enc));
+                }
+            }
+        }
+        unreachable!();
+    }
+
+    // 正確なコスト計算
+    // from -> to へ行く過程で、ロスなく迎えるコストを全計算する
     fn cost(
-        &mut self,
+        &self,
         from: &Pose,
         to_coord: (i16, i16),
         is_64x64_vertical: bool,
@@ -763,6 +832,15 @@ impl PoseSimulator {
             }
         }
         ret
+    }
+
+    fn save(&self, filepath: &PathBuf) {
+        let f = File::create(filepath).unwrap();
+        let mut writer = BufWriter::new(f);
+        writer.write("configuration\n".as_bytes()).unwrap();
+        for pose in self.pose_list.iter() {
+            writer.write(pose.to_string().as_bytes()).unwrap();
+        }
     }
 }
 
@@ -846,6 +924,16 @@ pub fn solve() {
     // final_subpath.push((0, 1));
     // final_subpath.push((0, 0));
     let color_table = load_image(&PathBuf::from_str("data/image.csv").unwrap());
+    let mut pose_simulator = PoseSimulator::new(color_table.clone());
+
+    // initialize
+    for _iter in 0..64 {
+        let mut diff = DiffPose {
+            diff_list: [Direction::None; 8],
+        };
+        diff.diff_list[0] = Direction::Up;
+        pose_simulator.simulate_manual(&diff);
+    }
 
     let intermediate = vec![
         [
@@ -910,8 +998,6 @@ pub fn solve() {
         .map(|arm_list| Pose { arm_list })
         .collect::<Vec<_>>();
 
-    // initialize
-    let mut pose_simulator = PoseSimulator::new(color_table.clone(), true);
     let subpath_list = vec![
         ul_subpath.clone(),
         ll_subpath.clone(),
@@ -931,6 +1017,31 @@ pub fn solve() {
             is_64x64_vertical,
         );
     }
+    for i in 1..7 {
+        let max_size_list = [64, 32, 16, 8, 4, 2, 1, 1];
+        for _iter in 0..max_size_list[i] {
+            let mut diff = DiffPose {
+                diff_list: [Direction::None; 8],
+            };
+            diff.diff_list[i] = Direction::Down;
+            pose_simulator.simulate_manual(&diff);
+        }
+    }
+    {
+        let mut diff = DiffPose {
+            diff_list: [Direction::None; 8],
+        };
+        diff.diff_list[7] = Direction::Left;
+        pose_simulator.simulate_manual(&diff);
+    }
+    {
+        let mut diff = DiffPose {
+            diff_list: [Direction::None; 8],
+        };
+        diff.diff_list[7] = Direction::Down;
+        pose_simulator.simulate_manual(&diff);
+    }
+    pose_simulator.save(&PathBuf::from_str("final_solution.csv").unwrap());
 
     // merge solutionp
     let mut merged_solution = vec![];
