@@ -401,6 +401,7 @@ fn reconstruct_route(route_str: Vec<char>) -> Vec<u32> {
     solution_array
 }
 
+#[derive(Clone)]
 struct StepDistanceFunction {
     distance_table: Vec<Vec<i64>>,
 }

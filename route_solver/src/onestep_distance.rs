@@ -35,6 +35,7 @@ pub struct Cell {
     b: i64,
 }
 
+#[derive(Clone)]
 pub struct OneStepDistanceFunction {
     cell_list: Vec<Cell>,
     is_64x64_vertical: bool,

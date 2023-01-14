@@ -29,6 +29,7 @@ use crate::{
 // - s-t をまとめて 1頂点として採用(p とする)
 // - p と p 以外(q とする)の距離を測る時、s-q, t-q 間の近い方を採用
 // - p と q が離れている限りは
+#[derive(Clone)]
 struct SubPathDistance {
     coord_set: Vec<(i16, i16)>,
     begin_id: u32,
@@ -206,7 +207,7 @@ fn get_cache_filepath(distance: &impl DistanceFunction) -> PathBuf {
 }
 
 fn solve_tsp(
-    distance: &(impl DistanceFunction + std::marker::Sync),
+    distance: &(impl DistanceFunction + std::marker::Sync + Clone),
     mut init_solution: ArraySolution,
     scale: f64,
     begin: u32,
@@ -225,11 +226,11 @@ fn solve_tsp(
         },
     );
 
-    let filepath =
-        PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str()).unwrap();
-    if filepath.exists() {
-        return ArraySolution::load(&filepath);
-    }
+    // let filepath =
+    //     PathBuf::from_str(format!("solution_final_lkh_{}.tsp", distance.name()).as_str()).unwrap();
+    // if filepath.exists() {
+    //     return ArraySolution::load(&filepath);
+    // }
 
     // 最初に制約を満たすように変異を加える
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
@@ -253,7 +254,7 @@ fn solve_tsp(
     let mut best_solution = init_solution.clone();
     let mut best_eval = evaluate(distance, &best_solution);
 
-    let solutions = (0..96)
+    let solutions = (0..24)
         .into_par_iter()
         .map(|_iter| {
             let local_solution = opt3::solve(
@@ -275,12 +276,12 @@ fn solve_tsp(
                     use_neighbor_cache: true,
                     cache_filepath: get_cache_filepath(distance),
                     debug: false,
-                    time_ms: 60_000,
+                    time_ms: 90_000,
                     start_kick_step: 30,
                     kick_step_diff: 10,
                     end_kick_step: distance.dimension() as usize / 10,
                     fail_count_threashold: 50,
-                    max_depth: 6,
+                    max_depth: 7,
                     neighbor_create_parallel: true,
                     scale,
                 },
@@ -305,41 +306,7 @@ fn solve_tsp(
         })
         .collect::<Vec<_>>();
 
-    for (_, mut local_solution) in solutions.into_iter() {
-        // 並列化して最適化
-        for _iter in 0..2 {
-            local_solution = divide_and_conqure_solver::solve(
-                distance,
-                &local_solution,
-                DivideAndConqureConfig {
-                    no_split: 12,
-                    debug: false,
-                    time_ms: 30_000,
-                    start_kick_step: 30,
-                    kick_step_diff: 10,
-                    end_kick_step: distance.dimension() as usize / 10,
-                    fail_count_threashold: 50,
-                    max_depth: 7,
-                    scale,
-                },
-            );
-        }
-
-        if local_solution.next(begin) != end && local_solution.prev(begin) != end {
-            let success = lkh::connect(
-                distance,
-                &mut local_solution,
-                &neighbor_table,
-                begin,
-                end,
-                8,
-            );
-            if success {
-                local_solution.validate();
-                assert!(local_solution.next(begin) == end || local_solution.prev(begin) == end);
-            }
-        }
-
+    for (_, local_solution) in solutions.into_iter() {
         let eval = evaluate(distance, &local_solution);
         eprintln!("eval = {}", eval as f64 / (255.0 * 10000.0));
 
@@ -372,7 +339,7 @@ fn solve_tsp(
                 kick_step_diff: 10,
                 end_kick_step: distance.dimension() as usize / 10,
                 fail_count_threashold: 50,
-                max_depth: 7,
+                max_depth: 8,
                 scale,
             },
         );
@@ -410,13 +377,13 @@ fn solve_tsp(
         LKHConfig {
             use_neighbor_cache: true,
             cache_filepath: get_cache_filepath(distance),
-            debug: true,
-            time_ms: 1000 * 60 * 5,
+            debug: false,
+            time_ms: 1000 * 60 * 10,
             start_kick_step: 30,
             kick_step_diff: 10,
             end_kick_step: 1000,
             fail_count_threashold: 50,
-            max_depth: 7,
+            max_depth: 8,
             neighbor_create_parallel: true,
             scale,
         },
@@ -426,7 +393,9 @@ fn solve_tsp(
         "eval = {}",
         evaluate(distance, &best_solution) as f64 * scale
     );
-    best_solution.save(&PathBuf::from_str("solution_all_lkh.tsp").unwrap());
+    best_solution.save(
+        &PathBuf::from_str(format!("solution_final_lkh_{}.tsp", distance.name()).as_str()).unwrap(),
+    );
 
     best_solution
 }
@@ -602,7 +571,7 @@ impl PoseSimulator {
             }
 
             let elapsed = (Instant::now() - start).as_millis();
-            if elapsed > 30_000 {
+            if elapsed > 120_000 {
                 break;
             }
         }

@@ -16,7 +16,7 @@ fn get_cache_filepath(distance: &impl DistanceFunction) -> PathBuf {
 }
 
 pub fn solve_tsp(
-    distance: &(impl DistanceFunction + std::marker::Sync),
+    distance: &(impl DistanceFunction + std::marker::Sync + std::clone::Clone),
     init_solution: ArraySolution,
     scale: f64,
 ) -> ArraySolution {
@@ -82,14 +82,14 @@ pub fn solve_tsp(
             use_neighbor_cache: true,
             cache_filepath: get_cache_filepath(distance),
             debug: true,
-            time_ms: 60_000,
+            time_ms: 240_000,
             start_kick_step: 30,
             kick_step_diff: 10,
             end_kick_step: distance.dimension() as usize / 10,
             fail_count_threashold: 50,
             max_depth: 6,
             neighbor_create_parallel: true,
-            scale: scale,
+            scale,
         },
     );
     eprintln!("finish initial lkh.");
@@ -98,7 +98,7 @@ pub fn solve_tsp(
 
     // 分割して並列化
     let mut start_kick_step = 30;
-    let mut time_ms = 30_000;
+    let mut time_ms = 120_000;
     let mut best_eval = evaluate(distance, &solution);
 
     for iter in 1.. {
@@ -113,8 +113,8 @@ pub fn solve_tsp(
                 kick_step_diff: 10,
                 end_kick_step: distance.dimension() as usize / 10,
                 fail_count_threashold: 50,
-                max_depth: 7,
-                scale: scale,
+                max_depth: 6,
+                scale,
             },
         );
         let eval = evaluate(distance, &solution);

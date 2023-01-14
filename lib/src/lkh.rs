@@ -238,7 +238,7 @@ pub fn solve(
     let neighbor_table = if config.use_neighbor_cache && config.cache_filepath.exists() {
         NeighborTable::load(&config.cache_filepath)
     } else {
-        let table = NeighborTable::new(distance, 5, config.neighbor_create_parallel);
+        let table = NeighborTable::new(distance, 4, config.neighbor_create_parallel);
         if config.use_neighbor_cache {
             table.save(&config.cache_filepath);
         }
@@ -331,7 +331,7 @@ pub fn solve(
             dlb.remove(a);
         }
 
-        if iter % 1000 == 0 {
+        if iter % 100 == 0 {
             if config.debug {
                 eprintln!("-----");
                 eprintln!(

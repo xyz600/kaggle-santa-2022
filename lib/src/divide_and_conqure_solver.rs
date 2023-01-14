@@ -17,7 +17,7 @@ struct DividedDistance<'a, T: DistanceFunction> {
     name: String,
 }
 
-impl<'a, T: DistanceFunction> DividedDistance<'a, T> {
+impl<'a, T: DistanceFunction + Clone> DividedDistance<'a, T> {
     fn new(
         ref_distance: &'a T,
         vertex_map: Vec<u32>,
@@ -70,7 +70,7 @@ pub struct DivideAndConqureConfig {
 
 // スレッド数で問題を分割して、最終的に統合
 pub fn solve(
-    distance: &(impl DistanceFunction + std::marker::Sync),
+    distance: &(impl DistanceFunction + std::marker::Sync + std::clone::Clone),
     solution: &impl Solution,
     config: DivideAndConqureConfig,
 ) -> ArraySolution {
