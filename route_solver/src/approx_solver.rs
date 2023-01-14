@@ -4,6 +4,7 @@ use std::{
     io::{BufWriter, Write},
     path::PathBuf,
     str::FromStr,
+    time::Instant,
 };
 
 use lib::{
@@ -553,41 +554,53 @@ impl PoseSimulator {
         // 復元用の table
         let mut rev = HashMap::<u128, u128>::new();
 
-        let mut prev_pose_list = HashMap::<u128, i64>::new();
-        let mut next_pose_list = HashMap::<u128, i64>::new();
-        prev_pose_list.insert(initial_pose.encode(), 0);
+        let mut cost_table = HashMap::<u128, i64>::new();
 
-        // 頂点間の遷移を全部計算して距離を求める
-        for index in 0..point_seq.len() - 1 {
-            let to = point_seq[index + 1];
-            let mut cost_table = HashMap::<u128, i64>::new();
+        // chokudai search
+        let mut pose_buffer = vec![BinaryHeap::<(i64, u128)>::new(); point_seq.len()];
+        pose_buffer[0].push((0, initial_pose.encode()));
+        cost_table.insert(initial_pose.encode(), 0);
 
-            for (from_pose_enc, cost) in prev_pose_list.iter() {
-                let from_pose = Pose::decode(*from_pose_enc);
-                for (to_pose_enc, to_cost) in self.cost(&from_pose, to, is_64x64_vertical) {
-                    let next_cost = cost + to_cost;
-                    if !cost_table.contains_key(&to_pose_enc)
-                        || cost_table[&to_pose_enc] > next_cost
-                    {
-                        cost_table.insert(to_pose_enc, next_cost);
-                        rev.insert(to_pose_enc, *from_pose_enc);
-                        next_pose_list.insert(to_pose_enc, next_cost);
+        let mut last_pose_set = HashMap::<u128, i64>::new();
+        let mut best_cost = std::f64::MAX;
+
+        let start = Instant::now();
+        loop {
+            for index in 0..point_seq.len() - 1 {
+                let to = point_seq[index + 1];
+
+                if let Some((cost, from_pose_enc)) = pose_buffer[index].pop() {
+                    let cost = -cost;
+                    let from_pose = Pose::decode(from_pose_enc);
+                    for (to_pose_enc, to_cost) in self.cost(&from_pose, to, is_64x64_vertical) {
+                        let next_cost = cost + to_cost;
+                        if !cost_table.contains_key(&to_pose_enc)
+                            || cost_table[&to_pose_enc] > next_cost
+                        {
+                            cost_table.insert(to_pose_enc, next_cost);
+                            rev.insert(to_pose_enc, from_pose_enc);
+                            pose_buffer[index + 1].push((-next_cost, to_pose_enc));
+
+                            if index == point_seq.len() - 2 {
+                                last_pose_set.insert(to_pose_enc, next_cost);
+                            }
+                        }
                     }
                 }
             }
-            eprintln!(
-                "from size = {}, to size = {}",
-                prev_pose_list.len(),
-                next_pose_list.len()
-            );
-            for (next, _) in next_pose_list.iter() {
-                let pose = Pose::decode(*next);
-                assert_eq!(pose.coord(), to);
+
+            for (k, v) in last_pose_set.iter() {
+                let v = *v as f64 / (255.0 * 10000.0);
+                if best_cost > v {
+                    best_cost = v;
+                    eprintln!("last cost: {}", v);
+                }
             }
 
-            (prev_pose_list, next_pose_list) = (next_pose_list, prev_pose_list);
-            next_pose_list.clear();
-            eprintln!("iter = {}", index);
+            let elapsed = (Instant::now() - start).as_millis();
+            if elapsed > 300_000 {
+                break;
+            }
         }
 
         // 復元
@@ -834,39 +847,90 @@ pub fn solve() {
     // final_subpath.push((0, 0));
     let color_table = load_image(&PathBuf::from_str("data/image.csv").unwrap());
 
-    // initialize
-    // ul
-    let mut pose_simulator = PoseSimulator::new(color_table.clone(), true);
-    let initial_pose = Pose {
-        arm_list: [
-            Coord::new(64, 64),
-            Coord::new(0, -32),
-            Coord::new(0, -16),
-            Coord::new(0, -8),
-            Coord::new(0, -4),
-            Coord::new(0, -2),
-            Coord::new(0, -1),
-            Coord::new(0, -1),
+    let intermediate = vec![
+        [
+            // S'
+            (64, 64),
+            (0, -32),
+            (0, -16),
+            (0, -8),
+            (0, -4),
+            (0, -2),
+            (0, -1),
+            (0, -1),
         ],
-    };
-    let final_pose = Pose {
-        arm_list: [
-            Coord::new(64, -64),
-            Coord::new(-32, -32),
-            Coord::new(-16, -16),
-            Coord::new(-8, -8),
-            Coord::new(-4, -4),
-            Coord::new(-2, -2),
-            Coord::new(-1, -1),
-            Coord::new(-1, -1),
+        [
+            // B
+            (64, -64),
+            (-32, -32),
+            (-16, -16),
+            (-8, -8),
+            (-4, -4),
+            (-2, -2),
+            (-1, -1),
+            (-1, -1),
         ],
-    };
-    pose_simulator.simulate_best_cost(&initial_pose, &ul_subpath, &final_pose, false);
+        [
+            // C
+            (-64, -64),
+            (-32, 32),
+            (-16, 16),
+            (-8, 8),
+            (-4, 4),
+            (-2, 2),
+            (-1, 1),
+            (-1, 1),
+        ],
+        [
+            // D
+            (-64, 64),
+            (32, 32),
+            (16, 16),
+            (8, 8),
+            (4, 4),
+            (2, 2),
+            (1, 1),
+            (1, 1),
+        ],
+        [
+            // E
+            (0, 64),
+            (32, -32),
+            (16, -16),
+            (8, -8),
+            (4, -4),
+            (2, -2),
+            (1, -1),
+            (1, 0),
+        ],
+    ];
+    let intermediate = intermediate
+        .into_iter()
+        .map(|array| array.map(|(y, x)| Coord::new(y, x)))
+        .map(|arm_list| Pose { arm_list })
+        .collect::<Vec<_>>();
 
-    // dl
-    // dr
-    // ur
-    // finalize
+    // initialize
+    let mut pose_simulator = PoseSimulator::new(color_table.clone(), true);
+    let subpath_list = vec![
+        ul_subpath.clone(),
+        ll_subpath.clone(),
+        lr_subpath.clone(),
+        ur_subpath.clone(),
+    ];
+    for index in 0..4 {
+        let initial_pose = intermediate[index].clone();
+        let final_pose = intermediate[index + 1].clone();
+        assert_eq!(*subpath_list[index].first().unwrap(), initial_pose.coord());
+        assert_eq!(*subpath_list[index].last().unwrap(), final_pose.coord());
+        let is_64x64_vertical = index % 2 == 1;
+        pose_simulator.simulate_best_cost(
+            &initial_pose,
+            &subpath_list[index],
+            &final_pose,
+            is_64x64_vertical,
+        );
+    }
 
     // merge solutionp
     let mut merged_solution = vec![];
