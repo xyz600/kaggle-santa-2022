@@ -550,64 +550,47 @@ impl PoseSimulator {
         final_pose: &Pose,
         is_64x64_vertical: bool,
     ) {
-        let encode_coord = |(y, x)| -> usize { ((y as i64 + 128) * 257 + x as i64 + 128) as usize };
-
-        eprintln!("enter simulate_best_cost");
-        let coord_pose_map = self.create_coord_pose_map(initial_pose, is_64x64_vertical);
-        eprintln!("calculate coord_pose_map");
-
-        let mut cost_table = HashMap::<u128, i64>::new();
-        let initial_pose_enc = initial_pose.encode();
-        cost_table.insert(initial_pose_enc, 0);
-
         // 復元用の table
         let mut rev = HashMap::<u128, u128>::new();
 
+        let mut prev_pose_list = HashMap::<u128, i64>::new();
+        let mut next_pose_list = HashMap::<u128, i64>::new();
+        prev_pose_list.insert(initial_pose.encode(), 0);
+
         // 頂点間の遷移を全部計算して距離を求める
         for index in 0..point_seq.len() - 1 {
-            let from = point_seq[index];
             let to = point_seq[index + 1];
+            let mut cost_table = HashMap::<u128, i64>::new();
 
-            eprintln!(
-                "from / to size: {} {}",
-                coord_pose_map[encode_coord(from)].len(),
-                coord_pose_map[encode_coord(to)].len()
-            );
-
-            for from_pose_enc in coord_pose_map[encode_coord(from)].iter() {
+            for (from_pose_enc, cost) in prev_pose_list.iter() {
                 let from_pose = Pose::decode(*from_pose_enc);
-                for to_pose_enc in coord_pose_map[encode_coord(to)].iter() {
-                    let to_pose = Pose::decode(*to_pose_enc);
-
-                    let cost_diff = self.cost(&from_pose, &to_pose, is_64x64_vertical);
-                    let next_cost = cost_table[from_pose_enc] + cost_diff;
-
-                    if !cost_table.contains_key(to_pose_enc) || cost_table[to_pose_enc] > next_cost
+                for (to_pose_enc, to_cost) in self.cost(&from_pose, to, is_64x64_vertical) {
+                    let next_cost = cost + to_cost;
+                    if !cost_table.contains_key(&to_pose_enc)
+                        || cost_table[&to_pose_enc] > next_cost
                     {
-                        cost_table.insert(*to_pose_enc, next_cost);
-                        rev.insert(*to_pose_enc, *from_pose_enc);
+                        cost_table.insert(to_pose_enc, next_cost);
+                        rev.insert(to_pose_enc, *from_pose_enc);
+                        next_pose_list.insert(to_pose_enc, next_cost);
                     }
                 }
             }
+            eprintln!(
+                "from size = {}, to size = {}",
+                prev_pose_list.len(),
+                next_pose_list.len()
+            );
+            for (next, _) in next_pose_list.iter() {
+                let pose = Pose::decode(*next);
+                assert_eq!(pose.coord(), to);
+            }
+
+            (prev_pose_list, next_pose_list) = (next_pose_list, prev_pose_list);
+            next_pose_list.clear();
             eprintln!("iter = {}", index);
         }
 
         // 復元
-    }
-
-    fn one_step_reachable(&self, from: &Pose, to: &Pose) -> bool {
-        for i in 0..8 {
-            let from_y = from.arm_list[i].y;
-            let to_y = to.arm_list[i].y;
-
-            let from_x = from.arm_list[i].x;
-            let to_x = to.arm_list[i].x;
-
-            if from_y.abs_diff(to_y) > 1 || from_x.abs_diff(to_x) > 1 {
-                return false;
-            }
-        }
-        true
     }
 
     // 整数で 255 倍されたリアルのコスト
@@ -626,44 +609,77 @@ impl PoseSimulator {
         pose_cost + color_cost
     }
 
-    fn next_direction(&self, max_size: i16, coord: Coord, is_vertical: bool) -> Vec<Direction> {
+    fn next_direction(
+        &self,
+        max_size: i16,
+        coord: Coord,
+        dy: i16,
+        dx: i16,
+        is_vertical: bool,
+    ) -> Vec<Direction> {
         if is_vertical {
             let mut ret = vec![Direction::None];
-            if max_size > coord.y {
+            if dy > 0 && max_size > coord.y {
                 ret.push(Direction::Up);
             }
-            if -max_size < coord.y {
+            if dy < 0 && -max_size < coord.y {
                 ret.push(Direction::Down);
             }
             ret
         } else {
             let mut ret = vec![Direction::None];
-            if max_size > coord.x {
+            if dx > 0 && max_size > coord.x {
                 ret.push(Direction::Right);
             }
-            if -max_size < coord.x {
+            if dx < 0 && -max_size < coord.x {
                 ret.push(Direction::Left);
             }
             ret
         }
     }
 
-    fn next_pose_list(&self, cur: &Pose, is_64x64_vertical: bool) -> Vec<Pose> {
+    fn next_pose_list(
+        &self,
+        cur: &Pose,
+        to_coord: (i16, i16),
+        is_64x64_vertical: bool,
+    ) -> Vec<Pose> {
+        let cur_coord = cur.coord();
+        let dx = to_coord.1 - cur_coord.1;
+        let dy = to_coord.0 - cur_coord.0;
+
+        let min_y = cur_coord.0.min(to_coord.0);
+        let max_y = cur_coord.0.max(to_coord.0);
+        let min_x = cur_coord.1.min(to_coord.1);
+        let max_x = cur_coord.1.max(to_coord.1);
+
         // 無理やり
         let mut ret = vec![];
-        for dir_64 in self.next_direction(64, cur.arm_list[0], is_64x64_vertical) {
-            for dir_32 in self.next_direction(32, cur.arm_list[1], !is_64x64_vertical) {
-                for dir_16 in self.next_direction(16, cur.arm_list[2], !is_64x64_vertical) {
-                    for dir_8 in self.next_direction(8, cur.arm_list[3], !is_64x64_vertical) {
-                        for dir_4 in self.next_direction(4, cur.arm_list[4], !is_64x64_vertical) {
-                            for dir_2 in self.next_direction(2, cur.arm_list[5], !is_64x64_vertical)
+        for dir_64 in self.next_direction(64, cur.arm_list[0], dy, dx, is_64x64_vertical) {
+            for dir_32 in self.next_direction(32, cur.arm_list[1], dy, dx, !is_64x64_vertical) {
+                for dir_16 in self.next_direction(16, cur.arm_list[2], dy, dx, !is_64x64_vertical) {
+                    for dir_8 in self.next_direction(8, cur.arm_list[3], dy, dx, !is_64x64_vertical)
+                    {
+                        for dir_4 in
+                            self.next_direction(4, cur.arm_list[4], dy, dx, !is_64x64_vertical)
+                        {
+                            for dir_2 in
+                                self.next_direction(2, cur.arm_list[5], dy, dx, !is_64x64_vertical)
                             {
-                                for dir_1_1 in
-                                    self.next_direction(1, cur.arm_list[6], !is_64x64_vertical)
-                                {
-                                    for dir_1_2 in
-                                        self.next_direction(1, cur.arm_list[7], !is_64x64_vertical)
-                                    {
+                                for dir_1_1 in self.next_direction(
+                                    1,
+                                    cur.arm_list[6],
+                                    dy,
+                                    dx,
+                                    !is_64x64_vertical,
+                                ) {
+                                    for dir_1_2 in self.next_direction(
+                                        1,
+                                        cur.arm_list[7],
+                                        dy,
+                                        dx,
+                                        !is_64x64_vertical,
+                                    ) {
                                         let diff_list = [
                                             dir_64, dir_32, dir_16, dir_8, dir_4, dir_2, dir_1_1,
                                             dir_1_2,
@@ -671,7 +687,16 @@ impl PoseSimulator {
                                         let diff = DiffPose { diff_list };
                                         let mut next_pose = cur.clone();
                                         next_pose.apply(&diff);
-                                        ret.push(next_pose);
+
+                                        // from -> to へ遠回りせず行くためのルートを計算するので、from -> to 内の区間で十分
+                                        let next_coord = next_pose.coord();
+                                        if min_y <= next_coord.0
+                                            && next_coord.0 <= max_y
+                                            && min_x <= next_coord.1
+                                            && next_coord.1 <= max_x
+                                        {
+                                            ret.push(next_pose);
+                                        }
                                     }
                                 }
                             }
@@ -684,44 +709,47 @@ impl PoseSimulator {
     }
 
     // 正確なコスト計算
-    fn cost(&mut self, from: &Pose, to: &Pose, is_64x64_vertical: bool) -> i64 {
-        if self.one_step_reachable(from, to) {
-            self.cost_one_step(from, to)
-        } else {
-            // FIXME: 必要に応じて A* する
+    // from -> to へ行く過程で、ロスなく迎えるコストを全計算する
+    fn cost(
+        &mut self,
+        from: &Pose,
+        to_coord: (i16, i16),
+        is_64x64_vertical: bool,
+    ) -> HashMap<u128, i64> {
+        let mut ret = HashMap::new();
 
-            let mut que = BinaryHeap::new();
-            let mut cost_table = HashMap::<u128, i64>::new();
+        let mut que = BinaryHeap::new();
+        let mut cost_table = HashMap::<u128, i64>::new();
 
-            let from_enc = from.encode();
-            que.push((0, from_enc));
-            cost_table.insert(from_enc, 0);
-            let to_enc = to.encode();
+        let from_enc = from.encode();
+        que.push((0, from_enc));
+        cost_table.insert(from_enc, 0);
 
-            while let Some((cost, enc)) = que.pop() {
-                let cost = -cost;
-                if cost_table[&enc] < cost {
-                    continue;
-                }
+        while let Some((cost, enc)) = que.pop() {
+            let cost = -cost;
+            if cost_table[&enc] < cost {
+                continue;
+            }
 
-                if enc == to_enc {
-                    return cost;
-                }
+            // 1歩で行ける全てのコストを計上
+            let pose = Pose::decode(enc);
 
-                // 1歩で行ける全てのコストを計上
-                let pose = Pose::decode(enc);
-                for next_pose in self.next_pose_list(&pose, is_64x64_vertical) {
-                    let next_enc = next_pose.encode();
-                    let diff_cost = self.cost_one_step(&pose, &next_pose);
-                    let next_cost = cost + diff_cost;
-                    if !cost_table.contains_key(&next_enc) || cost_table[&next_enc] > next_cost {
-                        cost_table.insert(next_enc, next_cost);
-                        que.push((-next_cost, next_enc));
-                    }
+            if pose.coord() == to_coord {
+                ret.insert(enc, cost);
+            }
+
+            for next_pose in self.next_pose_list(&pose, to_coord, is_64x64_vertical) {
+                let next_enc = next_pose.encode();
+                let diff_cost = self.cost_one_step(&pose, &next_pose);
+                let next_cost = cost + diff_cost;
+
+                if !cost_table.contains_key(&next_enc) || cost_table[&next_enc] > next_cost {
+                    cost_table.insert(next_enc, next_cost);
+                    que.push((-next_cost, next_enc));
                 }
             }
-            unreachable!();
         }
+        ret
     }
 }
 
