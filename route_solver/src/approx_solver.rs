@@ -21,6 +21,7 @@ use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 
 use crate::{
     mst_solution::create_mst_solution,
+    onestep_approx_distance::OneStepApproximateDistanceFunction,
     onestep_distance::OneStepDistanceFunction,
     util::{load_image, Cell, Coord, DiffPose, Direction, Pose},
 };
@@ -30,18 +31,18 @@ use crate::{
 // - p と p 以外(q とする)の距離を測る時、s-q, t-q 間の近い方を採用
 // - p と q が離れている限りは
 #[derive(Clone)]
-struct SubPathDistance {
+struct SubPathDistance<T: DistanceFunction> {
     coord_set: Vec<(i16, i16)>,
     begin_id: u32,
     end_id: u32,
-    orig_distance: OneStepDistanceFunction,
+    orig_distance: T,
     orig_index_map: HashMap<(i16, i16), u32>,
     name: String,
 }
 
-impl SubPathDistance {}
+impl<T: DistanceFunction> SubPathDistance<T> {}
 
-impl DistanceFunction for SubPathDistance {
+impl<T: DistanceFunction> DistanceFunction for SubPathDistance<T> {
     fn distance(&self, id1: u32, id2: u32) -> i64 {
         if (self.begin_id == id1 && self.end_id == id2)
             || (self.begin_id == id2 && self.end_id == id1)
@@ -226,11 +227,11 @@ fn solve_tsp(
         },
     );
 
-    // let filepath =
-    //     PathBuf::from_str(format!("solution_final_lkh_{}.tsp", distance.name()).as_str()).unwrap();
-    // if filepath.exists() {
-    //     return ArraySolution::load(&filepath);
-    // }
+    let filepath =
+        PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str()).unwrap();
+    if filepath.exists() {
+        return ArraySolution::load(&filepath);
+    }
 
     // 最初に制約を満たすように変異を加える
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
@@ -811,6 +812,154 @@ impl PoseSimulator {
             writer.write(pose.to_string().as_bytes()).unwrap();
         }
     }
+}
+
+pub fn solve2() {
+    // y: [-8, 8], x: [0, 4] の 17 x 5 = 85 マス以外は、自由に解く
+    // それ以外は復元パートの chokudai search を信じろ！
+
+    let mut orig_index_map = HashMap::<(i16, i16), u32>::new();
+    {
+        let mut index = 0u32;
+        for y in (-128..=128).rev() {
+            for x in -128..=128 {
+                orig_index_map.insert((y, x), index);
+                index += 1;
+            }
+        }
+    }
+
+    let mut coord_list = vec![];
+    for y in -128..=128 {
+        for x in -128..=128 {
+            if !(-8 <= y && y <= 8 && 0 <= x && x <= 4) {
+                coord_list.push((y, x));
+            }
+        }
+    }
+
+    let begin = (8, 4);
+    let end = (-8, 4);
+
+    coord_list.push(begin);
+    coord_list.push(end);
+
+    // calculate_subpath
+
+    let orig_distance =
+        OneStepApproximateDistanceFunction::load(&PathBuf::from_str("data/image.csv").unwrap());
+
+    let mut index_map = HashMap::new();
+    for (i, coord) in coord_list.iter().enumerate() {
+        index_map.insert(coord, i as u32);
+    }
+    let index_map = index_map;
+
+    let mut begin_id = std::u32::MAX;
+    let mut end_id = std::u32::MAX;
+    for i in 0..coord_list.len() {
+        if coord_list[i] == begin {
+            begin_id = i as u32;
+        }
+        if coord_list[i] == end {
+            end_id = i as u32;
+        }
+    }
+    assert_ne!(begin_id, std::u32::MAX);
+    assert_ne!(end_id, std::u32::MAX);
+    let begin_id = begin_id;
+    let end_id = end_id;
+
+    let distance = SubPathDistance {
+        coord_set: coord_list.clone(),
+        begin_id,
+        end_id,
+        orig_distance,
+        orig_index_map: orig_index_map.clone(),
+        name: "almost_all_subpath".to_string(),
+    };
+
+    // ±1のグリッド内部に含まれる近傍で mst
+    let mut neighbor_list = vec![HashSet::new(); distance.dimension() as usize];
+    for (i, &(y, x)) in coord_list.iter().enumerate() {
+        for dy in -1..=1 {
+            for dx in -1..=1 {
+                let ny = y + dy;
+                let nx = x + dx;
+                if index_map.contains_key(&(ny, nx)) {
+                    let n_index = index_map[&(ny, nx)];
+                    neighbor_list[i].insert(n_index);
+                }
+            }
+        }
+    }
+
+    let init_solution = create_mst_solution(&distance, &neighbor_list);
+    let subpath_solution = solve_tsp(
+        &distance,
+        init_solution,
+        1.0 / (255.0 * 10000.0),
+        begin_id,
+        end_id,
+    );
+
+    let mut sub_route = vec![];
+    let mut id = begin_id;
+    if subpath_solution.prev(begin_id) == end_id {
+        for _iter in 0..subpath_solution.len() {
+            sub_route.push(coord_list[id as usize]);
+            id = subpath_solution.next(id);
+        }
+    } else if subpath_solution.next(begin_id) == end_id {
+        for _iter in 0..subpath_solution.len() {
+            sub_route.push(coord_list[id as usize]);
+            id = subpath_solution.prev(id);
+        }
+    } else {
+        unreachable!();
+    }
+
+    let mut route = vec![];
+    // initialize
+    for x in 0..=4 {
+        if x % 2 == 0 {
+            for y in 0..=8 {
+                let index = orig_index_map[&(y, x)];
+                route.push(index);
+            }
+        } else {
+            for y in (0..=8).rev() {
+                let index = orig_index_map[&(y, x)];
+                route.push(index);
+            }
+        }
+    }
+    route.pop();
+    for coord in sub_route.iter() {
+        let index = orig_index_map[coord];
+        route.push(index);
+    }
+    route.pop();
+
+    // finalize
+    for x in (0..=4).rev() {
+        if x % 2 == 0 {
+            for y in -8..0 {
+                let index = orig_index_map[&(y, x)];
+                route.push(index);
+            }
+        } else {
+            for y in (-8..0).rev() {
+                let index = orig_index_map[&(y, x)];
+                route.push(index);
+            }
+        }
+    }
+
+    let final_solution = ArraySolution::from_array(route);
+    final_solution.save(&PathBuf::from_str("final_solution2.tsp").unwrap());
+
+    // estimate pose
 }
 
 // subset に分けて、s-t パスを繋いで最適化する
