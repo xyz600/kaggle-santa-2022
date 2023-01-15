@@ -227,11 +227,11 @@ fn solve_tsp(
         },
     );
 
-    let filepath =
-        PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str()).unwrap();
-    if filepath.exists() {
-        return ArraySolution::load(&filepath);
-    }
+    // let filepath =
+    //     PathBuf::from_str(format!("solution_split_lkh_{}.tsp", distance.name()).as_str()).unwrap();
+    // if filepath.exists() {
+    //     return ArraySolution::load(&filepath);
+    // }
 
     // 最初に制約を満たすように変異を加える
     let neighbor_table = NeighborTable::load(&get_cache_filepath(distance));
@@ -255,7 +255,7 @@ fn solve_tsp(
     let mut best_solution = init_solution.clone();
     let mut best_eval = evaluate(distance, &best_solution);
 
-    let solutions = (0..24)
+    let solutions = (0..96)
         .into_par_iter()
         .map(|_iter| {
             let local_solution = opt3::solve(
@@ -277,7 +277,7 @@ fn solve_tsp(
                     use_neighbor_cache: true,
                     cache_filepath: get_cache_filepath(distance),
                     debug: false,
-                    time_ms: 90_000,
+                    time_ms: 120_000,
                     start_kick_step: 30,
                     kick_step_diff: 10,
                     end_kick_step: distance.dimension() as usize / 10,
@@ -401,6 +401,349 @@ fn solve_tsp(
     best_solution
 }
 
+struct PoseSimulator2 {
+    pose_list: Vec<Pose>,
+    // size64 を上下方向に動作させるか
+    color_list: Vec<Cell>,
+    index_table: HashMap<(i16, i16), u32>,
+}
+
+impl PoseSimulator2 {
+    fn new(color_list: Vec<Cell>) -> PoseSimulator2 {
+        let mut index_table = HashMap::new();
+        let mut index = 0;
+        for y in (-128..=128 as i16).rev() {
+            for x in -128..=128 as i16 {
+                index_table.insert((y, x), index);
+                index += 1;
+            }
+        }
+
+        PoseSimulator2 {
+            pose_list: vec![Pose::new()],
+            color_list,
+            index_table,
+        }
+    }
+
+    fn current(&self) -> (i16, i16) {
+        self.pose_list.last().unwrap().coord()
+    }
+
+    fn get_max_value(depth: usize) -> i16 {
+        let ret = [64, 32, 16, 8, 4, 2, 1, 1];
+        ret[depth]
+    }
+
+    fn simulate_manual(&mut self, diff: &DiffPose) {
+        let mut last = self.pose_list.last().unwrap().clone();
+        last.apply(diff);
+        self.pose_list.push(last);
+    }
+
+    fn simulate_best_cost(
+        &mut self,
+        initial_pose: &Pose,
+        point_seq: &Vec<(i16, i16)>,
+        final_pose: &Pose,
+    ) {
+        eprintln!("seq length: {}", point_seq.len());
+
+        // 復元用の table
+        let mut rev = HashMap::<u128, u128>::new();
+
+        let mut cost_table = HashMap::<u128, i64>::new();
+
+        // chokudai search
+        let mut pose_buffer = vec![BinaryHeap::<(i64, u128)>::new(); point_seq.len()];
+        pose_buffer[0].push((0, initial_pose.encode()));
+        cost_table.insert(initial_pose.encode(), 0);
+
+        let mut last_pose_set = HashMap::<u128, i64>::new();
+        let mut best_cost = std::f64::MAX;
+
+        let start = Instant::now();
+        eprintln!("start estimate.");
+        let mut prev_max_index = 0;
+
+        loop {
+            for index in 0..point_seq.len() - 1 {
+                let to = point_seq[index + 1];
+
+                if let Some((cost, from_pose_enc)) = pose_buffer[index].pop() {
+                    let cost = -cost;
+                    let from_pose = Pose::decode(from_pose_enc);
+
+                    for (to_pose_enc, to_cost) in self.cost(&from_pose, to) {
+                        let next_cost = cost + to_cost;
+                        if !cost_table.contains_key(&to_pose_enc)
+                            || cost_table[&to_pose_enc] > next_cost
+                        {
+                            cost_table.insert(to_pose_enc, next_cost);
+                            rev.insert(to_pose_enc, from_pose_enc);
+                            pose_buffer[index + 1].push((-next_cost, to_pose_enc));
+
+                            if index == point_seq.len() - 2 {
+                                last_pose_set.insert(to_pose_enc, next_cost);
+                            }
+                        }
+                    }
+                }
+            }
+
+            {
+                let mut max_index = 0;
+                for index in 0..point_seq.len() {
+                    if !pose_buffer[index].is_empty() {
+                        max_index = index;
+                    }
+                }
+                if prev_max_index != max_index {
+                    eprintln!("max index: {}", max_index);
+                }
+                prev_max_index = max_index;
+            }
+
+            for (k, v) in last_pose_set.iter() {
+                let v = *v as f64 / (255.0 * 10000.0);
+                if best_cost > v {
+                    best_cost = v;
+                    eprintln!("last cost: {}", v);
+                }
+            }
+
+            let elapsed = (Instant::now() - start).as_millis();
+            if elapsed > 1200_000 {
+                break;
+            }
+        }
+
+        // 復元
+        let mut pose_sequence = vec![];
+        let mut cur = final_pose.encode();
+        let init_enc = initial_pose.encode();
+        while cur != init_enc {
+            let prev_pose_enc = rev[&cur];
+            let cur_pose = Pose::decode(cur);
+            let prev_pose = Pose::decode(prev_pose_enc);
+            let mut subseq = self.cost_pose_seq(&cur_pose, &prev_pose);
+            // prev_pose を除外
+            subseq.pop();
+            pose_sequence.append(&mut subseq);
+            cur = prev_pose_enc;
+        }
+        pose_sequence.reverse();
+        self.pose_list.append(&mut pose_sequence);
+    }
+
+    // 整数で 255 倍されたリアルのコスト
+    fn cost_one_step(&self, from: &Pose, to: &Pose) -> i64 {
+        // 1手でたどり着く場合は迂回しないのが明らかに最善なので簡単
+        let pose_cost = (from.cost(&to) * 255.0 * 10000.0) as i64;
+        let from_color = self.color_list[self.index_table[&from.coord()] as usize];
+        let to_color = self.color_list[self.index_table[&to.coord()] as usize];
+
+        let dr = from_color.r.abs_diff(to_color.r) as i64;
+        let dg = from_color.g.abs_diff(to_color.g) as i64;
+        let db = from_color.b.abs_diff(to_color.b) as i64;
+
+        let color_cost = (dr + dg + db) * 3 * 10000;
+
+        pose_cost + color_cost
+    }
+
+    fn next_direction(&self, max_value: i16, coord: Coord, dy: i16, dx: i16) -> Vec<Direction> {
+        let x = coord.x;
+        let y = coord.y;
+
+        let mut ret = if x == -max_value && y == -max_value {
+            vec![Direction::Up, Direction::None, Direction::Right]
+        } else if x == max_value && y == -max_value {
+            vec![Direction::Up, Direction::None, Direction::Left]
+        } else if x == -max_value && y == max_value {
+            vec![Direction::Down, Direction::None, Direction::Right]
+        } else if x == max_value && y == max_value {
+            vec![Direction::Down, Direction::None, Direction::Left]
+        } else if x.abs() == max_value {
+            vec![Direction::Up, Direction::Down, Direction::None]
+        } else if y.abs() == max_value {
+            vec![Direction::Left, Direction::Right, Direction::None]
+        } else {
+            unreachable!()
+        };
+
+        if dy == 0 {
+            ret.retain(|&v| v != Direction::Up && v != Direction::Down);
+        }
+        if dy > 0 {
+            ret.retain(|&v| v != Direction::Down);
+        }
+        if dy < 0 {
+            ret.retain(|&v| v != Direction::Up);
+        }
+
+        if dx == 0 {
+            ret.retain(|&v| v != Direction::Left && v != Direction::Right);
+        }
+        if dx > 0 {
+            ret.retain(|&v| v != Direction::Left);
+        }
+        if dx < 0 {
+            ret.retain(|&v| v != Direction::Right);
+        }
+
+        ret
+    }
+
+    fn next_pose_list(&self, cur: &Pose, to_coord: (i16, i16)) -> Vec<Pose> {
+        let cur_coord = cur.coord();
+        let dx = to_coord.1 - cur_coord.1;
+        let dy = to_coord.0 - cur_coord.0;
+
+        let min_y = cur_coord.0.min(to_coord.0);
+        let max_y = cur_coord.0.max(to_coord.0);
+        let min_x = cur_coord.1.min(to_coord.1);
+        let max_x = cur_coord.1.max(to_coord.1);
+
+        let mut ret = vec![];
+        for dir_64 in self.next_direction(64, cur.arm_list[0], dy, dx) {
+            for dir_32 in self.next_direction(32, cur.arm_list[1], dy, dx) {
+                for dir_16 in self.next_direction(16, cur.arm_list[2], dy, dx) {
+                    for dir_8 in self.next_direction(8, cur.arm_list[3], dy, dx) {
+                        for dir_4 in self.next_direction(4, cur.arm_list[4], dy, dx) {
+                            for dir_2 in self.next_direction(2, cur.arm_list[5], dy, dx) {
+                                for dir_1_1 in self.next_direction(1, cur.arm_list[6], dy, dx) {
+                                    for dir_1_2 in self.next_direction(1, cur.arm_list[7], dy, dx) {
+                                        let diff_list = [
+                                            dir_64, dir_32, dir_16, dir_8, dir_4, dir_2, dir_1_1,
+                                            dir_1_2,
+                                        ];
+                                        let diff = DiffPose { diff_list };
+                                        let mut next_pose = cur.clone();
+                                        next_pose.apply(&diff);
+
+                                        // from -> to へ遠回りせず行くためのルートを計算するので、from -> to 内の区間で十分
+                                        let next_coord = next_pose.coord();
+                                        if min_y <= next_coord.0
+                                            && next_coord.0 <= max_y
+                                            && min_x <= next_coord.1
+                                            && next_coord.1 <= max_x
+                                        {
+                                            ret.push(next_pose);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        ret
+    }
+
+    // 正確なコスト計算
+    // from -> to へ行く過程で、ロスなく迎えるコストを全計算する
+    fn cost_pose_seq(&self, from: &Pose, to: &Pose) -> Vec<Pose> {
+        let mut que = BinaryHeap::new();
+        let mut cost_table = HashMap::<u128, i64>::new();
+
+        let from_enc = from.encode();
+        let to_enc = to.encode();
+        let to_coord = to.coord();
+        let mut rev = HashMap::<u128, u128>::new();
+
+        que.push((0, from_enc));
+        cost_table.insert(from_enc, 0);
+
+        while let Some((cost, enc)) = que.pop() {
+            let cost = -cost;
+            if cost_table[&enc] < cost {
+                continue;
+            }
+
+            if enc == to_enc {
+                // 復元
+                let mut ret = vec![];
+                let mut cur = to_enc;
+                while cur != from_enc {
+                    ret.push(Pose::decode(cur));
+                    cur = rev[&cur];
+                }
+                ret.push(Pose::decode(cur));
+                ret.reverse();
+                return ret;
+            }
+
+            // 1歩で行ける全てのコストを計上
+            let pose = Pose::decode(enc);
+
+            for next_pose in self.next_pose_list(&pose, to_coord) {
+                let next_enc = next_pose.encode();
+                let diff_cost = self.cost_one_step(&pose, &next_pose);
+                let next_cost = cost + diff_cost;
+
+                if !cost_table.contains_key(&next_enc) || cost_table[&next_enc] > next_cost {
+                    rev.insert(next_enc, enc);
+                    cost_table.insert(next_enc, next_cost);
+                    que.push((-next_cost, next_enc));
+                }
+            }
+        }
+        unreachable!();
+    }
+
+    // 正確なコスト計算
+    // from -> to へ行く過程で、ロスなく迎えるコストを全計算する
+    fn cost(&self, from: &Pose, to_coord: (i16, i16)) -> HashMap<u128, i64> {
+        let mut ret = HashMap::new();
+
+        let mut que = BinaryHeap::new();
+        let mut cost_table = HashMap::<u128, i64>::new();
+
+        let from_enc = from.encode();
+        que.push((0, from_enc));
+        cost_table.insert(from_enc, 0);
+
+        while let Some((cost, enc)) = que.pop() {
+            let cost = -cost;
+            if cost_table[&enc] < cost {
+                continue;
+            }
+
+            // 1歩で行ける全てのコストを計上
+            let pose = Pose::decode(enc);
+
+            if pose.coord() == to_coord {
+                ret.insert(enc, cost);
+                continue;
+            }
+
+            for next_pose in self.next_pose_list(&pose, to_coord) {
+                let next_enc = next_pose.encode();
+                let diff_cost = self.cost_one_step(&pose, &next_pose);
+                let next_cost = cost + diff_cost;
+
+                if !cost_table.contains_key(&next_enc) || cost_table[&next_enc] > next_cost {
+                    cost_table.insert(next_enc, next_cost);
+                    que.push((-next_cost, next_enc));
+                }
+            }
+        }
+        ret
+    }
+
+    fn save(&self, filepath: &PathBuf) {
+        let f = File::create(filepath).unwrap();
+        let mut writer = BufWriter::new(f);
+        writer.write("configuration\n".as_bytes()).unwrap();
+        for pose in self.pose_list.iter() {
+            writer.write(pose.to_string().as_bytes()).unwrap();
+        }
+    }
+}
+
 struct PoseSimulator {
     pose_list: Vec<Pose>,
     // size64 を上下方向に動作させるか
@@ -433,83 +776,6 @@ impl PoseSimulator {
     fn get_max_value(depth: usize) -> i16 {
         let ret = [64, 32, 16, 8, 4, 2, 1, 1];
         ret[depth]
-    }
-
-    fn create_coord_pose_map(
-        &self,
-        initial_pose: &Pose,
-        is_64x64_vertical: bool,
-    ) -> Vec<Vec<u128>> {
-        // [(i16, i16)] -> Vec<u128>
-        let mut coord_pose_map = vec![vec![]; 257 * 257];
-
-        let encode_coord = |(y, x)| -> usize { ((y as i64 + 128) * 257 + x as i64 + 128) as usize };
-        let key = encode_coord(initial_pose.coord());
-        coord_pose_map[key].push(initial_pose.encode());
-
-        let arm = initial_pose.arm_list;
-        if is_64x64_vertical {
-            for y_64 in -64..=64 {
-                for x_32 in -32..=32 {
-                    for x_16 in -16..=16 {
-                        for x_8 in -8..=8 {
-                            for x_4 in -4..=4 {
-                                for x_2 in -2..=2 {
-                                    for x_1_1 in -1..=1 {
-                                        for x_1_2 in -1..=1 {
-                                            let arm_list = [
-                                                Coord::new(y_64, arm[0].x),
-                                                Coord::new(arm[1].y, x_32),
-                                                Coord::new(arm[2].y, x_16),
-                                                Coord::new(arm[3].y, x_8),
-                                                Coord::new(arm[4].y, x_4),
-                                                Coord::new(arm[5].y, x_2),
-                                                Coord::new(arm[6].y, x_1_1),
-                                                Coord::new(arm[7].y, x_1_2),
-                                            ];
-                                            let pose = Pose { arm_list };
-                                            let coord = pose.coord();
-                                            coord_pose_map[encode_coord(coord)].push(pose.encode());
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            for x_64 in -64..=64 {
-                for y_32 in -32..=32 {
-                    for y_16 in -16..=16 {
-                        for y_8 in -8..=8 {
-                            for y_4 in -4..=4 {
-                                for y_2 in -2..=2 {
-                                    for y_1_1 in -1..=1 {
-                                        for y_1_2 in -1..=1 {
-                                            let arm_list = [
-                                                Coord::new(arm[0].y, x_64),
-                                                Coord::new(y_32, arm[1].x),
-                                                Coord::new(y_16, arm[2].x),
-                                                Coord::new(y_8, arm[3].x),
-                                                Coord::new(y_4, arm[4].x),
-                                                Coord::new(y_2, arm[5].x),
-                                                Coord::new(y_1_1, arm[6].x),
-                                                Coord::new(y_1_2, arm[7].x),
-                                            ];
-                                            let pose = Pose { arm_list };
-                                            let coord = pose.coord();
-                                            coord_pose_map[encode_coord(coord)].push(pose.encode());
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        coord_pose_map
     }
 
     fn simulate_manual(&mut self, diff: &DiffPose) {
@@ -788,6 +1054,7 @@ impl PoseSimulator {
 
             if pose.coord() == to_coord {
                 ret.insert(enc, cost);
+                continue;
             }
 
             for next_pose in self.next_pose_list(&pose, to_coord, is_64x64_vertical) {
@@ -815,151 +1082,229 @@ impl PoseSimulator {
 }
 
 pub fn solve2() {
-    // y: [-8, 8], x: [0, 4] の 17 x 5 = 85 マス以外は、自由に解く
-    // それ以外は復元パートの chokudai search を信じろ！
-
     let mut orig_index_map = HashMap::<(i16, i16), u32>::new();
+    let mut orig_rev_index_map = Vec::<(i16, i16)>::new();
     {
         let mut index = 0u32;
         for y in (-128..=128).rev() {
             for x in -128..=128 {
                 orig_index_map.insert((y, x), index);
+                orig_rev_index_map.push((y, x));
                 index += 1;
             }
         }
     }
 
-    let mut coord_list = vec![];
-    for y in -128..=128 {
-        for x in -128..=128 {
-            if !(-8 <= y && y <= 8 && 0 <= x && x <= 4) {
+    let filepath = PathBuf::from_str("final_solution2.tsp").unwrap();
+    let final_solution = if filepath.exists() {
+        ArraySolution::load(&filepath)
+    } else {
+        let height = 16;
+        let width = 4;
+        // y: [-16, -1], x: [0, 4]
+        // y: [0, 16], x: [0, 5] の 17 x 6 + 16 x 5 マス以外は、自由に解く
+        // それ以外は復元パートの chokudai search を信じろ！
+
+        let mut coord_list = vec![];
+        for y in -128..=128 {
+            for x in -128..=128 {
+                if 0 <= y && y <= height && 0 <= x && x <= width + 1 {
+                    continue;
+                }
+                if -height <= y && y <= 0 && 0 <= x && x <= width {
+                    continue;
+                }
                 coord_list.push((y, x));
             }
         }
-    }
 
-    let begin = (8, 4);
-    let end = (-8, 4);
+        let begin = (0, width + 1);
+        let end = (-height, width);
 
-    coord_list.push(begin);
-    coord_list.push(end);
+        coord_list.push(begin);
+        coord_list.push(end);
 
-    // calculate_subpath
+        // calculate_subpath
 
-    let orig_distance =
-        OneStepApproximateDistanceFunction::load(&PathBuf::from_str("data/image.csv").unwrap());
+        let orig_distance =
+            OneStepApproximateDistanceFunction::load(&PathBuf::from_str("data/image.csv").unwrap());
 
-    let mut index_map = HashMap::new();
-    for (i, coord) in coord_list.iter().enumerate() {
-        index_map.insert(coord, i as u32);
-    }
-    let index_map = index_map;
-
-    let mut begin_id = std::u32::MAX;
-    let mut end_id = std::u32::MAX;
-    for i in 0..coord_list.len() {
-        if coord_list[i] == begin {
-            begin_id = i as u32;
+        let mut index_map = HashMap::new();
+        for (i, coord) in coord_list.iter().enumerate() {
+            index_map.insert(coord, i as u32);
         }
-        if coord_list[i] == end {
-            end_id = i as u32;
+        let index_map = index_map;
+
+        let mut begin_id = std::u32::MAX;
+        let mut end_id = std::u32::MAX;
+        for i in 0..coord_list.len() {
+            if coord_list[i] == begin {
+                begin_id = i as u32;
+            }
+            if coord_list[i] == end {
+                end_id = i as u32;
+            }
         }
-    }
-    assert_ne!(begin_id, std::u32::MAX);
-    assert_ne!(end_id, std::u32::MAX);
-    let begin_id = begin_id;
-    let end_id = end_id;
+        assert_ne!(begin_id, std::u32::MAX);
+        assert_ne!(end_id, std::u32::MAX);
+        let begin_id = begin_id;
+        let end_id = end_id;
 
-    let distance = SubPathDistance {
-        coord_set: coord_list.clone(),
-        begin_id,
-        end_id,
-        orig_distance,
-        orig_index_map: orig_index_map.clone(),
-        name: "almost_all_subpath".to_string(),
-    };
+        let distance = SubPathDistance {
+            coord_set: coord_list.clone(),
+            begin_id,
+            end_id,
+            orig_distance,
+            orig_index_map: orig_index_map.clone(),
+            name: format!("almost_all_subpath_h{}_2", height),
+        };
 
-    // ±1のグリッド内部に含まれる近傍で mst
-    let mut neighbor_list = vec![HashSet::new(); distance.dimension() as usize];
-    for (i, &(y, x)) in coord_list.iter().enumerate() {
-        for dy in -1..=1 {
-            for dx in -1..=1 {
-                let ny = y + dy;
-                let nx = x + dx;
-                if index_map.contains_key(&(ny, nx)) {
-                    let n_index = index_map[&(ny, nx)];
-                    neighbor_list[i].insert(n_index);
+        // ±1のグリッド内部に含まれる近傍で mst
+        let mut neighbor_list = vec![HashSet::new(); distance.dimension() as usize];
+        for (i, &(y, x)) in coord_list.iter().enumerate() {
+            for dy in -1..=1 {
+                for dx in -1..=1 {
+                    let ny = y + dy;
+                    let nx = x + dx;
+                    if index_map.contains_key(&(ny, nx)) {
+                        let n_index = index_map[&(ny, nx)];
+                        neighbor_list[i].insert(n_index);
+                    }
                 }
             }
         }
-    }
 
-    let init_solution = create_mst_solution(&distance, &neighbor_list);
-    let subpath_solution = solve_tsp(
-        &distance,
-        init_solution,
-        1.0 / (255.0 * 10000.0),
-        begin_id,
-        end_id,
-    );
+        let init_solution = create_mst_solution(&distance, &neighbor_list);
+        let subpath_solution = solve_tsp(
+            &distance,
+            init_solution,
+            1.0 / (255.0 * 10000.0),
+            begin_id,
+            end_id,
+        );
 
-    let mut sub_route = vec![];
-    let mut id = begin_id;
-    if subpath_solution.prev(begin_id) == end_id {
-        for _iter in 0..subpath_solution.len() {
-            sub_route.push(coord_list[id as usize]);
-            id = subpath_solution.next(id);
-        }
-    } else if subpath_solution.next(begin_id) == end_id {
-        for _iter in 0..subpath_solution.len() {
-            sub_route.push(coord_list[id as usize]);
-            id = subpath_solution.prev(id);
-        }
-    } else {
-        unreachable!();
-    }
-
-    let mut route = vec![];
-    // initialize
-    for x in 0..=4 {
-        if x % 2 == 0 {
-            for y in 0..=8 {
-                let index = orig_index_map[&(y, x)];
-                route.push(index);
+        let mut sub_route = vec![];
+        let mut id = begin_id;
+        if subpath_solution.prev(begin_id) == end_id {
+            for _iter in 0..subpath_solution.len() {
+                sub_route.push(coord_list[id as usize]);
+                id = subpath_solution.next(id);
+            }
+        } else if subpath_solution.next(begin_id) == end_id {
+            for _iter in 0..subpath_solution.len() {
+                sub_route.push(coord_list[id as usize]);
+                id = subpath_solution.prev(id);
             }
         } else {
-            for y in (0..=8).rev() {
-                let index = orig_index_map[&(y, x)];
-                route.push(index);
+            unreachable!();
+        }
+
+        let mut route = vec![];
+        // initialize
+        for x in 0..=width + 1 {
+            if x % 2 == 0 {
+                for y in 0..=height {
+                    let index = orig_index_map[&(y, x)];
+                    route.push(index);
+                }
+            } else {
+                for y in (0..=height).rev() {
+                    let index = orig_index_map[&(y, x)];
+                    route.push(index);
+                }
             }
         }
-    }
-    route.pop();
-    for coord in sub_route.iter() {
-        let index = orig_index_map[coord];
-        route.push(index);
-    }
-    route.pop();
+        route.pop();
+        for coord in sub_route.iter() {
+            let index = orig_index_map[coord];
+            route.push(index);
+        }
+        route.pop();
 
-    // finalize
-    for x in (0..=4).rev() {
-        if x % 2 == 0 {
-            for y in -8..0 {
-                let index = orig_index_map[&(y, x)];
-                route.push(index);
-            }
-        } else {
-            for y in (-8..0).rev() {
-                let index = orig_index_map[&(y, x)];
-                route.push(index);
+        // finalize
+        for x in (0..=width).rev() {
+            if x % 2 == 0 {
+                for y in -height..0 {
+                    let index = orig_index_map[&(y, x)];
+                    route.push(index);
+                }
+            } else {
+                for y in (-height..0).rev() {
+                    let index = orig_index_map[&(y, x)];
+                    route.push(index);
+                }
             }
         }
-    }
+        let final_solution = ArraySolution::from_array(route);
+        final_solution.save(&PathBuf::from_str("final_solution2.tsp").unwrap());
+        final_solution
+    };
 
-    let final_solution = ArraySolution::from_array(route);
-    final_solution.save(&PathBuf::from_str("final_solution2.tsp").unwrap());
-
+    eprintln!("finish to calculate solution");
     // estimate pose
+
+    let center_id = orig_index_map[&(0, 0)];
+    let intermediate_id = orig_index_map[&(128, 128)];
+    let mut forward_route = vec![(0, 0)];
+    {
+        let mut id = center_id;
+        loop {
+            let next = final_solution.next(id);
+            forward_route.push(orig_rev_index_map[next as usize]);
+            if next == intermediate_id {
+                break;
+            }
+            id = next;
+        }
+    }
+    let mut backward_route = vec![(0, 0)];
+    {
+        let mut id = center_id;
+        loop {
+            let prev = final_solution.prev(id);
+            backward_route.push(orig_rev_index_map[prev as usize]);
+            if prev == intermediate_id {
+                break;
+            }
+            id = prev;
+        }
+    }
+
+    let color_table = load_image(&PathBuf::from_str("data/image.csv").unwrap());
+    let initial_pose = Pose {
+        arm_list: [
+            Coord::new(0, 64),
+            Coord::new(0, -32),
+            Coord::new(0, -16),
+            Coord::new(0, -8),
+            Coord::new(0, -4),
+            Coord::new(0, -2),
+            Coord::new(0, -1),
+            Coord::new(0, -1),
+        ],
+    };
+    let final_pose = Pose {
+        arm_list: [
+            Coord::new(64, 64),
+            Coord::new(32, 32),
+            Coord::new(16, 16),
+            Coord::new(8, 8),
+            Coord::new(4, 4),
+            Coord::new(2, 2),
+            Coord::new(1, 1),
+            Coord::new(1, 1),
+        ],
+    };
+
+    for i in 0..10 {
+        eprintln!("coord: {:?}", forward_route[i]);
+    }
+
+    let mut pose_simulator_backward = PoseSimulator2::new(color_table.clone());
+    pose_simulator_backward.simulate_best_cost(&initial_pose, &backward_route, &final_pose);
+
+    let mut pose_simulator_forawrd = PoseSimulator2::new(color_table.clone());
+    pose_simulator_forawrd.simulate_best_cost(&initial_pose, &forward_route, &final_pose);
 }
 
 // subset に分けて、s-t パスを繋いで最適化する
