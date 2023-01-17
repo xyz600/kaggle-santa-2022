@@ -255,7 +255,7 @@ fn solve_tsp(
     let mut best_solution = init_solution.clone();
     let mut best_eval = evaluate(distance, &best_solution);
 
-    let solutions = (0..96)
+    let solutions = (0..48)
         .into_par_iter()
         .map(|_iter| {
             let local_solution = opt3::solve(
@@ -328,7 +328,7 @@ fn solve_tsp(
 
     // 分割して並列化
 
-    for iter in 1.. {
+    for iter in 1..=20 {
         best_solution = divide_and_conqure_solver::solve(
             distance,
             &best_solution,
@@ -379,7 +379,7 @@ fn solve_tsp(
             use_neighbor_cache: true,
             cache_filepath: get_cache_filepath(distance),
             debug: false,
-            time_ms: 1000 * 60 * 10,
+            time_ms: 1000 * 60 * 5,
             start_kick_step: 30,
             kick_step_diff: 10,
             end_kick_step: 1000,
@@ -446,7 +446,7 @@ impl PoseSimulator2 {
         initial_pose: &Pose,
         point_seq: &Vec<(i16, i16)>,
         final_pose: &Pose,
-    ) {
+    ) -> bool {
         eprintln!("seq length: {}", point_seq.len());
 
         // 復元用の table
@@ -463,8 +463,6 @@ impl PoseSimulator2 {
         let mut best_cost = std::f64::MAX;
 
         let start = Instant::now();
-        eprintln!("start estimate.");
-        let mut prev_max_index = 0;
 
         loop {
             for index in 0..point_seq.len() - 1 {
@@ -491,19 +489,6 @@ impl PoseSimulator2 {
                 }
             }
 
-            {
-                let mut max_index = 0;
-                for index in 0..point_seq.len() {
-                    if !pose_buffer[index].is_empty() {
-                        max_index = index;
-                    }
-                }
-                if prev_max_index != max_index {
-                    eprintln!("max index: {}", max_index);
-                }
-                prev_max_index = max_index;
-            }
-
             for (k, v) in last_pose_set.iter() {
                 let v = *v as f64 / (255.0 * 10000.0);
                 if best_cost > v {
@@ -513,27 +498,43 @@ impl PoseSimulator2 {
             }
 
             let elapsed = (Instant::now() - start).as_millis();
-            if elapsed > 1200_000 {
+            if elapsed > 120_000 {
                 break;
             }
         }
 
-        // 復元
-        let mut pose_sequence = vec![];
-        let mut cur = final_pose.encode();
-        let init_enc = initial_pose.encode();
-        while cur != init_enc {
-            let prev_pose_enc = rev[&cur];
-            let cur_pose = Pose::decode(cur);
-            let prev_pose = Pose::decode(prev_pose_enc);
-            let mut subseq = self.cost_pose_seq(&cur_pose, &prev_pose);
-            // prev_pose を除外
-            subseq.pop();
-            pose_sequence.append(&mut subseq);
-            cur = prev_pose_enc;
+        {
+            let mut max_index = 0;
+            for index in 0..point_seq.len() {
+                if !pose_buffer[index].is_empty() {
+                    max_index = index;
+                }
+            }
+            eprintln!("max index: {}", max_index);
         }
-        pose_sequence.reverse();
-        self.pose_list.append(&mut pose_sequence);
+
+        if !rev.contains_key(&final_pose.encode()) {
+            false
+        } else {
+            // 復元
+            let mut pose_sequence = vec![];
+            let mut cur = final_pose.encode();
+            let init_enc = initial_pose.encode();
+            while cur != init_enc {
+                let prev_pose_enc = rev[&cur];
+                let cur_pose = Pose::decode(cur);
+                let prev_pose = Pose::decode(prev_pose_enc);
+                let mut subseq = self.cost_pose_seq(&cur_pose, &prev_pose);
+                // prev_pose を除外
+                subseq.pop();
+                pose_sequence.append(&mut subseq);
+                cur = prev_pose_enc;
+            }
+            pose_sequence.reverse();
+            self.pose_list.append(&mut pose_sequence);
+
+            true
+        }
     }
 
     // 整数で 255 倍されたリアルのコスト
@@ -1096,7 +1097,7 @@ pub fn solve2() {
     }
 
     let filepath = PathBuf::from_str("final_solution2.tsp").unwrap();
-    let final_solution = if filepath.exists() {
+    let final_solution = if filepath.exists() && false {
         ArraySolution::load(&filepath)
     } else {
         let height = 16;
@@ -1296,15 +1297,22 @@ pub fn solve2() {
         ],
     };
 
-    for i in 0..10 {
-        eprintln!("coord: {:?}", forward_route[i]);
-    }
-
     let mut pose_simulator_backward = PoseSimulator2::new(color_table.clone());
-    pose_simulator_backward.simulate_best_cost(&initial_pose, &backward_route, &final_pose);
+    let success1 =
+        pose_simulator_backward.simulate_best_cost(&initial_pose, &backward_route, &final_pose);
 
     let mut pose_simulator_forawrd = PoseSimulator2::new(color_table.clone());
-    pose_simulator_forawrd.simulate_best_cost(&initial_pose, &forward_route, &final_pose);
+    let success2 =
+        pose_simulator_forawrd.simulate_best_cost(&initial_pose, &forward_route, &final_pose);
+
+    if success1 && success2 {
+        // merge
+        pose_simulator_backward.pose_list.pop();
+        for pose in pose_simulator_backward.pose_list.iter() {
+            pose_simulator_forawrd.pose_list.push(*pose);
+        }
+        pose_simulator_forawrd.save(&PathBuf::from_str("final_solution_3.tsp").unwrap());
+    }
 }
 
 // subset に分けて、s-t パスを繋いで最適化する

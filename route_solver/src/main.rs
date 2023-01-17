@@ -9,7 +9,7 @@ mod tsp;
 mod util;
 
 fn main() {
-    approx_solver::solve2();
-    // approx_solver::solve();
+    // approx_solver::solve2();
+    approx_solver::solve();
     // bfs_pose_solver::solve();
 }
