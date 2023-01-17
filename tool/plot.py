@@ -14,7 +14,7 @@ def load_solution(filepath: str):
 if __name__ == "__main__":
     
     data = load_data("../data/image.csv")
-    solution = load_solution("../final_solution.tsp")
+    solution = load_solution("../final_solution2.tsp")
     
     xs = list(map(lambda idx: data[idx][0], solution))
     ys = list(map(lambda idx: data[idx][1], solution))
