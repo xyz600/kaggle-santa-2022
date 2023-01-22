@@ -1,0 +1,3920 @@
+warning: resolver for the non root package will be ignored, specify resolver at the workspace root:
+package:   /home/xyz600/repo/kaggle-santa-2022/gui/Cargo.toml
+workspace: /home/xyz600/repo/kaggle-santa-2022/Cargo.toml
+   Compiling wgpu-hal v0.14.1
+error: Metal API enabled on non-Apple OS. If your project is not using resolver="2" in Cargo.toml, it should.
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/lib.rs:51:1
+   |
+51 | compile_error!("Metal API enabled on non-Apple OS. If your project is not using resolver=\"2\" in Cargo.toml, it should.");
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: DX12 API enabled on non-Windows OS. If your project is not using resolver="2" in Cargo.toml, it should.
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/lib.rs:53:1
+   |
+53 | compile_error!("DX12 API enabled on non-Windows OS. If your project is not using resolver=\"2\" in Cargo.toml, it should.");
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0432]: unresolved import `mtl`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:1:5
+  |
+1 | use mtl::{MTLFeatureSet, MTLGPUFamily, MTLLanguageVersion, MTLReadWriteTextureTier};
+  |     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:870:13
+    |
+870 |         use mtl::MTLPixelFormat::*;
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:25:9
+   |
+25 |     use mtl::MTLTextureType::*;
+   |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:38:9
+   |
+38 |     use mtl::MTLCompareFunction::*;
+   |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:53:9
+   |
+53 |     use mtl::MTLSamplerMinMagFilter::*;
+   |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:61:9
+   |
+61 |     use mtl::MTLSamplerAddressMode::*;
+   |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:73:9
+   |
+73 |     use mtl::MTLSamplerBorderColor::*;
+   |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:130:9
+    |
+130 |     use mtl::MTLBlendFactor::*;
+    |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:157:9
+    |
+157 |     use mtl::MTLBlendOperation::*;
+    |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:184:9
+    |
+184 |     use mtl::MTLVertexFormat::*;
+    |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:230:9
+    |
+230 |     use mtl::MTLStencilOperation::*;
+    |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:284:9
+    |
+284 |     use mtl::MTLStoreAction::*;
+    |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `core_graphics_types`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:5:5
+  |
+5 | use core_graphics_types::{
+  |     ^^^^^^^^^^^^^^^^^^^ use of undeclared crate or module `core_graphics_types`
+
+error[E0432]: unresolved import `objc`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:2:5
+  |
+2 | use objc::{class, msg_send, sel, sel_impl};
+  |     ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:9:5
+  |
+9 | use objc::{
+  |     ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `winapi`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:1:5
+  |
+1 | use winapi::shared::dxgiformat;
+  |     ^^^^^^ use of undeclared crate or module `winapi`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `winapi`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:5:9
+  |
+5 |     use winapi::shared::dxgiformat::*;
+  |         ^^^^^^ use of undeclared crate or module `winapi`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `winapi`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:149:9
+    |
+149 |     use winapi::shared::dxgiformat::*;
+    |         ^^^^^^ use of undeclared crate or module `winapi`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `winapi`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/exception.rs:4:5
+  |
+4 | use winapi::{
+  |     ^^^^^^ use of undeclared crate or module `winapi`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `winapi`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:1:5
+  |
+1 | use winapi::{
+  |     ^^^^^^ use of undeclared crate or module `winapi`
+
+error[E0432]: unresolved import `objc`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:9:5
+  |
+9 | use objc::{
+  |     ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `winapi`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/result.rs:3:5
+  |
+3 | use winapi::shared::winerror;
+  |     ^^^^^^ use of undeclared crate or module `winapi`
+
+error[E0432]: unresolved import `winapi`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:1:5
+  |
+1 | use winapi::{
+  |     ^^^^^^ use of undeclared crate or module `winapi`
+
+error[E0432]: unresolved import `super::dx11`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/lib.rs:70:20
+   |
+70 |     pub use super::dx11::Api as Dx11;
+   |                    ^^^^ could not find `dx11` in the crate root
+
+error[E0432]: unresolved import `super::dx12`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/lib.rs:72:20
+   |
+72 |     pub use super::dx12::Api as Dx12;
+   |                    ^^^^ could not find `dx12` in the crate root
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:484:17
+    |
+484 |                 msg_send![class!(NSProcessInfo), processInfo];
+    |                 ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:485:13
+    |
+485 |             msg_send![process_info, operatingSystemVersion]
+    |             ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:641:30
+    |
+641 |                     unsafe { msg_send![device.as_ref(), maxBufferLength] };
+    |                              ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `class`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:47:56
+   |
+47 |             let mut decl = ClassDecl::new(&class_name, class!(NSObject)).unwrap();
+   |                                                        ^^^^^
+   |
+   = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `sel`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:51:21
+   |
+51 |                     sel!(layer:shouldInheritContentsScale:fromWindow:),
+   |                     ^^^
+   |
+   = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:75:22
+   |
+75 |             let () = msg_send![view.as_ptr(), release];
+   |                      ^^^^^^^^
+   |
+   = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:89:30
+   |
+89 |         let _: *mut c_void = msg_send![view, retain];
+   |                              ^^^^^^^^
+   |
+   = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `class`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:94:21
+   |
+94 |         let class = class!(CAMetalLayer);
+   |                     ^^^^^
+   |
+   = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:95:33
+   |
+95 |         let proper_kind: BOOL = msg_send![layer, isKindOfClass: class];
+   |                                 ^^^^^^^^
+   |
+   = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:109:36
+    |
+109 |         let is_main_thread: BOOL = msg_send![class!(NSThread), isMainThread];
+    |                                    ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:114:39
+    |
+114 |         let main_layer: *mut Object = msg_send![view, layer];
+    |                                       ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `class`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:115:21
+    |
+115 |         let class = class!(CAMetalLayer);
+    |                     ^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:116:36
+    |
+116 |         let is_valid_layer: BOOL = msg_send![main_layer, isKindOfClass: class];
+    |                                    ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:122:42
+    |
+122 |             let new_layer: *mut Object = msg_send![class, new];
+    |                                          ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:123:33
+    |
+123 |             let frame: CGRect = msg_send![main_layer, bounds];
+    |                                 ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:124:22
+    |
+124 |             let () = msg_send![new_layer, setFrame: frame];
+    |                      ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:147:26
+    |
+147 |                 let () = msg_send![new_layer, setDelegate: delegate.0];
+    |                          ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:157:34
+    |
+157 |             let bounds: CGRect = msg_send![render_layer, bounds];
+    |                                  ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:158:43
+    |
+158 |             let contents_scale: CGFloat = msg_send![render_layer, contentsScale];
+    |                                           ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:225:22
+    |
+225 |             let () = msg_send![*render_layer, setAllowsNextDrawableTimeout:false];
+    |                      ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error: cannot determine resolution for the macro `msg_send`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:228:22
+    |
+228 |             let () = msg_send![*render_layer, setDisplaySyncEnabled: display_sync];
+    |                      ^^^^^^^^
+    |
+    = note: import resolution is stuck, try simplifying macro imports
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:53:13
+   |
+53 |             mtl::MTLReadWriteTextureTier::TierNone => (Tfc::empty(), Tfc::empty()),
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:54:13
+   |
+54 |             mtl::MTLReadWriteTextureTier::Tier1 => (Tfc::STORAGE_READ_WRITE, Tfc::empty()),
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:55:13
+   |
+55 |             mtl::MTLReadWriteTextureTier::Tier2 => {
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:452:27
+    |
+452 |     fn supports_any(raw: &mtl::DeviceRef, features_sets: &[MTLFeatureSet]) -> bool {
+    |                           ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:459:25
+    |
+459 |     pub fn new(device: &mtl::Device) -> Self {
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:483:36
+    |
+483 |             let process_info: *mut objc::runtime::Object =
+    |                                    ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:640:34
+    |
+640 |                 let buffer_size: mtl::NSInteger =
+    |                                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:869:61
+    |
+869 |     pub fn map_format(&self, format: wgt::TextureFormat) -> mtl::MTLPixelFormat {
+    |                                                             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:1012:25
+     |
+1012 |     pub fn new(device: &mtl::Device) -> Self {
+     |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:13:33
+   |
+13 |             raw_primitive_type: mtl::MTLPrimitiveType::Point,
+   |                                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:15:26
+   |
+15 |             raw_wg_size: mtl::MTLSize::new(0, 0, 0),
+   |                          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:25:34
+   |
+25 |     fn enter_blit(&mut self) -> &mtl::BlitCommandEncoderRef {
+   |                                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:28:13
+   |
+28 |             objc::rc::autoreleasepool(|| {
+   |             ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:42:40
+   |
+42 |     fn enter_any(&mut self) -> Option<&mtl::CommandEncoderRef> {
+   |                                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:98:19
+   |
+98 |         let raw = objc::rc::autoreleasepool(move || {
+   |                   ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:250:17
+    |
+250 |                 mtl::MTLBlitOption::empty(),
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:290:17
+    |
+290 |                 mtl::MTLBlitOption::empty(),
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:303:25
+    |
+303 |                         mtl::MTLVisibilityResultMode::Boolean,
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:317:49
+    |
+317 |                     .set_visibility_result_mode(mtl::MTLVisibilityResultMode::Disabled, 0);
+    |                                                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:325:25
+    |
+325 |         let raw_range = mtl::NSRange {
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:356:9
+    |
+356 |         objc::rc::autoreleasepool(|| {
+    |         ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:369:25
+    |
+369 |                         mtl::MTLLoadAction::Load
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:372:25
+    |
+372 |                         mtl::MTLLoadAction::Clear
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:389:25
+    |
+389 |                         mtl::MTLLoadAction::Load
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:392:25
+    |
+392 |                         mtl::MTLLoadAction::Clear
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:395:25
+    |
+395 |                         mtl::MTLStoreAction::Store
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:397:25
+    |
+397 |                         mtl::MTLStoreAction::DontCare
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:412:25
+    |
+412 |                         mtl::MTLLoadAction::Load
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:415:25
+    |
+415 |                         mtl::MTLLoadAction::Clear
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:418:25
+    |
+418 |                         mtl::MTLStoreAction::Store
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:420:25
+    |
+420 |                         mtl::MTLStoreAction::DontCare
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:716:45
+    |
+716 |             wgt::IndexFormat::Uint16 => (2, mtl::MTLIndexType::UInt16),
+    |                                             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:717:45
+    |
+717 |             wgt::IndexFormat::Uint32 => (4, mtl::MTLIndexType::UInt32),
+    |                                             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:744:30
+    |
+744 |         encoder.set_viewport(mtl::MTLViewport {
+    |                              ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:755:23
+    |
+755 |         let scissor = mtl::MTLScissorRect {
+    |                       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:958:25
+    |
+958 |         let raw_count = mtl::MTLSize {
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:1:56
+  |
+1 | pub fn map_texture_usage(usage: crate::TextureUses) -> mtl::MTLTextureUsage {
+  |                                                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:4:25
+  |
+4 |     let mut mtl_usage = mtl::MTLTextureUsage::Unknown;
+  |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:7:9
+  |
+7 |         mtl::MTLTextureUsage::RenderTarget,
+  |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:11:9
+   |
+11 |         mtl::MTLTextureUsage::ShaderRead,
+   |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:17:9
+   |
+17 |         mtl::MTLTextureUsage::ShaderWrite,
+   |         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:24:70
+   |
+24 | pub fn map_texture_view_dimension(dim: wgt::TextureViewDimension) -> mtl::MTLTextureType {
+   |                                                                      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:37:59
+   |
+37 | pub fn map_compare_function(fun: wgt::CompareFunction) -> mtl::MTLCompareFunction {
+   |                                                           ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:52:52
+   |
+52 | pub fn map_filter_mode(filter: wgt::FilterMode) -> mtl::MTLSamplerMinMagFilter {
+   |                                                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:60:55
+   |
+60 | pub fn map_address_mode(address: wgt::AddressMode) -> mtl::MTLSamplerAddressMode {
+   |                                                       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:72:67
+   |
+72 | pub fn map_border_color(border_color: wgt::SamplerBorderColor) -> mtl::MTLSamplerBorderColor {
+   |                                                                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:84:7
+   |
+84 | ) -> (mtl::MTLPrimitiveTopologyClass, mtl::MTLPrimitiveType) {
+   |       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:84:39
+   |
+84 | ) -> (mtl::MTLPrimitiveTopologyClass, mtl::MTLPrimitiveType) {
+   |                                       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:88:13
+   |
+88 |             mtl::MTLPrimitiveTopologyClass::Point,
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:89:13
+   |
+89 |             mtl::MTLPrimitiveType::Point,
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:92:13
+   |
+92 |             mtl::MTLPrimitiveTopologyClass::Line,
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:93:13
+   |
+93 |             mtl::MTLPrimitiveType::Line,
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:96:13
+   |
+96 |             mtl::MTLPrimitiveTopologyClass::Line,
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:97:13
+   |
+97 |             mtl::MTLPrimitiveType::LineStrip,
+   |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:100:13
+    |
+100 |             mtl::MTLPrimitiveTopologyClass::Triangle,
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:101:13
+    |
+101 |             mtl::MTLPrimitiveType::Triangle,
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:104:13
+    |
+104 |             mtl::MTLPrimitiveTopologyClass::Triangle,
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:105:13
+    |
+105 |             mtl::MTLPrimitiveType::TriangleStrip,
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:110:51
+    |
+110 | pub fn map_color_write(mask: wgt::ColorWrites) -> mtl::MTLColorWriteMask {
+    |                                                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:111:24
+    |
+111 |     let mut raw_mask = mtl::MTLColorWriteMask::empty();
+    |                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:114:21
+    |
+114 |         raw_mask |= mtl::MTLColorWriteMask::Red;
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:117:21
+    |
+117 |         raw_mask |= mtl::MTLColorWriteMask::Green;
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:120:21
+    |
+120 |         raw_mask |= mtl::MTLColorWriteMask::Blue;
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:123:21
+    |
+123 |         raw_mask |= mtl::MTLColorWriteMask::Alpha;
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:129:54
+    |
+129 | pub fn map_blend_factor(factor: wgt::BlendFactor) -> mtl::MTLBlendFactor {
+    |                                                      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:156:56
+    |
+156 | pub fn map_blend_op(operation: wgt::BlendOperation) -> mtl::MTLBlendOperation {
+    |                                                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:172:5
+    |
+172 |     mtl::MTLBlendOperation,
+    |     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:173:5
+    |
+173 |     mtl::MTLBlendFactor,
+    |     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:174:5
+    |
+174 |     mtl::MTLBlendFactor,
+    |     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:183:56
+    |
+183 | pub fn map_vertex_format(format: wgt::VertexFormat) -> mtl::MTLVertexFormat {
+    |                                                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:222:52
+    |
+222 | pub fn map_step_mode(mode: wgt::VertexStepMode) -> mtl::MTLVertexStepFunction {
+    |                                                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:224:40
+    |
+224 |         wgt::VertexStepMode::Vertex => mtl::MTLVertexStepFunction::PerVertex,
+    |                                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:225:42
+    |
+225 |         wgt::VertexStepMode::Instance => mtl::MTLVertexStepFunction::PerInstance,
+    |                                          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:229:53
+    |
+229 | pub fn map_stencil_op(op: wgt::StencilOperation) -> mtl::MTLStencilOperation {
+    |                                                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:245:48
+    |
+245 | pub fn map_winding(winding: wgt::FrontFace) -> mtl::MTLWinding {
+    |                                                ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:247:31
+    |
+247 |         wgt::FrontFace::Cw => mtl::MTLWinding::Clockwise,
+    |                               ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:248:32
+    |
+248 |         wgt::FrontFace::Ccw => mtl::MTLWinding::CounterClockwise,
+    |                                ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:252:50
+    |
+252 | pub fn map_cull_mode(face: Option<wgt::Face>) -> mtl::MTLCullMode {
+    |                                                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:254:17
+    |
+254 |         None => mtl::MTLCullMode::None,
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:255:35
+    |
+255 |         Some(wgt::Face::Front) => mtl::MTLCullMode::Front,
+    |                                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:256:34
+    |
+256 |         Some(wgt::Face::Back) => mtl::MTLCullMode::Back,
+    |                                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:260:49
+    |
+260 | pub fn map_range(range: &crate::MemoryRange) -> mtl::NSRange {
+    |                                                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:261:5
+    |
+261 |     mtl::NSRange {
+    |     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:267:55
+    |
+267 | pub fn map_copy_extent(extent: &crate::CopyExtent) -> mtl::MTLSize {
+    |                                                       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:268:5
+    |
+268 |     mtl::MTLSize {
+    |     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:275:46
+    |
+275 | pub fn map_origin(origin: &wgt::Origin3d) -> mtl::MTLOrigin {
+    |                                              ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:276:5
+    |
+276 |     mtl::MTLOrigin {
+    |     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:283:56
+    |
+283 | pub fn map_store_action(store: bool, resolve: bool) -> mtl::MTLStoreAction {
+    |                                                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:293:47
+    |
+293 | pub fn map_clear_color(color: &wgt::Color) -> mtl::MTLClearColor {
+    |                                               ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:294:5
+    |
+294 |     mtl::MTLClearColor {
+    |     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:15:14
+   |
+15 |     library: mtl::Library,
+   |              ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:16:15
+   |
+16 |     function: mtl::Function,
+   |               ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:17:14
+   |
+17 |     wg_size: mtl::MTLSize,
+   |              ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:27:6
+   |
+27 | ) -> mtl::StencilDescriptor {
+   |      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:28:16
+   |
+28 |     let desc = mtl::StencilDescriptor::new();
+   |                ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:38:65
+   |
+38 | fn create_depth_stencil_desc(state: &wgt::DepthStencilState) -> mtl::DepthStencilDescriptor {
+   |                                                                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:39:16
+   |
+39 |     let desc = mtl::DepthStencilDescriptor::new();
+   |                ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:57:26
+   |
+57 |         primitive_class: mtl::MTLPrimitiveTopologyClass,
+   |                          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:63:17
+   |
+63 |                 mtl::MTLPrimitiveTopologyClass::Point => true,
+   |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:84:23
+   |
+84 |         let options = mtl::CompileOptions::new();
+   |                       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:110:23
+    |
+110 |         let wg_size = mtl::MTLSize {
+    |                       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:181:19
+    |
+181 |         buffers: &mtl::PipelineBufferDescriptorArrayRef,
+    |                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:190:33
+    |
+190 |                 .set_mutability(mtl::MTLMutability::Immutable);
+    |                                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:195:14
+    |
+195 |         raw: mtl::Texture,
+    |              ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:196:21
+    |
+196 |         raw_format: mtl::MTLPixelFormat,
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:197:19
+    |
+197 |         raw_type: mtl::MTLTextureType,
+    |                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:212:40
+    |
+212 |     pub fn raw_device(&self) -> &Mutex<mtl::Device> {
+    |                                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:224:27
+    |
+224 |         let mut options = mtl::MTLResourceOptions::empty();
+    |                           ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:227:13
+    |
+227 |             mtl::MTLResourceOptions::StorageModeShared
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:229:13
+    |
+229 |             mtl::MTLResourceOptions::StorageModePrivate
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:232:13
+    |
+232 |             mtl::MTLResourceOptions::CPUCacheModeWriteCombined,
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:285:21
+    |
+285 |                     mtl::MTLTextureType::D1Array
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:287:21
+    |
+287 |                     mtl::MTLTextureType::D1
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:293:21
+    |
+293 |                     mtl::MTLTextureType::D2Multisample
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:296:21
+    |
+296 |                     mtl::MTLTextureType::D2Array
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:298:21
+    |
+298 |                     mtl::MTLTextureType::D2
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:305:17
+    |
+305 |                 mtl::MTLTextureType::D3
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:315:37
+    |
+315 |         descriptor.set_storage_mode(mtl::MTLStorageMode::Private);
+    |                                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:341:47
+    |
+341 |         let raw_type = if texture.raw_type == mtl::MTLTextureType::D2Multisample {
+    |                                               ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:369:17
+    |
+369 |                 mtl::NSRange {
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:373:17
+    |
+373 |                 mtl::NSRange {
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:379:17
+    |
+379 |                 objc::rc::autoreleasepool(|| {
+    |                 ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:402:17
+    |
+402 |                 mtl::MTLSamplerMipFilter::NotMipmapped
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:404:41
+    |
+404 |             wgt::FilterMode::Nearest => mtl::MTLSamplerMipFilter::Nearest,
+    |                                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:405:40
+    |
+405 |             wgt::FilterMode::Linear => mtl::MTLSamplerMipFilter::Linear,
+    |                                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:433:51
+    |
+433 |                     descriptor.set_address_mode_s(mtl::MTLSamplerAddressMode::ClampToZero);
+    |                                                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:437:51
+    |
+437 |                     descriptor.set_address_mode_t(mtl::MTLSamplerAddressMode::ClampToZero);
+    |                                                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:441:51
+    |
+441 |                     descriptor.set_address_mode_r(mtl::MTLSamplerAddressMode::ClampToZero);
+    |                                                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:652:21
+    |
+652 |                     mtl::MTLLanguageVersion::V1_0 => (1, 0),
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:653:21
+    |
+653 |                     mtl::MTLLanguageVersion::V1_1 => (1, 1),
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:654:21
+    |
+654 |                     mtl::MTLLanguageVersion::V1_2 => (1, 2),
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:655:21
+    |
+655 |                     mtl::MTLLanguageVersion::V2_0 => (2, 0),
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:656:21
+    |
+656 |                     mtl::MTLLanguageVersion::V2_1 => (2, 1),
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:657:21
+    |
+657 |                     mtl::MTLLanguageVersion::V2_2 => (2, 2),
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:658:21
+    |
+658 |                     mtl::MTLLanguageVersion::V2_3 => (2, 3),
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:659:21
+    |
+659 |                     mtl::MTLLanguageVersion::V2_4 => (2, 4),
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:790:39
+    |
+790 |             wgt::PolygonMode::Fill => mtl::MTLTriangleFillMode::Fill,
+    |                                       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:791:39
+    |
+791 |             wgt::PolygonMode::Line => mtl::MTLTriangleFillMode::Lines,
+    |                                       ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:838:66
+    |
+838 |                     descriptor.set_depth_attachment_pixel_format(mtl::MTLPixelFormat::Depth32Float);
+    |                                                                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:849:48
+    |
+849 |                 at_descriptor.set_pixel_format(mtl::MTLPixelFormat::Invalid);
+    |                                                ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:909:37
+    |
+909 |             let vertex_descriptor = mtl::VertexDescriptor::new();
+    |                                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:974:21
+    |
+974 |                     mtl::MTLDepthClipMode::Clamp
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:976:21
+    |
+976 |                     mtl::MTLDepthClipMode::Clip
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:995:13
+    |
+995 |             mtl::MTLPrimitiveTopologyClass::Unspecified,
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:1041:31
+     |
+1041 |                 let options = mtl::MTLResourceOptions::empty();
+     |                               ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:1069:36
+     |
+1069 |             if cmd_buf.status() == mtl::MTLCommandBufferStatus::Completed {
+     |                                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:1099:20
+     |
+1099 |             if let mtl::MTLCommandBufferStatus::Completed = cmd_buf.status() {
+     |                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:1114:38
+     |
+1114 |         let shared_capture_manager = mtl::CaptureManager::shared();
+     |                                      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:1122:38
+     |
+1122 |         let shared_capture_manager = mtl::CaptureManager::shared();
+     |                                      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:62:50
+   |
+62 |     fn new(view: Option<NonNull<Object>>, layer: mtl::MetalLayer) -> Self {
+   |                                                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:66:35
+   |
+66 |             raw_swapchain_format: mtl::MTLPixelFormat::Invalid,
+   |                                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:87:34
+   |
+87 |             mem::transmute::<_, &mtl::MetalLayerRef>(Self::get_metal_layer(view, delegate))
+   |                                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:93:38
+   |
+93 |     pub unsafe fn from_layer(layer: &mtl::MetalLayerRef) -> Self {
+   |                                      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:216:54
+    |
+216 |         let wants_edr = self.raw_swapchain_format == mtl::MTLPixelFormat::RGBA16Float;
+    |                                                      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:235:37
+    |
+235 |         self.raw_swapchain_format = mtl::MTLPixelFormat::Invalid;
+    |                                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/surface.rs:256:27
+    |
+256 |                 raw_type: mtl::MTLTextureType::D2,
+    |                           ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:69:53
+   |
+69 |     pub fn create_surface_from_layer(&self, layer: &mtl::MetalLayerRef) -> Surface {
+   |                                                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:143:18
+    |
+143 |     msl_version: mtl::MTLLanguageVersion,
+    |                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:145:30
+    |
+145 |     read_write_texture_tier: mtl::MTLReadWriteTextureTier,
+    |                              ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:252:19
+    |
+252 |     device: Mutex<mtl::Device>,
+    |                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:262:20
+    |
+262 |     fn new(device: mtl::Device) -> Self {
+    |                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:280:20
+    |
+280 |     raw: Arc<Mutex<mtl::CommandQueue>>,
+    |                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:292:26
+    |
+292 |     view: Option<NonNull<objc::runtime::Object>>,
+    |                          ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:293:25
+    |
+293 |     render_layer: Mutex<mtl::MetalLayer>,
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:294:27
+    |
+294 |     raw_swapchain_format: mtl::MTLPixelFormat,
+    |                           ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:308:15
+    |
+308 |     drawable: mtl::MetalDrawable,
+    |               ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:327:9
+    |
+327 |         objc::rc::autoreleasepool(|| {
+    |         ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `objc`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:375:9
+    |
+375 |         objc::rc::autoreleasepool(|| {
+    |         ^^^^ use of undeclared crate or module `objc`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:402:10
+    |
+402 |     raw: mtl::Buffer,
+    |          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:417:10
+    |
+417 |     raw: mtl::Texture,
+    |          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:418:17
+    |
+418 |     raw_format: mtl::MTLPixelFormat,
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:419:15
+    |
+419 |     raw_type: mtl::MTLTextureType,
+    |               ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:430:10
+    |
+430 |     raw: mtl::Texture,
+    |          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:445:10
+    |
+445 |     raw: mtl::SamplerState,
+    |          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:542:26
+    |
+542 | type BufferPtr = NonNull<mtl::MTLBuffer>;
+    |                          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:543:27
+    |
+543 | type TexturePtr = NonNull<mtl::MTLTexture>;
+    |                           ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:544:27
+    |
+544 | type SamplerPtr = NonNull<mtl::MTLSamplerState>;
+    |                           ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:547:19
+    |
+547 |     type Native = mtl::BufferRef;
+    |                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:559:19
+    |
+559 |     type Native = mtl::TextureRef;
+    |                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:571:19
+    |
+571 |     type Native = mtl::SamplerStateRef;
+    |                   ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:630:10
+    |
+630 |     raw: mtl::RenderPipelineState,
+    |          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:632:13
+    |
+632 |     vs_lib: mtl::Library,
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:634:20
+    |
+634 |     fs_lib: Option<mtl::Library>,
+    |                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:637:25
+    |
+637 |     raw_primitive_type: mtl::MTLPrimitiveType,
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:638:29
+    |
+638 |     raw_triangle_fill_mode: mtl::MTLTriangleFillMode,
+    |                             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:639:24
+    |
+639 |     raw_front_winding: mtl::MTLWinding,
+    |                        ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:640:20
+    |
+640 |     raw_cull_mode: mtl::MTLCullMode,
+    |                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:641:33
+    |
+641 |     raw_depth_clip_mode: Option<mtl::MTLDepthClipMode>,
+    |                                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:642:28
+    |
+642 |     depth_stencil: Option<(mtl::DepthStencilState, wgt::DepthBiasState)>,
+    |                            ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:649:10
+    |
+649 |     raw: mtl::ComputePipelineState,
+    |          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:651:13
+    |
+651 |     cs_lib: mtl::Library,
+    |             ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:653:22
+    |
+653 |     work_group_size: mtl::MTLSize,
+    |                      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:662:17
+    |
+662 |     raw_buffer: mtl::Buffer,
+    |                 ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:673:54
+    |
+673 |     pending_command_buffers: Vec<(crate::FenceValue, mtl::CommandBuffer)>,
+    |                                                      ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:683:36
+    |
+683 |             if cmd_buf.status() == mtl::MTLCommandBufferStatus::Completed {
+    |                                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:701:15
+    |
+701 |     raw_type: mtl::MTLIndexType,
+    |               ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:710:18
+    |
+710 |     blit: Option<mtl::BlitCommandEncoder>,
+    |                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:711:20
+    |
+711 |     render: Option<mtl::RenderCommandEncoder>,
+    |                    ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:712:21
+    |
+712 |     compute: Option<mtl::ComputeCommandEncoder>,
+    |                     ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:713:25
+    |
+713 |     raw_primitive_type: mtl::MTLPrimitiveType,
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:715:18
+    |
+715 |     raw_wg_size: mtl::MTLSize,
+    |                  ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:724:26
+    |
+724 |     raw_queue: Arc<Mutex<mtl::CommandQueue>>,
+    |                          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:725:25
+    |
+725 |     raw_cmd_buf: Option<mtl::CommandBuffer>,
+    |                         ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:744:10
+    |
+744 |     raw: mtl::CommandBuffer,
+    |          ^^^ use of undeclared crate or module `mtl`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:186:69
+    |
+186 | pub fn map_acomposite_alpha_mode(_mode: wgt::CompositeAlphaMode) -> native::AlphaMode {
+    |                                                                     ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:187:5
+    |
+187 |     native::AlphaMode::Ignore
+    |     ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:16:36
+   |
+16 | pub fn enumerate_adapters(factory: native::DxgiFactory) -> Vec<native::DxgiAdapter> {
+   |                                    ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:16:64
+   |
+16 | pub fn enumerate_adapters(factory: native::DxgiFactory) -> Vec<native::DxgiAdapter> {
+   |                                                                ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:23:32
+   |
+23 |             let mut adapter4 = native::WeakPtr::<dxgi1_6::IDXGIAdapter4>::null();
+   |                                ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:41:27
+   |
+41 |             adapters.push(native::DxgiAdapter::Adapter4(adapter4));
+   |                           ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:46:28
+   |
+46 |         let mut adapter1 = native::WeakPtr::<dxgi::IDXGIAdapter1>::null();
+   |                            ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:64:35
+   |
+64 |                     adapters.push(native::DxgiAdapter::Adapter3(adapter3));
+   |                                   ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:78:35
+   |
+78 |                     adapters.push(native::DxgiAdapter::Adapter2(adapter2));
+   |                                   ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:87:23
+   |
+87 |         adapters.push(native::DxgiAdapter::Adapter1(adapter1));
+   |                       ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:99:14
+   |
+99 | ) -> Result<(native::DxgiLib, native::DxgiFactory), crate::InstanceError> {
+   |              ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:99:31
+   |
+99 | ) -> Result<(native::DxgiLib, native::DxgiFactory), crate::InstanceError> {
+   |                               ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:100:20
+    |
+100 |     let lib_dxgi = native::DxgiLib::new().map_err(|_| crate::InstanceError)?;
+    |                    ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:102:29
+    |
+102 |     let mut factory_flags = native::FactoryCreationFlags::empty();
+    |                             ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:112:38
+    |
+112 |                     factory_flags |= native::FactoryCreationFlags::DEBUG;
+    |                                      ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:157:38
+    |
+157 |                 return Ok((lib_dxgi, native::DxgiFactory::Factory6(factory6)));
+    |                                      ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:167:38
+    |
+167 |                 return Ok((lib_dxgi, native::DxgiFactory::Factory4(factory4)));
+    |                                      ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:195:34
+    |
+195 |             return Ok((lib_dxgi, native::DxgiFactory::Factory2(factory2)));
+    |                                  ^^^^^^ use of undeclared crate or module `native`
+
+error[E0433]: failed to resolve: use of undeclared crate or module `native`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/factory.rs:209:19
+    |
+209 |     Ok((lib_dxgi, native::DxgiFactory::Factory1(factory1)))
+    |                   ^^^^^^ use of undeclared crate or module `native`
+
+error[E0425]: cannot find value `R8Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:873:28
+    |
+873 |             Tf::R8Unorm => R8Unorm,
+    |                            ^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R8Unorm;
+    |
+1   | use wgt::TextureFormat::R8Unorm;
+    |
+
+error[E0425]: cannot find value `R8Snorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:874:28
+    |
+874 |             Tf::R8Snorm => R8Snorm,
+    |                            ^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R8Snorm;
+    |
+1   | use wgt::TextureFormat::R8Snorm;
+    |
+
+error[E0425]: cannot find value `R8Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:875:27
+    |
+875 |             Tf::R8Uint => R8Uint,
+    |                           ^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R8Uint;
+    |
+1   | use wgt::TextureFormat::R8Uint;
+    |
+
+error[E0425]: cannot find value `R8Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:876:27
+    |
+876 |             Tf::R8Sint => R8Sint,
+    |                           ^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R8Sint;
+    |
+1   | use wgt::TextureFormat::R8Sint;
+    |
+
+error[E0425]: cannot find value `R16Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:877:28
+    |
+877 |             Tf::R16Uint => R16Uint,
+    |                            ^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R16Uint;
+    |
+1   | use wgt::TextureFormat::R16Uint;
+    |
+
+error[E0425]: cannot find value `R16Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:878:28
+    |
+878 |             Tf::R16Sint => R16Sint,
+    |                            ^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R16Sint;
+    |
+1   | use wgt::TextureFormat::R16Sint;
+    |
+
+error[E0425]: cannot find value `R16Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:879:29
+    |
+879 |             Tf::R16Unorm => R16Unorm,
+    |                             ^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::TextureFormat::R16Unorm;
+    |
+
+error[E0425]: cannot find value `R16Snorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:880:29
+    |
+880 |             Tf::R16Snorm => R16Snorm,
+    |                             ^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::TextureFormat::R16Snorm;
+    |
+
+error[E0425]: cannot find value `R16Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:881:29
+    |
+881 |             Tf::R16Float => R16Float,
+    |                             ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R16Float;
+    |
+1   | use wgt::TextureFormat::R16Float;
+    |
+
+error[E0425]: cannot find value `RG8Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:882:29
+    |
+882 |             Tf::Rg8Unorm => RG8Unorm,
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG8Snorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:883:29
+    |
+883 |             Tf::Rg8Snorm => RG8Snorm,
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG8Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:884:28
+    |
+884 |             Tf::Rg8Uint => RG8Uint,
+    |                            ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG8Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:885:28
+    |
+885 |             Tf::Rg8Sint => RG8Sint,
+    |                            ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG16Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:886:30
+    |
+886 |             Tf::Rg16Unorm => RG16Unorm,
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG16Snorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:887:30
+    |
+887 |             Tf::Rg16Snorm => RG16Snorm,
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `R32Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:888:28
+    |
+888 |             Tf::R32Uint => R32Uint,
+    |                            ^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R32Uint;
+    |
+1   | use wgt::TextureFormat::R32Uint;
+    |
+
+error[E0425]: cannot find value `R32Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:889:28
+    |
+889 |             Tf::R32Sint => R32Sint,
+    |                            ^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R32Sint;
+    |
+1   | use wgt::TextureFormat::R32Sint;
+    |
+
+error[E0425]: cannot find value `R32Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:890:29
+    |
+890 |             Tf::R32Float => R32Float,
+    |                             ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::StorageFormat::R32Float;
+    |
+1   | use wgt::TextureFormat::R32Float;
+    |
+
+error[E0425]: cannot find value `RG16Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:891:29
+    |
+891 |             Tf::Rg16Uint => RG16Uint,
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG16Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:892:29
+    |
+892 |             Tf::Rg16Sint => RG16Sint,
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG16Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:893:30
+    |
+893 |             Tf::Rg16Float => RG16Float,
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA8Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:894:31
+    |
+894 |             Tf::Rgba8Unorm => RGBA8Unorm,
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA8Unorm_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:895:35
+    |
+895 |             Tf::Rgba8UnormSrgb => RGBA8Unorm_sRGB,
+    |                                   ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BGRA8Unorm_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:896:35
+    |
+896 |             Tf::Bgra8UnormSrgb => BGRA8Unorm_sRGB,
+    |                                   ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA8Snorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:897:31
+    |
+897 |             Tf::Rgba8Snorm => RGBA8Snorm,
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BGRA8Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:898:31
+    |
+898 |             Tf::Bgra8Unorm => BGRA8Unorm,
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA8Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:899:30
+    |
+899 |             Tf::Rgba8Uint => RGBA8Uint,
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA8Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:900:30
+    |
+900 |             Tf::Rgba8Sint => RGBA8Sint,
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGB10A2Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:901:33
+    |
+901 |             Tf::Rgb10a2Unorm => RGB10A2Unorm,
+    |                                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG11B10Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:902:33
+    |
+902 |             Tf::Rg11b10Float => RG11B10Float,
+    |                                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG32Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:903:29
+    |
+903 |             Tf::Rg32Uint => RG32Uint,
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG32Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:904:29
+    |
+904 |             Tf::Rg32Sint => RG32Sint,
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RG32Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:905:30
+    |
+905 |             Tf::Rg32Float => RG32Float,
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA16Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:906:31
+    |
+906 |             Tf::Rgba16Uint => RGBA16Uint,
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA16Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:907:31
+    |
+907 |             Tf::Rgba16Sint => RGBA16Sint,
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA16Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:908:32
+    |
+908 |             Tf::Rgba16Unorm => RGBA16Unorm,
+    |                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA16Snorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:909:32
+    |
+909 |             Tf::Rgba16Snorm => RGBA16Snorm,
+    |                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA16Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:910:32
+    |
+910 |             Tf::Rgba16Float => RGBA16Float,
+    |                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA32Uint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:911:31
+    |
+911 |             Tf::Rgba32Uint => RGBA32Uint,
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA32Sint` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:912:31
+    |
+912 |             Tf::Rgba32Sint => RGBA32Sint,
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGBA32Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:913:32
+    |
+913 |             Tf::Rgba32Float => RGBA32Float,
+    |                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Depth16Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:915:33
+    |
+915 |             Tf::Depth16Unorm => Depth16Unorm,
+    |                                 ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::TextureFormat::Depth16Unorm;
+    |
+
+error[E0425]: cannot find value `Depth32Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:916:33
+    |
+916 |             Tf::Depth32Float => Depth32Float,
+    |                                 ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::TextureFormat::Depth32Float;
+    |
+
+error[E0425]: cannot find value `Depth32Float_Stencil8` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:917:41
+    |
+917 |             Tf::Depth32FloatStencil8 => Depth32Float_Stencil8,
+    |                                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Depth24Unorm_Stencil8` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:920:21
+    |
+920 |                     Depth24Unorm_Stencil8
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Depth32Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:922:21
+    |
+922 |                     Depth32Float
+    |                     ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::TextureFormat::Depth32Float;
+    |
+
+error[E0425]: cannot find value `Depth24Unorm_Stencil8` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:927:21
+    |
+927 |                     Depth24Unorm_Stencil8
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Depth32Float_Stencil8` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:929:21
+    |
+929 |                     Depth32Float_Stencil8
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `RGB9E5Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:932:33
+    |
+932 |             Tf::Rgb9e5Ufloat => RGB9E5Float,
+    |                                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC1_RGBA` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:933:33
+    |
+933 |             Tf::Bc1RgbaUnorm => BC1_RGBA,
+    |                                 ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC1_RGBA_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:934:37
+    |
+934 |             Tf::Bc1RgbaUnormSrgb => BC1_RGBA_sRGB,
+    |                                     ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC2_RGBA` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:935:33
+    |
+935 |             Tf::Bc2RgbaUnorm => BC2_RGBA,
+    |                                 ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC2_RGBA_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:936:37
+    |
+936 |             Tf::Bc2RgbaUnormSrgb => BC2_RGBA_sRGB,
+    |                                     ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC3_RGBA` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:937:33
+    |
+937 |             Tf::Bc3RgbaUnorm => BC3_RGBA,
+    |                                 ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC3_RGBA_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:938:37
+    |
+938 |             Tf::Bc3RgbaUnormSrgb => BC3_RGBA_sRGB,
+    |                                     ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC4_RUnorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:939:30
+    |
+939 |             Tf::Bc4RUnorm => BC4_RUnorm,
+    |                              ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC4_RSnorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:940:30
+    |
+940 |             Tf::Bc4RSnorm => BC4_RSnorm,
+    |                              ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC5_RGUnorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:941:31
+    |
+941 |             Tf::Bc5RgUnorm => BC5_RGUnorm,
+    |                               ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC5_RGSnorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:942:31
+    |
+942 |             Tf::Bc5RgSnorm => BC5_RGSnorm,
+    |                               ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC6H_RGBFloat` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:943:34
+    |
+943 |             Tf::Bc6hRgbSfloat => BC6H_RGBFloat,
+    |                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC6H_RGBUfloat` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:944:34
+    |
+944 |             Tf::Bc6hRgbUfloat => BC6H_RGBUfloat,
+    |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC7_RGBAUnorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:945:33
+    |
+945 |             Tf::Bc7RgbaUnorm => BC7_RGBAUnorm,
+    |                                 ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BC7_RGBAUnorm_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:946:37
+    |
+946 |             Tf::Bc7RgbaUnormSrgb => BC7_RGBAUnorm_sRGB,
+    |                                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ETC2_RGB8` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:947:34
+    |
+947 |             Tf::Etc2Rgb8Unorm => ETC2_RGB8,
+    |                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ETC2_RGB8_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:948:38
+    |
+948 |             Tf::Etc2Rgb8UnormSrgb => ETC2_RGB8_sRGB,
+    |                                      ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ETC2_RGB8A1` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:949:36
+    |
+949 |             Tf::Etc2Rgb8A1Unorm => ETC2_RGB8A1,
+    |                                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ETC2_RGB8A1_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:950:40
+    |
+950 |             Tf::Etc2Rgb8A1UnormSrgb => ETC2_RGB8A1_sRGB,
+    |                                        ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `EAC_RGBA8` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:951:35
+    |
+951 |             Tf::Etc2Rgba8Unorm => EAC_RGBA8,
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `EAC_RGBA8_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:952:39
+    |
+952 |             Tf::Etc2Rgba8UnormSrgb => EAC_RGBA8_sRGB,
+    |                                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `EAC_R11Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:953:32
+    |
+953 |             Tf::EacR11Unorm => EAC_R11Unorm,
+    |                                ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `EAC_R11Snorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:954:32
+    |
+954 |             Tf::EacR11Snorm => EAC_R11Snorm,
+    |                                ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `EAC_RG11Unorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:955:33
+    |
+955 |             Tf::EacRg11Unorm => EAC_RG11Unorm,
+    |                                 ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `EAC_RG11Snorm` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:956:33
+    |
+956 |             Tf::EacRg11Snorm => EAC_RG11Snorm,
+    |                                 ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_4x4_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:959:40
+    |
+959 |                     AstcBlock::B4x4 => ASTC_4x4_LDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_5x4_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:960:40
+    |
+960 |                     AstcBlock::B5x4 => ASTC_5x4_LDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_5x5_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:961:40
+    |
+961 |                     AstcBlock::B5x5 => ASTC_5x5_LDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_6x5_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:962:40
+    |
+962 |                     AstcBlock::B6x5 => ASTC_6x5_LDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_6x6_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:963:40
+    |
+963 |                     AstcBlock::B6x6 => ASTC_6x6_LDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x5_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:964:40
+    |
+964 |                     AstcBlock::B8x5 => ASTC_8x5_LDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x6_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:965:40
+    |
+965 |                     AstcBlock::B8x6 => ASTC_8x6_LDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x8_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:966:40
+    |
+966 |                     AstcBlock::B8x8 => ASTC_8x8_LDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x5_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:967:41
+    |
+967 |                     AstcBlock::B10x5 => ASTC_10x5_LDR,
+    |                                         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x6_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:968:41
+    |
+968 |                     AstcBlock::B10x6 => ASTC_10x6_LDR,
+    |                                         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x8_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:969:41
+    |
+969 |                     AstcBlock::B10x8 => ASTC_10x8_LDR,
+    |                                         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x10_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:970:42
+    |
+970 |                     AstcBlock::B10x10 => ASTC_10x10_LDR,
+    |                                          ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_12x10_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:971:42
+    |
+971 |                     AstcBlock::B12x10 => ASTC_12x10_LDR,
+    |                                          ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_12x12_LDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:972:42
+    |
+972 |                     AstcBlock::B12x12 => ASTC_12x12_LDR,
+    |                                          ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_4x4_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:975:40
+    |
+975 |                     AstcBlock::B4x4 => ASTC_4x4_sRGB,
+    |                                        ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_5x4_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:976:40
+    |
+976 |                     AstcBlock::B5x4 => ASTC_5x4_sRGB,
+    |                                        ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_5x5_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:977:40
+    |
+977 |                     AstcBlock::B5x5 => ASTC_5x5_sRGB,
+    |                                        ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_6x5_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:978:40
+    |
+978 |                     AstcBlock::B6x5 => ASTC_6x5_sRGB,
+    |                                        ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_6x6_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:979:40
+    |
+979 |                     AstcBlock::B6x6 => ASTC_6x6_sRGB,
+    |                                        ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x5_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:980:40
+    |
+980 |                     AstcBlock::B8x5 => ASTC_8x5_sRGB,
+    |                                        ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x6_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:981:40
+    |
+981 |                     AstcBlock::B8x6 => ASTC_8x6_sRGB,
+    |                                        ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x8_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:982:40
+    |
+982 |                     AstcBlock::B8x8 => ASTC_8x8_sRGB,
+    |                                        ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x5_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:983:41
+    |
+983 |                     AstcBlock::B10x5 => ASTC_10x5_sRGB,
+    |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x6_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:984:41
+    |
+984 |                     AstcBlock::B10x6 => ASTC_10x6_sRGB,
+    |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x8_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:985:41
+    |
+985 |                     AstcBlock::B10x8 => ASTC_10x8_sRGB,
+    |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x10_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:986:42
+    |
+986 |                     AstcBlock::B10x10 => ASTC_10x10_sRGB,
+    |                                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_12x10_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:987:42
+    |
+987 |                     AstcBlock::B12x10 => ASTC_12x10_sRGB,
+    |                                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_12x12_sRGB` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:988:42
+    |
+988 |                     AstcBlock::B12x12 => ASTC_12x12_sRGB,
+    |                                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_4x4_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:991:40
+    |
+991 |                     AstcBlock::B4x4 => ASTC_4x4_HDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_5x4_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:992:40
+    |
+992 |                     AstcBlock::B5x4 => ASTC_5x4_HDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_5x5_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:993:40
+    |
+993 |                     AstcBlock::B5x5 => ASTC_5x5_HDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_6x5_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:994:40
+    |
+994 |                     AstcBlock::B6x5 => ASTC_6x5_HDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_6x6_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:995:40
+    |
+995 |                     AstcBlock::B6x6 => ASTC_6x6_HDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x5_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:996:40
+    |
+996 |                     AstcBlock::B8x5 => ASTC_8x5_HDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x6_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:997:40
+    |
+997 |                     AstcBlock::B8x6 => ASTC_8x6_HDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_8x8_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:998:40
+    |
+998 |                     AstcBlock::B8x8 => ASTC_8x8_HDR,
+    |                                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x5_HDR` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:999:41
+    |
+999 |                     AstcBlock::B10x5 => ASTC_10x5_HDR,
+    |                                         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x6_HDR` in this scope
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:1000:41
+     |
+1000 |                     AstcBlock::B10x6 => ASTC_10x6_HDR,
+     |                                         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x8_HDR` in this scope
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:1001:41
+     |
+1001 |                     AstcBlock::B10x8 => ASTC_10x8_HDR,
+     |                                         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_10x10_HDR` in this scope
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:1002:42
+     |
+1002 |                     AstcBlock::B10x10 => ASTC_10x10_HDR,
+     |                                          ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_12x10_HDR` in this scope
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:1003:42
+     |
+1003 |                     AstcBlock::B12x10 => ASTC_12x10_HDR,
+     |                                          ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ASTC_12x12_HDR` in this scope
+    --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/adapter.rs:1004:42
+     |
+1004 |                     AstcBlock::B12x12 => ASTC_12x12_HDR,
+     |                                          ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/command.rs:357:35
+    |
+357 |             let descriptor = mtl::RenderPassDescriptor::new();
+    |                                   ^^^^^^^^^^^^^^^^^^^^ not found in `mtl`
+    |
+help: consider importing this struct
+    |
+1   | use crate::RenderPassDescriptor;
+    |
+help: if you import `RenderPassDescriptor`, refer to it directly
+    |
+357 -             let descriptor = mtl::RenderPassDescriptor::new();
+357 +             let descriptor = RenderPassDescriptor::new();
+    |
+
+error[E0425]: cannot find value `D1` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:28:20
+   |
+28 |         Tvd::D1 => D1,
+   |                    ^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::ImageDimension::D1;
+   |
+1  | use wgt::TextureDimension::D1;
+   |
+1  | use wgt::TextureViewDimension::D1;
+   |
+
+error[E0425]: cannot find value `D2` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:29:20
+   |
+29 |         Tvd::D2 => D2,
+   |                    ^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::ImageDimension::D2;
+   |
+1  | use wgt::TextureDimension::D2;
+   |
+1  | use wgt::TextureViewDimension::D2;
+   |
+
+error[E0425]: cannot find value `D2Array` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:30:25
+   |
+30 |         Tvd::D2Array => D2Array,
+   |                         ^^^^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+1  | use wgt::TextureViewDimension::D2Array;
+   |
+
+error[E0425]: cannot find value `D3` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:31:20
+   |
+31 |         Tvd::D3 => D3,
+   |                    ^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::ImageDimension::D3;
+   |
+1  | use wgt::TextureDimension::D3;
+   |
+1  | use wgt::TextureViewDimension::D3;
+   |
+
+error[E0425]: cannot find value `Cube` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:32:22
+   |
+32 |         Tvd::Cube => Cube,
+   |                      ^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::ImageDimension::Cube;
+   |
+1  | use wgt::TextureViewDimension::Cube;
+   |
+
+error[E0425]: cannot find value `CubeArray` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:33:27
+   |
+33 |         Tvd::CubeArray => CubeArray,
+   |                           ^^^^^^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+1  | use wgt::TextureViewDimension::CubeArray;
+   |
+
+error[E0425]: cannot find value `Never` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:41:22
+   |
+41 |         Cf::Never => Never,
+   |                      ^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::back::msl::sampler::CompareFunc::Never;
+   |
+1  | use wgt::CompareFunction::Never;
+   |
+
+error[E0425]: cannot find value `Less` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:42:21
+   |
+42 |         Cf::Less => Less,
+   |                     ^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use core::cmp::Ordering::Less;
+   |
+1  | use naga::BinaryOperator::Less;
+   |
+1  | use naga::back::msl::sampler::CompareFunc::Less;
+   |
+1  | use std::cmp::Ordering::Less;
+   |
+     and 1 other candidate
+
+error[E0425]: cannot find value `LessEqual` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:43:26
+   |
+43 |         Cf::LessEqual => LessEqual,
+   |                          ^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::BinaryOperator::LessEqual;
+   |
+1  | use naga::ConservativeDepth::LessEqual;
+   |
+1  | use naga::back::msl::sampler::CompareFunc::LessEqual;
+   |
+1  | use wgt::CompareFunction::LessEqual;
+   |
+
+error[E0425]: cannot find value `Equal` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:44:22
+   |
+44 |         Cf::Equal => Equal,
+   |                      ^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use core::cmp::Ordering::Equal;
+   |
+1  | use naga::BinaryOperator::Equal;
+   |
+1  | use naga::back::msl::sampler::CompareFunc::Equal;
+   |
+1  | use std::cmp::Ordering::Equal;
+   |
+     and 1 other candidate
+
+error[E0425]: cannot find value `GreaterEqual` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:45:29
+   |
+45 |         Cf::GreaterEqual => GreaterEqual,
+   |                             ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::BinaryOperator::GreaterEqual;
+   |
+1  | use naga::ConservativeDepth::GreaterEqual;
+   |
+1  | use naga::back::msl::sampler::CompareFunc::GreaterEqual;
+   |
+1  | use wgt::CompareFunction::GreaterEqual;
+   |
+
+error[E0425]: cannot find value `Greater` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:46:24
+   |
+46 |         Cf::Greater => Greater,
+   |                        ^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use core::cmp::Ordering::Greater;
+   |
+1  | use naga::BinaryOperator::Greater;
+   |
+1  | use naga::back::msl::sampler::CompareFunc::Greater;
+   |
+1  | use std::cmp::Ordering::Greater;
+   |
+     and 1 other candidate
+
+error[E0425]: cannot find value `NotEqual` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:47:25
+   |
+47 |         Cf::NotEqual => NotEqual,
+   |                         ^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::BinaryOperator::NotEqual;
+   |
+1  | use naga::back::msl::sampler::CompareFunc::NotEqual;
+   |
+1  | use wgt::CompareFunction::NotEqual;
+   |
+
+error[E0425]: cannot find value `Always` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:48:23
+   |
+48 |         Cf::Always => Always,
+   |                       ^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::back::msl::sampler::CompareFunc::Always;
+   |
+1  | use wgt::CompareFunction::Always;
+   |
+
+error[E0425]: cannot find value `Nearest` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:55:37
+   |
+55 |         wgt::FilterMode::Nearest => Nearest,
+   |                                     ^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::back::msl::sampler::Filter::Nearest;
+   |
+1  | use wgt::FilterMode::Nearest;
+   |
+
+error[E0425]: cannot find value `Linear` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:56:36
+   |
+56 |         wgt::FilterMode::Linear => Linear,
+   |                                    ^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::Interpolation::Linear;
+   |
+1  | use naga::back::msl::sampler::Filter::Linear;
+   |
+1  | use wgt::FilterMode::Linear;
+   |
+
+error[E0425]: cannot find value `Repeat` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:64:23
+   |
+64 |         Fm::Repeat => Repeat,
+   |                       ^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::back::msl::sampler::Address::Repeat;
+   |
+1  | use wgt::AddressMode::Repeat;
+   |
+
+error[E0425]: cannot find value `MirrorRepeat` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:65:29
+   |
+65 |         Fm::MirrorRepeat => MirrorRepeat,
+   |                             ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+1  | use wgt::AddressMode::MirrorRepeat;
+   |
+
+error[E0425]: cannot find value `ClampToEdge` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:66:28
+   |
+66 |         Fm::ClampToEdge => ClampToEdge,
+   |                            ^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::back::msl::sampler::Address::ClampToEdge;
+   |
+1  | use wgt::AddressMode::ClampToEdge;
+   |
+
+error[E0425]: cannot find value `ClampToBorderColor` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:67:30
+   |
+67 |         Fm::ClampToBorder => ClampToBorderColor,
+   |                              ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `TransparentBlack` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:75:54
+   |
+75 |         wgt::SamplerBorderColor::TransparentBlack => TransparentBlack,
+   |                                                      ^^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::back::msl::sampler::BorderColor::TransparentBlack;
+   |
+1  | use wgt::SamplerBorderColor::TransparentBlack;
+   |
+
+error[E0425]: cannot find value `OpaqueBlack` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:76:49
+   |
+76 |         wgt::SamplerBorderColor::OpaqueBlack => OpaqueBlack,
+   |                                                 ^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::back::msl::sampler::BorderColor::OpaqueBlack;
+   |
+1  | use wgt::SamplerBorderColor::OpaqueBlack;
+   |
+
+error[E0425]: cannot find value `OpaqueWhite` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:77:49
+   |
+77 |         wgt::SamplerBorderColor::OpaqueWhite => OpaqueWhite,
+   |                                                 ^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these items
+   |
+1  | use naga::back::msl::sampler::BorderColor::OpaqueWhite;
+   |
+1  | use wgt::SamplerBorderColor::OpaqueWhite;
+   |
+
+error[E0425]: cannot find value `Zero` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:134:21
+    |
+134 |         Bf::Zero => Zero,
+    |                     ^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use core::num::FpCategory::Zero;
+    |
+1   | use core::num::IntErrorKind::Zero;
+    |
+1   | use core::num::flt2dec::FullDecoded::Zero;
+    |
+1   | use core::num::fmt::Part::Zero;
+    |
+      and 6 other candidates
+
+error[E0425]: cannot find value `One` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:135:20
+    |
+135 |         Bf::One => One,
+    |                    ^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::BlendFactor::One;
+    |
+
+error[E0425]: cannot find value `SourceColor` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:136:20
+    |
+136 |         Bf::Src => SourceColor,
+    |                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `OneMinusSourceColor` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:137:28
+    |
+137 |         Bf::OneMinusSrc => OneMinusSourceColor,
+    |                            ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DestinationColor` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:138:20
+    |
+138 |         Bf::Dst => DestinationColor,
+    |                    ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `OneMinusDestinationColor` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:139:28
+    |
+139 |         Bf::OneMinusDst => OneMinusDestinationColor,
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `SourceAlpha` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:140:25
+    |
+140 |         Bf::SrcAlpha => SourceAlpha,
+    |                         ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `OneMinusSourceAlpha` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:141:33
+    |
+141 |         Bf::OneMinusSrcAlpha => OneMinusSourceAlpha,
+    |                                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DestinationAlpha` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:142:25
+    |
+142 |         Bf::DstAlpha => DestinationAlpha,
+    |                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `OneMinusDestinationAlpha` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:143:33
+    |
+143 |         Bf::OneMinusDstAlpha => OneMinusDestinationAlpha,
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `BlendColor` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:144:25
+    |
+144 |         Bf::Constant => BlendColor,
+    |                         ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `OneMinusBlendColor` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:145:33
+    |
+145 |         Bf::OneMinusConstant => OneMinusBlendColor,
+    |                                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `SourceAlphaSaturated` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:148:34
+    |
+148 |         Bf::SrcAlphaSaturated => SourceAlphaSaturated,
+    |                                  ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Add` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:161:20
+    |
+161 |         Bo::Add => Add,
+    |                    ^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::AtomicFunction::Add;
+    |
+1   | use naga::BinaryOperator::Add;
+    |
+1   | use wgt::BlendOperation::Add;
+    |
+
+error[E0425]: cannot find value `Subtract` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:162:25
+    |
+162 |         Bo::Subtract => Subtract,
+    |                         ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::AtomicFunction::Subtract;
+    |
+1   | use naga::BinaryOperator::Subtract;
+    |
+1   | use wgt::BlendOperation::Subtract;
+    |
+
+error[E0425]: cannot find value `ReverseSubtract` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:163:32
+    |
+163 |         Bo::ReverseSubtract => ReverseSubtract,
+    |                                ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::BlendOperation::ReverseSubtract;
+    |
+
+error[E0425]: cannot find value `Min` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:164:20
+    |
+164 |         Bo::Min => Min,
+    |                    ^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::AtomicFunction::Min;
+    |
+1   | use naga::MathFunction::Min;
+    |
+1   | use wgt::BlendOperation::Min;
+    |
+
+error[E0425]: cannot find value `Max` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:165:20
+    |
+165 |         Bo::Max => Max,
+    |                    ^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::AtomicFunction::Max;
+    |
+1   | use naga::MathFunction::Max;
+    |
+1   | use wgt::BlendOperation::Max;
+    |
+
+error[E0425]: cannot find value `UChar2Normalized` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:188:25
+    |
+188 |         Vf::Unorm8x2 => UChar2Normalized,
+    |                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Char2Normalized` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:189:25
+    |
+189 |         Vf::Snorm8x2 => Char2Normalized,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UChar2` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:190:24
+    |
+190 |         Vf::Uint8x2 => UChar2,
+    |                        ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Char2` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:191:24
+    |
+191 |         Vf::Sint8x2 => Char2,
+    |                        ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UChar4Normalized` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:192:25
+    |
+192 |         Vf::Unorm8x4 => UChar4Normalized,
+    |                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Char4Normalized` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:193:25
+    |
+193 |         Vf::Snorm8x4 => Char4Normalized,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UChar4` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:194:24
+    |
+194 |         Vf::Uint8x4 => UChar4,
+    |                        ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Char4` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:195:24
+    |
+195 |         Vf::Sint8x4 => Char4,
+    |                        ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UShort2Normalized` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:196:26
+    |
+196 |         Vf::Unorm16x2 => UShort2Normalized,
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Short2Normalized` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:197:26
+    |
+197 |         Vf::Snorm16x2 => Short2Normalized,
+    |                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UShort2` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:198:25
+    |
+198 |         Vf::Uint16x2 => UShort2,
+    |                         ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Short2` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:199:25
+    |
+199 |         Vf::Sint16x2 => Short2,
+    |                         ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Half2` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:200:26
+    |
+200 |         Vf::Float16x2 => Half2,
+    |                          ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UShort4Normalized` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:201:26
+    |
+201 |         Vf::Unorm16x4 => UShort4Normalized,
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Short4Normalized` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:202:26
+    |
+202 |         Vf::Snorm16x4 => Short4Normalized,
+    |                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UShort4` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:203:25
+    |
+203 |         Vf::Uint16x4 => UShort4,
+    |                         ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Short4` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:204:25
+    |
+204 |         Vf::Sint16x4 => Short4,
+    |                         ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Half4` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:205:26
+    |
+205 |         Vf::Float16x4 => Half4,
+    |                          ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UInt` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:206:23
+    |
+206 |         Vf::Uint32 => UInt,
+    |                       ^^^^ not found in this scope
+
+error[E0425]: cannot find value `Int` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:207:23
+    |
+207 |         Vf::Sint32 => Int,
+    |                       ^^^ not found in this scope
+
+error[E0425]: cannot find value `Float` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:208:24
+    |
+208 |         Vf::Float32 => Float,
+    |                        ^^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use naga::ScalarKind::Float;
+    |
+1   | use naga::ScalarValue::Float;
+    |
+
+error[E0425]: cannot find value `UInt2` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:209:25
+    |
+209 |         Vf::Uint32x2 => UInt2,
+    |                         ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Int2` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:210:25
+    |
+210 |         Vf::Sint32x2 => Int2,
+    |                         ^^^^ not found in this scope
+
+error[E0425]: cannot find value `Float2` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:211:26
+    |
+211 |         Vf::Float32x2 => Float2,
+    |                          ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UInt3` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:212:25
+    |
+212 |         Vf::Uint32x3 => UInt3,
+    |                         ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Int3` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:213:25
+    |
+213 |         Vf::Sint32x3 => Int3,
+    |                         ^^^^ not found in this scope
+
+error[E0425]: cannot find value `Float3` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:214:26
+    |
+214 |         Vf::Float32x3 => Float3,
+    |                          ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UInt4` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:215:25
+    |
+215 |         Vf::Uint32x4 => UInt4,
+    |                         ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Int4` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:216:25
+    |
+216 |         Vf::Sint32x4 => Int4,
+    |                         ^^^^ not found in this scope
+
+error[E0425]: cannot find value `Float4` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:217:26
+    |
+217 |         Vf::Float32x4 => Float4,
+    |                          ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Keep` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:234:21
+    |
+234 |         So::Keep => Keep,
+    |                     ^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::StencilOperation::Keep;
+    |
+
+error[E0425]: cannot find value `Zero` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:235:21
+    |
+235 |         So::Zero => Zero,
+    |                     ^^^^ not found in this scope
+    |
+help: consider importing one of these items
+    |
+1   | use core::num::FpCategory::Zero;
+    |
+1   | use core::num::IntErrorKind::Zero;
+    |
+1   | use core::num::flt2dec::FullDecoded::Zero;
+    |
+1   | use core::num::fmt::Part::Zero;
+    |
+      and 6 other candidates
+
+error[E0425]: cannot find value `Replace` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:236:24
+    |
+236 |         So::Replace => Replace,
+    |                        ^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::StencilOperation::Replace;
+    |
+
+error[E0425]: cannot find value `IncrementClamp` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:237:31
+    |
+237 |         So::IncrementClamp => IncrementClamp,
+    |                               ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::StencilOperation::IncrementClamp;
+    |
+
+error[E0425]: cannot find value `IncrementWrap` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:238:30
+    |
+238 |         So::IncrementWrap => IncrementWrap,
+    |                              ^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::StencilOperation::IncrementWrap;
+    |
+
+error[E0425]: cannot find value `DecrementClamp` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:239:31
+    |
+239 |         So::DecrementClamp => DecrementClamp,
+    |                               ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::StencilOperation::DecrementClamp;
+    |
+
+error[E0425]: cannot find value `DecrementWrap` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:240:30
+    |
+240 |         So::DecrementWrap => DecrementWrap,
+    |                              ^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::StencilOperation::DecrementWrap;
+    |
+
+error[E0425]: cannot find value `Invert` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:241:23
+    |
+241 |         So::Invert => Invert,
+    |                       ^^^^^^ not found in this scope
+    |
+help: consider importing this unit variant
+    |
+1   | use wgt::StencilOperation::Invert;
+    |
+
+error[E0425]: cannot find value `StoreAndMultisampleResolve` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:286:25
+    |
+286 |         (true, true) => StoreAndMultisampleResolve,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `MultisampleResolve` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:287:26
+    |
+287 |         (false, true) => MultisampleResolve,
+    |                          ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `Store` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:288:26
+    |
+288 |         (true, false) => Store,
+    |                          ^^^^^ help: a local variable with a similar name exists (notice the capitalization): `store`
+
+error[E0425]: cannot find value `DontCare` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/conv.rs:289:27
+    |
+289 |         (false, false) => DontCare,
+    |                           ^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:274:31
+    |
+274 |         let descriptor = mtl::TextureDescriptor::new();
+    |                               ^^^^^^^^^^^^^^^^^ not found in `mtl`
+    |
+help: consider importing one of these items
+    |
+1   | use crate::TextureDescriptor;
+    |
+1   | use wgt::TextureDescriptor;
+    |
+help: if you import `TextureDescriptor`, refer to it directly
+    |
+274 -         let descriptor = mtl::TextureDescriptor::new();
+274 +         let descriptor = TextureDescriptor::new();
+    |
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:396:31
+    |
+396 |         let descriptor = mtl::SamplerDescriptor::new();
+    |                               ^^^^^^^^^^^^^^^^^ not found in `mtl`
+    |
+help: consider importing this struct
+    |
+1   | use crate::SamplerDescriptor;
+    |
+help: if you import `SamplerDescriptor`, refer to it directly
+    |
+396 -         let descriptor = mtl::SamplerDescriptor::new();
+396 +         let descriptor = SamplerDescriptor::new();
+    |
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:787:31
+    |
+787 |         let descriptor = mtl::RenderPipelineDescriptor::new();
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^ not found in `mtl`
+    |
+help: consider importing this struct
+    |
+1   | use crate::RenderPipelineDescriptor;
+    |
+help: if you import `RenderPipelineDescriptor`, refer to it directly
+    |
+787 -         let descriptor = mtl::RenderPipelineDescriptor::new();
+787 +         let descriptor = RenderPipelineDescriptor::new();
+    |
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:990:31
+    |
+990 |         let descriptor = mtl::ComputePipelineDescriptor::new();
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in `mtl`
+    |
+help: consider importing this struct
+    |
+1   | use crate::ComputePipelineDescriptor;
+    |
+help: if you import `ComputePipelineDescriptor`, refer to it directly
+    |
+990 -         let descriptor = mtl::ComputePipelineDescriptor::new();
+990 +         let descriptor = ComputePipelineDescriptor::new();
+    |
+
+error[E0433]: failed to resolve: use of undeclared crate or module `mtl`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:107:28
+    |
+107 |         let devices = mtl::Device::all();
+    |                            ^^^^^^ not found in `mtl`
+    |
+help: consider importing one of these items
+    |
+22  | use ash::Device;
+    |
+22  | use ash::vk::Device;
+    |
+22  | use crate::Device;
+    |
+22  | use crate::gles::Device;
+    |
+      and 1 other candidate
+help: if you import `Device`, refer to it directly
+    |
+107 -         let devices = mtl::Device::all();
+107 +         let devices = Device::all();
+    |
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8_UNORM` in this scope
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:8:24
+  |
+8 |         Tf::R8Unorm => DXGI_FORMAT_R8_UNORM,
+  |                        ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8_SNORM` in this scope
+ --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:9:24
+  |
+9 |         Tf::R8Snorm => DXGI_FORMAT_R8_SNORM,
+  |                        ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:10:23
+   |
+10 |         Tf::R8Uint => DXGI_FORMAT_R8_UINT,
+   |                       ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:11:23
+   |
+11 |         Tf::R8Sint => DXGI_FORMAT_R8_SINT,
+   |                       ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:12:24
+   |
+12 |         Tf::R16Uint => DXGI_FORMAT_R16_UINT,
+   |                        ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:13:24
+   |
+13 |         Tf::R16Sint => DXGI_FORMAT_R16_SINT,
+   |                        ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:14:25
+   |
+14 |         Tf::R16Unorm => DXGI_FORMAT_R16_UNORM,
+   |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16_SNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:15:25
+   |
+15 |         Tf::R16Snorm => DXGI_FORMAT_R16_SNORM,
+   |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16_FLOAT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:16:25
+   |
+16 |         Tf::R16Float => DXGI_FORMAT_R16_FLOAT,
+   |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:17:25
+   |
+17 |         Tf::Rg8Unorm => DXGI_FORMAT_R8G8_UNORM,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8_SNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:18:25
+   |
+18 |         Tf::Rg8Snorm => DXGI_FORMAT_R8G8_SNORM,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:19:24
+   |
+19 |         Tf::Rg8Uint => DXGI_FORMAT_R8G8_UINT,
+   |                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:20:24
+   |
+20 |         Tf::Rg8Sint => DXGI_FORMAT_R8G8_SINT,
+   |                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:21:26
+   |
+21 |         Tf::Rg16Unorm => DXGI_FORMAT_R16G16_UNORM,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_SNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:22:26
+   |
+22 |         Tf::Rg16Snorm => DXGI_FORMAT_R16G16_SNORM,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:23:24
+   |
+23 |         Tf::R32Uint => DXGI_FORMAT_R32_UINT,
+   |                        ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:24:24
+   |
+24 |         Tf::R32Sint => DXGI_FORMAT_R32_SINT,
+   |                        ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32_FLOAT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:25:25
+   |
+25 |         Tf::R32Float => DXGI_FORMAT_R32_FLOAT,
+   |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:26:25
+   |
+26 |         Tf::Rg16Uint => DXGI_FORMAT_R16G16_UINT,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:27:25
+   |
+27 |         Tf::Rg16Sint => DXGI_FORMAT_R16G16_SINT,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_FLOAT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:28:26
+   |
+28 |         Tf::Rg16Float => DXGI_FORMAT_R16G16_FLOAT,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:29:27
+   |
+29 |         Tf::Rgba8Unorm => DXGI_FORMAT_R8G8B8A8_UNORM,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_UNORM_SRGB` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:30:31
+   |
+30 |         Tf::Rgba8UnormSrgb => DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+   |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_B8G8R8A8_UNORM_SRGB` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:31:31
+   |
+31 |         Tf::Bgra8UnormSrgb => DXGI_FORMAT_B8G8R8A8_UNORM_SRGB,
+   |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_SNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:32:27
+   |
+32 |         Tf::Rgba8Snorm => DXGI_FORMAT_R8G8B8A8_SNORM,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_B8G8R8A8_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:33:27
+   |
+33 |         Tf::Bgra8Unorm => DXGI_FORMAT_B8G8R8A8_UNORM,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:34:26
+   |
+34 |         Tf::Rgba8Uint => DXGI_FORMAT_R8G8B8A8_UINT,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:35:26
+   |
+35 |         Tf::Rgba8Sint => DXGI_FORMAT_R8G8B8A8_SINT,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R9G9B9E5_SHAREDEXP` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:36:29
+   |
+36 |         Tf::Rgb9e5Ufloat => DXGI_FORMAT_R9G9B9E5_SHAREDEXP,
+   |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R10G10B10A2_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:37:29
+   |
+37 |         Tf::Rgb10a2Unorm => DXGI_FORMAT_R10G10B10A2_UNORM,
+   |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R11G11B10_FLOAT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:38:29
+   |
+38 |         Tf::Rg11b10Float => DXGI_FORMAT_R11G11B10_FLOAT,
+   |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:39:25
+   |
+39 |         Tf::Rg32Uint => DXGI_FORMAT_R32G32_UINT,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:40:25
+   |
+40 |         Tf::Rg32Sint => DXGI_FORMAT_R32G32_SINT,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32_FLOAT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:41:26
+   |
+41 |         Tf::Rg32Float => DXGI_FORMAT_R32G32_FLOAT,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:42:27
+   |
+42 |         Tf::Rgba16Uint => DXGI_FORMAT_R16G16B16A16_UINT,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:43:27
+   |
+43 |         Tf::Rgba16Sint => DXGI_FORMAT_R16G16B16A16_SINT,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:44:28
+   |
+44 |         Tf::Rgba16Unorm => DXGI_FORMAT_R16G16B16A16_UNORM,
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_SNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:45:28
+   |
+45 |         Tf::Rgba16Snorm => DXGI_FORMAT_R16G16B16A16_SNORM,
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_FLOAT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:46:28
+   |
+46 |         Tf::Rgba16Float => DXGI_FORMAT_R16G16B16A16_FLOAT,
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32A32_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:47:27
+   |
+47 |         Tf::Rgba32Uint => DXGI_FORMAT_R32G32B32A32_UINT,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32A32_SINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:48:27
+   |
+48 |         Tf::Rgba32Sint => DXGI_FORMAT_R32G32B32A32_SINT,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32A32_FLOAT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:49:28
+   |
+49 |         Tf::Rgba32Float => DXGI_FORMAT_R32G32B32A32_FLOAT,
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_D16_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:51:29
+   |
+51 |         Tf::Depth16Unorm => DXGI_FORMAT_D16_UNORM,
+   |                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_D24_UNORM_S8_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:52:28
+   |
+52 |         Tf::Depth24Plus => DXGI_FORMAT_D24_UNORM_S8_UINT,
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_D24_UNORM_S8_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:53:36
+   |
+53 |         Tf::Depth24PlusStencil8 => DXGI_FORMAT_D24_UNORM_S8_UINT,
+   |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_D32_FLOAT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:54:29
+   |
+54 |         Tf::Depth32Float => DXGI_FORMAT_D32_FLOAT,
+   |                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_D32_FLOAT_S8X24_UINT` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:55:37
+   |
+55 |         Tf::Depth32FloatStencil8 => DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC1_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:56:29
+   |
+56 |         Tf::Bc1RgbaUnorm => DXGI_FORMAT_BC1_UNORM,
+   |                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC1_UNORM_SRGB` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:57:33
+   |
+57 |         Tf::Bc1RgbaUnormSrgb => DXGI_FORMAT_BC1_UNORM_SRGB,
+   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC2_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:58:29
+   |
+58 |         Tf::Bc2RgbaUnorm => DXGI_FORMAT_BC2_UNORM,
+   |                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC2_UNORM_SRGB` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:59:33
+   |
+59 |         Tf::Bc2RgbaUnormSrgb => DXGI_FORMAT_BC2_UNORM_SRGB,
+   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC3_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:60:29
+   |
+60 |         Tf::Bc3RgbaUnorm => DXGI_FORMAT_BC3_UNORM,
+   |                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC3_UNORM_SRGB` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:61:33
+   |
+61 |         Tf::Bc3RgbaUnormSrgb => DXGI_FORMAT_BC3_UNORM_SRGB,
+   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC4_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:62:26
+   |
+62 |         Tf::Bc4RUnorm => DXGI_FORMAT_BC4_UNORM,
+   |                          ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC4_SNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:63:26
+   |
+63 |         Tf::Bc4RSnorm => DXGI_FORMAT_BC4_SNORM,
+   |                          ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC5_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:64:27
+   |
+64 |         Tf::Bc5RgUnorm => DXGI_FORMAT_BC5_UNORM,
+   |                           ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC5_SNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:65:27
+   |
+65 |         Tf::Bc5RgSnorm => DXGI_FORMAT_BC5_SNORM,
+   |                           ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC6H_UF16` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:66:30
+   |
+66 |         Tf::Bc6hRgbUfloat => DXGI_FORMAT_BC6H_UF16,
+   |                              ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC6H_SF16` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:67:30
+   |
+67 |         Tf::Bc6hRgbSfloat => DXGI_FORMAT_BC6H_SF16,
+   |                              ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC7_UNORM` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:68:29
+   |
+68 |         Tf::Bc7RgbaUnorm => DXGI_FORMAT_BC7_UNORM,
+   |                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_BC7_UNORM_SRGB` in this scope
+  --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:69:33
+   |
+69 |         Tf::Bc7RgbaUnormSrgb => DXGI_FORMAT_BC7_UNORM_SRGB,
+   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8_UNORM` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:152:25
+    |
+152 |         Vf::Unorm8x2 => DXGI_FORMAT_R8G8_UNORM,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8_SNORM` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:153:25
+    |
+153 |         Vf::Snorm8x2 => DXGI_FORMAT_R8G8_SNORM,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8_UINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:154:24
+    |
+154 |         Vf::Uint8x2 => DXGI_FORMAT_R8G8_UINT,
+    |                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8_SINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:155:24
+    |
+155 |         Vf::Sint8x2 => DXGI_FORMAT_R8G8_SINT,
+    |                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_UNORM` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:156:25
+    |
+156 |         Vf::Unorm8x4 => DXGI_FORMAT_R8G8B8A8_UNORM,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_SNORM` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:157:25
+    |
+157 |         Vf::Snorm8x4 => DXGI_FORMAT_R8G8B8A8_SNORM,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_UINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:158:24
+    |
+158 |         Vf::Uint8x4 => DXGI_FORMAT_R8G8B8A8_UINT,
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R8G8B8A8_SINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:159:24
+    |
+159 |         Vf::Sint8x4 => DXGI_FORMAT_R8G8B8A8_SINT,
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_UNORM` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:160:26
+    |
+160 |         Vf::Unorm16x2 => DXGI_FORMAT_R16G16_UNORM,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_SNORM` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:161:26
+    |
+161 |         Vf::Snorm16x2 => DXGI_FORMAT_R16G16_SNORM,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_UINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:162:25
+    |
+162 |         Vf::Uint16x2 => DXGI_FORMAT_R16G16_UINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_SINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:163:25
+    |
+163 |         Vf::Sint16x2 => DXGI_FORMAT_R16G16_SINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16_FLOAT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:164:26
+    |
+164 |         Vf::Float16x2 => DXGI_FORMAT_R16G16_FLOAT,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_UNORM` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:165:26
+    |
+165 |         Vf::Unorm16x4 => DXGI_FORMAT_R16G16B16A16_UNORM,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_SNORM` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:166:26
+    |
+166 |         Vf::Snorm16x4 => DXGI_FORMAT_R16G16B16A16_SNORM,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_UINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:167:25
+    |
+167 |         Vf::Uint16x4 => DXGI_FORMAT_R16G16B16A16_UINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_SINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:168:25
+    |
+168 |         Vf::Sint16x4 => DXGI_FORMAT_R16G16B16A16_SINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R16G16B16A16_FLOAT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:169:26
+    |
+169 |         Vf::Float16x4 => DXGI_FORMAT_R16G16B16A16_FLOAT,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32_UINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:170:23
+    |
+170 |         Vf::Uint32 => DXGI_FORMAT_R32_UINT,
+    |                       ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32_SINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:171:23
+    |
+171 |         Vf::Sint32 => DXGI_FORMAT_R32_SINT,
+    |                       ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32_FLOAT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:172:24
+    |
+172 |         Vf::Float32 => DXGI_FORMAT_R32_FLOAT,
+    |                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32_UINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:173:25
+    |
+173 |         Vf::Uint32x2 => DXGI_FORMAT_R32G32_UINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32_SINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:174:25
+    |
+174 |         Vf::Sint32x2 => DXGI_FORMAT_R32G32_SINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32_FLOAT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:175:26
+    |
+175 |         Vf::Float32x2 => DXGI_FORMAT_R32G32_FLOAT,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32_UINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:176:25
+    |
+176 |         Vf::Uint32x3 => DXGI_FORMAT_R32G32B32_UINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32_SINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:177:25
+    |
+177 |         Vf::Sint32x3 => DXGI_FORMAT_R32G32B32_SINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32_FLOAT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:178:26
+    |
+178 |         Vf::Float32x3 => DXGI_FORMAT_R32G32B32_FLOAT,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32A32_UINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:179:25
+    |
+179 |         Vf::Uint32x4 => DXGI_FORMAT_R32G32B32A32_UINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32A32_SINT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:180:25
+    |
+180 |         Vf::Sint32x4 => DXGI_FORMAT_R32G32B32A32_SINT,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `DXGI_FORMAT_R32G32B32A32_FLOAT` in this scope
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/auxil/dxgi/conv.rs:181:26
+    |
+181 |         Vf::Float32x4 => DXGI_FORMAT_R32G32B32A32_FLOAT,
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0609]: no field `color` on type `&_`
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/device.rs:859:89
+    |
+859 |                 let (color_op, color_src, color_dst) = conv::map_blend_component(&blend.color);
+    |                                                                                         ^^^^^
+
+error[E0283]: type annotations needed
+   --> /home/xyz600/.cargo/registry/src/github.com-1ecc6299db9ec823/wgpu-hal-0.14.1/src/metal/mod.rs:595:5
+    |
+591 | #[derive(Debug, Default)]
+    |                 ------- in this derive macro expansion
+...
+595 |     samplers: Vec<SamplerPtr>,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^ cannot infer type
+    |
+    = note: cannot satisfy `_: std::default::Default`
+    = note: this error originates in the derive macro `Default` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+Some errors have detailed explanations: E0283, E0425, E0432, E0433, E0609.
+For more information about an error, try `rustc --explain E0283`.
+error: could not compile `wgpu-hal` due to 568 previous errors
